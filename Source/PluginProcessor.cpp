@@ -1,5 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "parameter_constants.h"
 
 Auto_AudioProcessor::Auto_AudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -11,15 +12,15 @@ Auto_AudioProcessor::Auto_AudioProcessor()
 		  .withOutput("Output", AudioChannelSet::stereo(), true)
 #endif
 	  ),
-inputGain("inputGain", "In", NormalisableRange<float>(0,1), 0),
-outputGain("outputGain", "Out", NormalisableRange<float>(0,1), 0),
-resonance("resonance", "Res", NormalisableRange<float>(0,2), 0),
-frequency("frequency", "Freq", NormalisableRange<float>(0.1,20000), 0.1),
-drive("drive", "Drive", NormalisableRange<float>(1,10), 1),
-envAmount("envAmount", "Env Am", NormalisableRange<float>(0,1), 0),
-mix("mix", "Mix", NormalisableRange<float>(0,1), 0),
-envSpeed("envSpeed", "Env Speed", false),
-twoFourPole("twoFourPole", "2/4 Pole", false)
+inputGain(parameter_constants::INPUT_GAIN_ID, "In", NormalisableRange<float>(-30,30), 0),
+outputGain(parameter_constants::OUTPUT_GAIN_ID, "Out", NormalisableRange<float>(-30,30), 0),
+resonance(parameter_constants::RESONANCE_ID, "Res", NormalisableRange<float>(0,1), 0),
+frequency(parameter_constants::FREQUENCY_ID, "Freq", NormalisableRange<float>(0.1,20000), 0.1),
+drive(parameter_constants::DRIVE_ID, "Drive", NormalisableRange<float>(1,10), 1),
+envAmount(parameter_constants::ENV_AMOUNT_ID, "Env Am", NormalisableRange<float>(0,1), 0),
+mix(parameter_constants::MIX_ID, "Mix", NormalisableRange<float>(0,1), 0),
+envSpeed(parameter_constants::ENV_SPEED_ID, "Env Speed", false),
+twoFourPole(parameter_constants::TWO_FOUR_POLE_ID, "2/4 Pole", false)
 #endif
 {
 }
@@ -98,7 +99,6 @@ void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& 
     ScopedNoDenormals noDenormals;
     auto block = dsp::AudioBlock<float>(buffer);
     const auto context = dsp::ProcessContextReplacing<float>(block);
-    setParameters();
     chain.process(context);
 }
 void Auto_AudioProcessor::releaseResources()
@@ -108,47 +108,73 @@ void Auto_AudioProcessor::releaseResources()
 
 void Auto_AudioProcessor::sliderValueChanged(Slider* slider)
 {
-    auto ID = slider->getComponentID();
-    auto value = slider->getValue();
+	const String& ID = slider->getComponentID();
+	const float value = static_cast<float>(slider->getValue());
     for(auto floatParam : floatParameter)
     {
         if(floatParam->paramID == ID)
         {
-	       *floatParam = static_cast<float>(value); 
+	       *floatParam = value; 
+           setParameter(ID);
+           break;
         }
     }
 }
 
 void Auto_AudioProcessor::buttonClicked(Button* button)
 {
-
+    const String& ID = button->getComponentID();
+    const bool value = button->getToggleState();
     for(auto boolParam : boolParameter)
     {
-        if(boolParam->paramID == button->getComponentID())
+        if(boolParam->paramID == ID)
         {
-	       *boolParam = button->getToggleState(); 
+	       *boolParam = value;
+           setParameter(ID);
+           break;
         }
     }
 }
 
-void Auto_AudioProcessor::setParameters()
+void Auto_AudioProcessor::setParameter(const String& parameterID)
 {
-
-    chain.get<inputGainIndex>().setGainLinear(inputGain);
-
-    const auto rate = envSpeed ? 0.2 : 0.7;
-    chain.get<followerIndex>().setAttack(rate);
-    chain.get<followerIndex>().setRelease(rate);
-
-	const auto mode = twoFourPole ? dsp::LadderFilter<float>::Mode::LPF24 :
-									dsp::LadderFilter<float>::Mode::LPF12;
-	const auto freq = jlimit<float>(0.1f, 20000, frequency + chain.get<followerIndex>().getValue());
-    chain.get<filterIndex>().setCutoffFrequencyHz(freq);
-    chain.get<filterIndex>().setResonance(resonance);
-    chain.get<filterIndex>().setDrive(drive);
-    chain.get<filterIndex>().setMode(mode);
-
-    chain.get<outputGainIndex>().setGainLinear(outputGain);
+    if(parameterID == parameter_constants::INPUT_GAIN_ID)
+    {
+		chain.get<inputGainIndex>().setGainDecibels(inputGain);
+    }
+    else if(parameterID == parameter_constants::DRIVE_ID)
+    {
+		chain.get<filterIndex>().setDrive(drive);
+    }
+    else if(parameterID ==  parameter_constants::FREQUENCY_ID)
+    {
+		const auto freq = jlimit<float>(0.1f, 20000.0f, frequency + chain.get<followerIndex>().getValue());
+		chain.get<filterIndex>().setCutoffFrequencyHz(freq);
+    }
+    else if(parameterID == parameter_constants::RESONANCE_ID)
+    {
+		chain.get<filterIndex>().setResonance(resonance);
+    }
+    else if(parameterID == parameter_constants::ENV_SPEED_ID)
+    {
+		const auto rate = envSpeed ? fast : slow;
+		chain.get<followerIndex>().setAttack(rate);
+		chain.get<followerIndex>().setRelease(rate);
+    }
+    else if(parameterID == parameter_constants::ENV_AMOUNT_ID)
+    {
+		chain.get<followerIndex>().setAmount(envAmount);
+    }
+    else if(parameterID == parameter_constants::TWO_FOUR_POLE_ID)
+    {
+		const auto mode = twoFourPole ? dsp::LadderFilter<float>::Mode::LPF24 :
+										dsp::LadderFilter<float>::Mode::LPF12;
+		chain.get<filterIndex>().setMode(mode);
+    }
+    else if(parameterID == parameter_constants::OUTPUT_GAIN_ID)
+    {
+		chain.get<outputGainIndex>().setGainDecibels(outputGain);
+    }
 }
 
 

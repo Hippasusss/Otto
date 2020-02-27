@@ -3,6 +3,7 @@
 <JUCERPROJECT id="YSGQTv" name="Auto" projectType="audioplug" jucerVersion="5.4.7">
   <MAINGROUP id="vPwknA" name="Auto">
     <GROUP id="{62755887-84A8-E3C6-EC3D-D7338C224042}" name="Source">
+      <FILE id="FVh70g" name="Constants.cpp" compile="1" resource="0" file="Source/Constants.cpp"/>
       <FILE id="vAvhHS" name="EnvelopeFollower.cpp" compile="1" resource="0"
             file="Source/EnvelopeFollower.cpp"/>
       <FILE id="rRMgJd" name="EnvelopeFollower.h" compile="0" resource="0"

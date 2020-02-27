@@ -40,16 +40,21 @@ public:
 
     void sliderValueChanged(Slider* slider) override;
     void buttonClicked(Button*) override;
+
 private:
+    const float slow = 0.7;
+    const float fast = 0.2;
+
+	void setParameter(const String& parameterID);
+
     enum processors
     {
-        inputGainIndex = 0,
+        inputGainIndex,
         followerIndex,
         filterIndex,
         outputGainIndex
     };
 
-	void setParameters();
 
 	AudioParameterFloat inputGain;
 	AudioParameterFloat outputGain;
@@ -67,6 +72,7 @@ private:
 
 
     juce::dsp::ProcessorChain <dsp::Gain<float>, EnvelopeFollower,  dsp::LadderFilter<float>, dsp::Gain<float>> chain;
+
    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Auto_AudioProcessor)
 };
