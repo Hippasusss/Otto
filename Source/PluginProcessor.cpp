@@ -15,7 +15,7 @@ Auto_AudioProcessor::Auto_AudioProcessor()
 inputGain(parameter_constants::INPUT_GAIN_ID, "In", NormalisableRange<float>(-30,30), 0),
 outputGain(parameter_constants::OUTPUT_GAIN_ID, "Out", NormalisableRange<float>(-30,30), 0),
 resonance(parameter_constants::RESONANCE_ID, "Res", NormalisableRange<float>(0,1), 0),
-frequency(parameter_constants::FREQUENCY_ID, "Freq", NormalisableRange<float>(0.1,20000), 0.1),
+frequency(parameter_constants::FREQUENCY_ID, "Freq", NormalisableRange<float>(20, 20000, 0.1f), 0.1),
 drive(parameter_constants::DRIVE_ID, "Drive", NormalisableRange<float>(1,10), 1),
 envAmount(parameter_constants::ENV_AMOUNT_ID, "Env Am", NormalisableRange<float>(0,1), 0),
 mix(parameter_constants::MIX_ID, "Mix", NormalisableRange<float>(0,1), 0),
@@ -90,7 +90,13 @@ void Auto_AudioProcessor::changeProgramName (int index, const String& newName)
 
 void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-	const auto spec = dsp::ProcessSpec {sampleRate, static_cast<uint32>(samplesPerBlock),static_cast<uint32>(getTotalNumInputChannels())};
+	const auto spec = dsp::ProcessSpec {sampleRate,
+										static_cast<uint32>(samplesPerBlock),
+										static_cast<uint32>(getTotalNumInputChannels())};
+
+	chain.get<outputGainIndex>().setRampDurationSeconds(0.1);
+	chain.get<inputGainIndex>().setRampDurationSeconds(0.1);
+    initaliseParameters();
     chain.prepare(spec);
 }
 
@@ -99,6 +105,7 @@ void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& 
     ScopedNoDenormals noDenormals;
     auto block = dsp::AudioBlock<float>(buffer);
     const auto context = dsp::ProcessContextReplacing<float>(block);
+
     chain.process(context);
 }
 void Auto_AudioProcessor::releaseResources()
@@ -136,7 +143,7 @@ void Auto_AudioProcessor::buttonClicked(Button* button)
     }
 }
 
-void Auto_AudioProcessor::setParameter(const String& parameterID)
+void Auto_AudioProcessor::setParameter(const String& parameterID) 
 {
     if(parameterID == parameter_constants::INPUT_GAIN_ID)
     {
@@ -148,7 +155,7 @@ void Auto_AudioProcessor::setParameter(const String& parameterID)
     }
     else if(parameterID ==  parameter_constants::FREQUENCY_ID)
     {
-		const auto freq = jlimit<float>(0.1f, 20000.0f, frequency + chain.get<followerIndex>().getValue());
+		const auto freq = jlimit<float>(0.1f, 20000.0f, frequency);
 		chain.get<filterIndex>().setCutoffFrequencyHz(freq);
     }
     else if(parameterID == parameter_constants::RESONANCE_ID)
@@ -175,6 +182,22 @@ void Auto_AudioProcessor::setParameter(const String& parameterID)
     {
 		chain.get<outputGainIndex>().setGainDecibels(outputGain);
     }
+}
+
+void Auto_AudioProcessor::initaliseParameters()
+{
+	chain.get<inputGainIndex>().setGainDecibels(inputGain);
+	chain.get<filterIndex>().setDrive(drive);
+	chain.get<filterIndex>().setCutoffFrequencyHz(frequency);
+	chain.get<filterIndex>().setResonance(resonance);
+	const auto rate = envSpeed ? fast : slow;
+	chain.get<followerIndex>().setAttack(rate);
+	chain.get<followerIndex>().setRelease(rate);
+	chain.get<followerIndex>().setAmount(envAmount);
+	const auto mode = twoFourPole ? dsp::LadderFilter<float>::Mode::LPF24 :
+									dsp::LadderFilter<float>::Mode::LPF12;
+	chain.get<filterIndex>().setMode(mode);
+	chain.get<outputGainIndex>().setGainDecibels(outputGain);
 }
 
 

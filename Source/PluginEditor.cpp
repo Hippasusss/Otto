@@ -21,17 +21,21 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& p)
     {
         slider->setSliderStyle (Slider::RotaryVerticalDrag);
         slider->setRange(0, 1.0, 0.01);
-        slider->setTextBoxStyle(Slider::TextBoxBelow, true, 0, 0);
+        slider->setTextBoxStyle(Slider::NoTextBox, true,0,0);
+        slider->setPopupDisplayEnabled(true, true, this);
         slider->setValue(0.0);
         slider->addListener(&processor);
     }
 
     inputGain.setRange(Range<double>(-30, 30), 0.1);
     outputGain.setRange(Range<double>(-30, 30), 0.1);
-    frequency.setRange(Range<double>(0.1, 20000), 0.1);
+    drive.setRange(Range<double>(1, 10), 0.1);
     resonance.setRange(Range<double>(0.0, 1.0), 0.001);
 
+    frequency.setRange(Range<double>(20, 20000), 0.1);
+    frequency.setSkewFactorFromMidPoint(2000);
 	frequency.setValue(1000.0f);
+
 	mix.setValue(1.0f);
 
 

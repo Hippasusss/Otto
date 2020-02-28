@@ -42,10 +42,11 @@ public:
     void buttonClicked(Button*) override;
 
 private:
-    const float slow = 0.7;
-    const float fast = 0.2;
+    const float slow = 700;
+    const float fast = 200;
 
 	void setParameter(const String& parameterID);
+	void initaliseParameters();
 
     enum processors
     {
