@@ -26,6 +26,7 @@ public:
     void setRelease(float milliseconds);
     void setAmount(float amount);
     float getValue() const;
+    std::function<void(float)> callback;
 
 private:
     double sampleRate;

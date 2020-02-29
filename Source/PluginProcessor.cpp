@@ -98,6 +98,13 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 	chain.get<inputGainIndex>().setRampDurationSeconds(0.1);
     initaliseParameters();
     chain.prepare(spec);
+
+    dsp::LadderFilter<float>& filter = chain.get<filterIndex>();
+	chain.get<followerIndex>().callback = [this, &filter ](const float value)
+	{
+        const float modulatedFrequency = jlimit<float>(0.1, 20000, this->frequency.get() + value * 20000);
+        filter.setCutoffFrequencyHz(modulatedFrequency);
+	};
 }
 
 void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
@@ -155,8 +162,7 @@ void Auto_AudioProcessor::setParameter(const String& parameterID)
     }
     else if(parameterID ==  parameter_constants::FREQUENCY_ID)
     {
-		const auto freq = jlimit<float>(0.1f, 20000.0f, frequency);
-		chain.get<filterIndex>().setCutoffFrequencyHz(freq);
+		chain.get<filterIndex>().setCutoffFrequencyHz(frequency);
     }
     else if(parameterID == parameter_constants::RESONANCE_ID)
     {

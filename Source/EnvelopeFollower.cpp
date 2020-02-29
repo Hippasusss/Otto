@@ -52,6 +52,7 @@ void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& contex
 	const float average = sum / (blockSize * numChannels);
     const float rate = average > value ? attackTime : releaseTime; 
     value += (blockTime / rate ) *  (average - value) * inputScaling;
+    callback(value);
 }
 
 void EnvelopeFollower::reset()

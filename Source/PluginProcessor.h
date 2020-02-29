@@ -42,8 +42,8 @@ public:
     void buttonClicked(Button*) override;
 
 private:
-    const float slow = 700;
-    const float fast = 200;
+    const float slow = 40;
+    const float fast = 10;
 
 	void setParameter(const String& parameterID);
 	void initaliseParameters();
