@@ -99,6 +99,7 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     initaliseParameters();
     chain.prepare(spec);
 
+    //Register envelope follower callback to set freqency parameter.
     dsp::LadderFilter<float>& filter = chain.get<filterIndex>();
 	chain.get<followerIndex>().callback = [this, &filter ](const float value)
 	{

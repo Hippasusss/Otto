@@ -16,6 +16,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& p)
     envSpeed("Env Speed", parameter_constants::ENV_SPEED_ID),
     twoFourPole("2/4 Pole", parameter_constants::TWO_FOUR_POLE_ID)
 {
+    setLookAndFeel(&lookAndFeel);
     setSize (800, 100);
     for(auto slider : sliders)
     {
@@ -54,6 +55,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& p)
 Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
 {
 	
+    setLookAndFeel(nullptr);
     for(auto slider : sliders)
     {
         slider->removeListener(&processor);

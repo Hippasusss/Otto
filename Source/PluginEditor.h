@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "LabeledSlider.h"
+#include "CustomLookAndFeel.h"
 
 class Auto_AudioProcessorEditor  : public AudioProcessorEditor
 {
@@ -15,6 +16,7 @@ public:
 
 private:
     Auto_AudioProcessor& processor;
+	CustomLookAndFeel lookAndFeel;
 
     LabeledSlider inputGain;
     LabeledSlider drive;
@@ -25,6 +27,7 @@ private:
     LabeledSlider outputGain;
     ToggleButton envSpeed;
     ToggleButton twoFourPole;
+
     
     std::array<Component*, 9> components {&inputGain, &drive, &envAmount, &frequency, 
         &resonance, &mix, &outputGain, &envSpeed, &twoFourPole};
