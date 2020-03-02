@@ -6,7 +6,7 @@ LabeledSlider::LabeledSlider() = default;
 LabeledSlider::LabeledSlider(const String& name, const String& ID): sliderLabel(name, name) 
 {
     setComponentID(ID);
-    sliderLabel.setJustificationType(Justification::centred);
+    sliderLabel.setJustificationType(Justification::centredTop);
     sliderLabel.attachToComponent(this, true);
     addAndMakeVisible(sliderLabel);
 }

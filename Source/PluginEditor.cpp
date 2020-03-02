@@ -14,16 +14,16 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& p)
     mix("Mix", parameter_constants::MIX_ID),
     outputGain("Out", parameter_constants::OUTPUT_GAIN_ID),
     envSpeed("Env Speed", parameter_constants::ENV_SPEED_ID),
-    twoFourPole("2/4 Pole", parameter_constants::TWO_FOUR_POLE_ID)
+    twoFourPole("2/4 Pole", parameter_constants::TWO_FOUR_POLE_ID),
+    parameterGroup("parameterGroup")
 {
     setLookAndFeel(&lookAndFeel);
-    setSize (800, 100);
+    setSize (800, 400);
     for(auto slider : sliders)
     {
         slider->setSliderStyle (Slider::RotaryVerticalDrag);
         slider->setRange(0, 1.0, 0.01);
-        slider->setTextBoxStyle(Slider::NoTextBox, true,0,0);
-        slider->setPopupDisplayEnabled(true, true, this);
+        slider->setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true,0,0);
         slider->setValue(0.0);
         slider->addListener(&processor);
     }
@@ -48,6 +48,10 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& p)
 
     for(auto comp : components)
     {
+        if(comp != &parameterGroup)
+        {
+            parameterGroup.addChildComponent(comp);
+        }
         addAndMakeVisible(comp);
     }
 }
@@ -70,25 +74,29 @@ Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
 void Auto_AudioProcessorEditor::resized()
 {
     auto rect = getLocalBounds();
+    auto topRect = rect.removeFromTop(300);
 
+    parameterGroup.setBounds(rect);
     auto tempRect = rect;
     for(auto slider: sliders)
     {
         tempRect = rect.removeFromLeft(100);
-        slider->setBounds(tempRect.removeFromTop(80));
-        slider->getSliderLabel().setBounds(tempRect);
+        slider->setBounds(tempRect.removeFromTop(80).reduced(11));
+        slider->getSliderLabel().setBounds(tempRect.translated(0,-3));
     }
 
     tempRect = rect.removeFromLeft(100);
     for(auto button: buttons)
     {
-        button->setBounds(tempRect.removeFromTop(50));
+        button->setBounds(tempRect.removeFromTop(50).reduced(10,13));
     }
 }
 
-void Auto_AudioProcessorEditor::paint (Graphics& g)
+void Auto_AudioProcessorEditor::paint (Graphics& graphics)
 {
-    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+    graphics.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+    graphics.setColour(getLookAndFeel().findColour(Slider::ColourIds::rotarySliderOutlineColourId));
+    graphics.drawRect(getBounds(), 4);
 
 }
 

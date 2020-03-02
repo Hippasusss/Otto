@@ -27,10 +27,11 @@ private:
     LabeledSlider outputGain;
     ToggleButton envSpeed;
     ToggleButton twoFourPole;
+    GroupComponent parameterGroup;
 
     
-    std::array<Component*, 9> components {&inputGain, &drive, &envAmount, &frequency, 
-        &resonance, &mix, &outputGain, &envSpeed, &twoFourPole};
+    std::array<Component*, 10> components {&inputGain, &drive, &envAmount, &frequency, 
+        &resonance, &mix, &outputGain, &envSpeed, &twoFourPole, &parameterGroup};
     std::array<LabeledSlider*, 7> sliders {&inputGain, &drive, &envAmount, &frequency, 
         &resonance, &mix, &outputGain};
     std::array<ToggleButton*, 2> buttons{&envSpeed, &twoFourPole};
