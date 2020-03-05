@@ -40,11 +40,13 @@ public:
 
     void sliderValueChanged(Slider* slider) override;
     void buttonClicked(Button*) override;
+    const EnvelopeFollower& getEnvelopeFollower() const;
+    const dsp::LadderFilter<float>& getLadderFilter() const;
 
 
-	const EnvelopeFollower& getEnvelopeFollowerReference() const;
 
 private:
+
     const float slow = 40;
     const float fast = 10;
 
@@ -73,11 +75,11 @@ private:
 														&frequency, &drive, &envAmount, &mix};
     std::array<AudioParameterBool*, 2> boolParameter {&envSpeed, &twoFourPole};
 
-
     juce::dsp::ProcessorChain <dsp::Gain<float>,
                                EnvelopeFollower,
                                dsp::LadderFilter<float>,
                                dsp::Gain<float>> chain;
+
 
    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Auto_AudioProcessor)

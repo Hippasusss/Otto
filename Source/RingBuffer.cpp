@@ -1,11 +1,11 @@
 /*
   ==============================================================================
 
-    StackFIFO.cpp
+    RingBuffer.cpp
     Created: 4 Mar 2020 12:28:21am
     Author:  Danny Herbert
 
   ==============================================================================
 */
 
-#include "StackFIFO.h"
+#include "RingBuffer.h"

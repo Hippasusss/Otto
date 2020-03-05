@@ -3,29 +3,37 @@
 <JUCERPROJECT id="YSGQTv" name="Auto" projectType="audioplug" jucerVersion="5.4.7">
   <MAINGROUP id="vPwknA" name="Auto">
     <GROUP id="{62755887-84A8-E3C6-EC3D-D7338C224042}" name="Source">
-      <FILE id="XukOP2" name="StackFIFO.cpp" compile="1" resource="0" file="Source/StackFIFO.cpp"/>
-      <FILE id="Y8uo7V" name="StackFIFO.h" compile="0" resource="0" file="Source/StackFIFO.h"/>
-      <FILE id="pYgrCW" name="GraphDisplay.h" compile="0" resource="0" file="Source/GraphDisplay.h"/>
-      <FILE id="WuDCXs" name="GraphDisplay.cpp" compile="1" resource="0"
-            file="Source/GraphDisplay.cpp"/>
-      <FILE id="zd3ATz" name="CustomLookAndFeel.h" compile="0" resource="0"
-            file="Source/CustomLookAndFeel.h"/>
-      <FILE id="kZtrtp" name="parameter_constants.h" compile="0" resource="0"
-            file="Source/parameter_constants.h"/>
-      <FILE id="vAvhHS" name="EnvelopeFollower.cpp" compile="1" resource="0"
-            file="Source/EnvelopeFollower.cpp"/>
-      <FILE id="rRMgJd" name="EnvelopeFollower.h" compile="0" resource="0"
-            file="Source/EnvelopeFollower.h"/>
-      <FILE id="QmzApq" name="LabeledSlider.h" compile="0" resource="0" file="Source/LabeledSlider.h"/>
-      <FILE id="fRyZmX" name="LabeledSlider.cpp" compile="1" resource="0"
-            file="Source/LabeledSlider.cpp"/>
-      <FILE id="N75YFL" name="PluginProcessor.cpp" compile="1" resource="0"
-            file="Source/PluginProcessor.cpp"/>
-      <FILE id="NctbIY" name="PluginProcessor.h" compile="0" resource="0"
-            file="Source/PluginProcessor.h"/>
-      <FILE id="zk4OUK" name="PluginEditor.cpp" compile="1" resource="0"
-            file="Source/PluginEditor.cpp"/>
-      <FILE id="GdjBT9" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <GROUP id="{AA83E59E-A34E-D4E2-1326-C1725F24E20A}" name="Utils">
+        <FILE id="XzHTVA" name="RingBuffer.cpp" compile="1" resource="0" file="Source/RingBuffer.cpp"/>
+        <FILE id="S8BKIO" name="RingBuffer.h" compile="0" resource="0" file="Source/RingBuffer.h"/>
+        <FILE id="zd3ATz" name="CustomLookAndFeel.h" compile="0" resource="0"
+              file="Source/CustomLookAndFeel.h"/>
+        <FILE id="kZtrtp" name="parameter_constants.h" compile="0" resource="0"
+              file="Source/parameter_constants.h"/>
+      </GROUP>
+      <GROUP id="{6EE6EECB-F0FA-67C5-6ED4-12606B817D60}" name="DSP">
+        <FILE id="vAvhHS" name="EnvelopeFollower.cpp" compile="1" resource="0"
+              file="Source/EnvelopeFollower.cpp"/>
+        <FILE id="rRMgJd" name="EnvelopeFollower.h" compile="0" resource="0"
+              file="Source/EnvelopeFollower.h"/>
+      </GROUP>
+      <GROUP id="{5C837F25-B0D1-9AE4-9897-114DE1C33272}" name="Components">
+        <FILE id="pYgrCW" name="GraphDisplay.h" compile="0" resource="0" file="Source/GraphDisplay.h"/>
+        <FILE id="WuDCXs" name="GraphDisplay.cpp" compile="1" resource="0"
+              file="Source/GraphDisplay.cpp"/>
+        <FILE id="QmzApq" name="LabeledSlider.h" compile="0" resource="0" file="Source/LabeledSlider.h"/>
+        <FILE id="fRyZmX" name="LabeledSlider.cpp" compile="1" resource="0"
+              file="Source/LabeledSlider.cpp"/>
+      </GROUP>
+      <GROUP id="{CF772ABB-50BF-1970-7383-E21F408898E4}" name="PluginPE">
+        <FILE id="N75YFL" name="PluginProcessor.cpp" compile="1" resource="0"
+              file="Source/PluginProcessor.cpp"/>
+        <FILE id="NctbIY" name="PluginProcessor.h" compile="0" resource="0"
+              file="Source/PluginProcessor.h"/>
+        <FILE id="zk4OUK" name="PluginEditor.cpp" compile="1" resource="0"
+              file="Source/PluginEditor.cpp"/>
+        <FILE id="GdjBT9" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      </GROUP>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

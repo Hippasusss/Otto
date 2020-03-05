@@ -136,9 +136,9 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\StackFIFO.cpp"/>
-    <ClCompile Include="..\..\Source\GraphDisplay.cpp"/>
+    <ClCompile Include="..\..\Source\RingBuffer.cpp"/>
     <ClCompile Include="..\..\Source\EnvelopeFollower.cpp"/>
+    <ClCompile Include="..\..\Source\GraphDisplay.cpp"/>
     <ClCompile Include="..\..\Source\LabeledSlider.cpp"/>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp"/>
     <ClCompile Include="..\..\Source\PluginEditor.cpp"/>
@@ -2046,11 +2046,11 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_opengl.cpp"/>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\StackFIFO.h"/>
-    <ClInclude Include="..\..\Source\GraphDisplay.h"/>
+    <ClInclude Include="..\..\Source\RingBuffer.h"/>
     <ClInclude Include="..\..\Source\CustomLookAndFeel.h"/>
     <ClInclude Include="..\..\Source\parameter_constants.h"/>
     <ClInclude Include="..\..\Source\EnvelopeFollower.h"/>
+    <ClInclude Include="..\..\Source\GraphDisplay.h"/>
     <ClInclude Include="..\..\Source\LabeledSlider.h"/>
     <ClInclude Include="..\..\Source\PluginProcessor.h"/>
     <ClInclude Include="..\..\Source\PluginEditor.h"/>

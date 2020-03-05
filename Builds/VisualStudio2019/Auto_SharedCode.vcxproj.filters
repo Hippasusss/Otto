@@ -2,6 +2,18 @@
 
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Auto\Source\Utils">
+      <UniqueIdentifier>{20F49ABA-1130-5090-B05E-27E18D05C84E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Auto\Source\DSP">
+      <UniqueIdentifier>{F4A1684B-4AF3-5D53-204B-8EC372AA7AB6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Auto\Source\Components">
+      <UniqueIdentifier>{07C3523D-9253-CBAE-C84B-E79F62170074}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Auto\Source\PluginPE">
+      <UniqueIdentifier>{FEFECAA2-334D-432B-F2A6-A23FAF541270}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Auto\Source">
       <UniqueIdentifier>{185A758F-BE31-599D-EE3A-ACA5030B98E7}</UniqueIdentifier>
     </Filter>
@@ -454,23 +466,23 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\StackFIFO.cpp">
-      <Filter>Auto\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\GraphDisplay.cpp">
-      <Filter>Auto\Source</Filter>
+    <ClCompile Include="..\..\Source\RingBuffer.cpp">
+      <Filter>Auto\Source\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\EnvelopeFollower.cpp">
-      <Filter>Auto\Source</Filter>
+      <Filter>Auto\Source\DSP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GraphDisplay.cpp">
+      <Filter>Auto\Source\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\LabeledSlider.cpp">
-      <Filter>Auto\Source</Filter>
+      <Filter>Auto\Source\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp">
-      <Filter>Auto\Source</Filter>
+      <Filter>Auto\Source\PluginPE</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\PluginEditor.cpp">
-      <Filter>Auto\Source</Filter>
+      <Filter>Auto\Source\PluginPE</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\Programs\Juce\JUCE\modules\juce_audio_basics\buffers\juce_AudioChannelSet.cpp">
       <Filter>JUCE Modules\juce_audio_basics\buffers</Filter>
@@ -2532,29 +2544,29 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\StackFIFO.h">
-      <Filter>Auto\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\GraphDisplay.h">
-      <Filter>Auto\Source</Filter>
+    <ClInclude Include="..\..\Source\RingBuffer.h">
+      <Filter>Auto\Source\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\CustomLookAndFeel.h">
-      <Filter>Auto\Source</Filter>
+      <Filter>Auto\Source\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\parameter_constants.h">
-      <Filter>Auto\Source</Filter>
+      <Filter>Auto\Source\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\EnvelopeFollower.h">
-      <Filter>Auto\Source</Filter>
+      <Filter>Auto\Source\DSP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\GraphDisplay.h">
+      <Filter>Auto\Source\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\LabeledSlider.h">
-      <Filter>Auto\Source</Filter>
+      <Filter>Auto\Source\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\PluginProcessor.h">
-      <Filter>Auto\Source</Filter>
+      <Filter>Auto\Source\PluginPE</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\PluginEditor.h">
-      <Filter>Auto\Source</Filter>
+      <Filter>Auto\Source\PluginPE</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\Programs\Juce\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h">
       <Filter>JUCE Modules\juce_audio_basics\audio_play_head</Filter>

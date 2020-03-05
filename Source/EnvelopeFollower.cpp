@@ -19,8 +19,7 @@ EnvelopeFollower::EnvelopeFollower():
 	value(0),
 	inputScaling(0),
     attackTime(0.5f),
-	releaseTime(1.0f),
-	smoothedValue(0)
+	releaseTime(1.0f)
 {
 
 }
@@ -52,8 +51,7 @@ void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& contex
 	const float average = sum / (blockSize * numChannels);
     const float rate = average > value ? attackTime : releaseTime; 
     value += (blockTime / rate ) *  (average - value) * inputScaling;
-    callback(value);
-    previousValues.addValue(value);
+    setParameterCallback(value);
 }
 
 void EnvelopeFollower::reset()
@@ -78,9 +76,4 @@ void EnvelopeFollower::setAmount(float amount)
 float EnvelopeFollower::getValue() const
 {
     return value;
-}
-
-const StackFIFO<float, 20>& EnvelopeFollower::getFIFO() const
-{
-    return previousValues;
 }

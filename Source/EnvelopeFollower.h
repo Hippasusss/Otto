@@ -10,7 +10,6 @@
 
 #pragma once
 #include "JuceHeader.h"
-#include "StackFIFO.h"
 
 class EnvelopeFollower: dsp::ProcessorBase
 {
@@ -27,13 +26,9 @@ public:
     void setRelease(float milliseconds);
     void setAmount(float amount);
     float getValue() const;
-    std::function<void(float)> callback;
-
-    const StackFIFO<float, 20>& getFIFO() const;
-
+    std::function<void(float)> setParameterCallback;
 
 private:
-    StackFIFO<float, 20> previousValues{};
     double sampleRate;
     int numChannels;
     int blockSize;
@@ -43,7 +38,6 @@ private:
     float inputScaling;
     float attackTime, releaseTime;
 
-    SmoothedValue<float, ValueSmoothingTypes::Linear> smoothedValue;
 
 };
 

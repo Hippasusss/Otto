@@ -16,11 +16,11 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& p)
     envSpeed("Env Speed", parameter_constants::ENV_SPEED_ID),
     twoFourPole("2/4 Pole", parameter_constants::TWO_FOUR_POLE_ID),
     parameterGroup("parameterGroup"),
-	display(p.getEnvelopeFollowerReference().getFIFO())
-    
+	display()
 {
     setLookAndFeel(&lookAndFeel);
     setSize (800, 400);
+
     for(auto slider : sliders)
     {
         slider->setSliderStyle (Slider::RotaryVerticalDrag);
@@ -56,6 +56,11 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& p)
         }
         addAndMakeVisible(comp);
     }
+
+	display.getValueCallback = [&]() -> float
+    {
+    	return p.getEnvelopeFollower().getValue();
+    };
 }
 
 Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
@@ -76,6 +81,7 @@ Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
 void Auto_AudioProcessorEditor::resized()
 {
     auto rect = getLocalBounds();
+
     auto topRect = rect.removeFromTop(300);
     display.setBounds(topRect);
 

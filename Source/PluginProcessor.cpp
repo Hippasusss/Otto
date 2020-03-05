@@ -12,15 +12,15 @@ Auto_AudioProcessor::Auto_AudioProcessor()
 		  .withOutput("Output", AudioChannelSet::stereo(), true)
 #endif
 	  ),
-inputGain(parameter_constants::INPUT_GAIN_ID, "In", NormalisableRange<float>(-30,30), 0),
-outputGain(parameter_constants::OUTPUT_GAIN_ID, "Out", NormalisableRange<float>(-30,30), 0),
-resonance(parameter_constants::RESONANCE_ID, "Res", NormalisableRange<float>(0,1), 0),
-frequency(parameter_constants::FREQUENCY_ID, "Freq", NormalisableRange<float>(20, 20000, 0.1f), 0.1),
-drive(parameter_constants::DRIVE_ID, "Drive", NormalisableRange<float>(1,10), 1),
-envAmount(parameter_constants::ENV_AMOUNT_ID, "Env Am", NormalisableRange<float>(0,1), 0),
-mix(parameter_constants::MIX_ID, "Mix", NormalisableRange<float>(0,1), 0),
-envSpeed(parameter_constants::ENV_SPEED_ID, "Env Speed", false),
-twoFourPole(parameter_constants::TWO_FOUR_POLE_ID, "2/4 Pole", false)
+	inputGain(parameter_constants::INPUT_GAIN_ID, "In", NormalisableRange<float>(-30,30), 0),
+	outputGain(parameter_constants::OUTPUT_GAIN_ID, "Out", NormalisableRange<float>(-30,30), 0),
+	resonance(parameter_constants::RESONANCE_ID, "Res", NormalisableRange<float>(0,1), 0),
+	frequency(parameter_constants::FREQUENCY_ID, "Freq", NormalisableRange<float>(20, 20000, 0.1f), 0.1),
+	drive(parameter_constants::DRIVE_ID, "Drive", NormalisableRange<float>(1,10), 1),
+	envAmount(parameter_constants::ENV_AMOUNT_ID, "Env Am", NormalisableRange<float>(0,1), 0),
+	mix(parameter_constants::MIX_ID, "Mix", NormalisableRange<float>(0,1), 0),
+	envSpeed(parameter_constants::ENV_SPEED_ID, "Env Speed", false),
+	twoFourPole(parameter_constants::TWO_FOUR_POLE_ID, "2/4 Pole", false)
 #endif
 {
 }
@@ -102,7 +102,7 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 
     //Register envelope follower callback to set frequency parameter.
     dsp::LadderFilter<float>& filter = chain.get<filterIndex>();
-	chain.get<followerIndex>().callback = [this, &filter ](const float value)
+	chain.get<followerIndex>().setParameterCallback = [&](const float value) 
 	{
         const float modulatedFrequency = jlimit<float>(0.1, 20000, this->frequency.get() + value * 20000);
         filter.setCutoffFrequencyHz(modulatedFrequency);
@@ -151,9 +151,14 @@ void Auto_AudioProcessor::buttonClicked(Button* button)
     }
 }
 
-const EnvelopeFollower& Auto_AudioProcessor::getEnvelopeFollowerReference() const
+const EnvelopeFollower& Auto_AudioProcessor::getEnvelopeFollower() const
 {
     return chain.get<followerIndex>();
+}
+
+const dsp::LadderFilter<float>& Auto_AudioProcessor::getLadderFilter() const
+{
+    return chain.get<filterIndex>();
 }
 
 void Auto_AudioProcessor::setParameter(const String& parameterID) 

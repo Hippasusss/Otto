@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    StackFIFO.h
+    RingBuffer.h
     Created: 4 Mar 2020 12:28:21am
     Author:  Danny Herbert
 
@@ -11,16 +11,16 @@
 #pragma once
 #include <array>
 template<typename arrayType, int size>
-class StackFIFO
+class RingBuffer
 {
 public:
-    StackFIFO();
+    RingBuffer();
 	void addValue(arrayType);
     int getSize() const;
     arrayType getValue(int i) const;
     arrayType operator[](int i);
 private:
-	std::array<arrayType, size> valueArray;
+	std::array<arrayType, size> valueArray {};
     int currentIndex;
     const int arraySize;
 };
@@ -28,12 +28,12 @@ private:
 //===============================================================================
 
 template <typename arrayType, int size>
-StackFIFO<arrayType, size>::StackFIFO(): currentIndex(0), arraySize(size)
+RingBuffer<arrayType, size>::RingBuffer(): currentIndex(0), arraySize(size)
 {
 }
 
 template <typename arrayType, int size>
-void StackFIFO<arrayType, size>::addValue(arrayType value)
+void RingBuffer<arrayType, size>::addValue(arrayType value)
 {
     valueArray[currentIndex] = value;
     ++currentIndex;
@@ -41,19 +41,19 @@ void StackFIFO<arrayType, size>::addValue(arrayType value)
 }
 
 template <typename arrayType, int size>
-int StackFIFO<arrayType, size>::getSize() const
+int RingBuffer<arrayType, size>::getSize() const
 {
     return arraySize;
 }
 
 template <typename arrayType, int size>
-arrayType StackFIFO<arrayType, size>::getValue(int i) const
+arrayType RingBuffer<arrayType, size>::getValue(int i) const
 {
     return valueArray[(i + currentIndex) % arraySize];
 }
 
 template <typename arrayType, int size>
-arrayType StackFIFO<arrayType, size>::operator[](int i)
+arrayType RingBuffer<arrayType, size>::operator[](int i)
 {
     return valueArray[i];
 }

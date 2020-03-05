@@ -11,25 +11,23 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "StackFIFO.h"
-
-//==============================================================================
-/*
-*/
+#include "RingBuffer.h"
 class GraphDisplay    : public Component,
 						public Timer
 {
 public:
-    GraphDisplay() = delete;
-    explicit GraphDisplay(const StackFIFO<float, 20>& fifoToDraw);
+	static const int RING_BUFFER_SIZE = 50;
+
+    GraphDisplay();
     ~GraphDisplay();
 
-    void paint (Graphics&) override;
-    void resized() override;
-    void updateListPointer(std::list<float>* list);
 
-     void timerCallback() override;
+    void paint (Graphics&) override;
+    void timerCallback() override;
+    std::function<float()>getValueCallback;
+
 private:
-    const StackFIFO<float, 20>& valuesToDraw;
+    RingBuffer<float, RING_BUFFER_SIZE> valuesToDraw;
+    float* valueOffset{};
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GraphDisplay)
 };
