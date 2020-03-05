@@ -53,6 +53,7 @@ void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& contex
     const float rate = average > value ? attackTime : releaseTime; 
     value += (blockTime / rate ) *  (average - value) * inputScaling;
     callback(value);
+    previousValues.addValue(value);
 }
 
 void EnvelopeFollower::reset()
@@ -77,4 +78,9 @@ void EnvelopeFollower::setAmount(float amount)
 float EnvelopeFollower::getValue() const
 {
     return value;
+}
+
+const StackFIFO<float, 20>& EnvelopeFollower::getFIFO() const
+{
+    return previousValues;
 }

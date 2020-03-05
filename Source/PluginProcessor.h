@@ -3,8 +3,8 @@
 #include "EnvelopeFollower.h"
 
 class Auto_AudioProcessor: public AudioProcessor,
-						   public Slider::Listener,
-						   public Button::Listener
+                           public Slider::Listener,
+                           public Button::Listener
 {
 public:
     Auto_AudioProcessor();
@@ -41,12 +41,15 @@ public:
     void sliderValueChanged(Slider* slider) override;
     void buttonClicked(Button*) override;
 
+
+	const EnvelopeFollower& getEnvelopeFollowerReference() const;
+
 private:
     const float slow = 40;
     const float fast = 10;
 
-	void setParameter(const String& parameterID);
-	void initaliseParameters();
+    void setParameter(const String& parameterID);
+    void initaliseParameters();
 
     enum processors
     {
@@ -56,23 +59,25 @@ private:
         outputGainIndex
     };
 
+    AudioParameterFloat inputGain;
+    AudioParameterFloat outputGain;
+    AudioParameterFloat resonance;
+    AudioParameterFloat frequency;
+    AudioParameterFloat drive;
+    AudioParameterFloat envAmount;
+    AudioParameterFloat mix;
+    AudioParameterBool envSpeed;
+    AudioParameterBool twoFourPole;
 
-	AudioParameterFloat inputGain;
-	AudioParameterFloat outputGain;
-	AudioParameterFloat resonance;
-	AudioParameterFloat frequency;
-	AudioParameterFloat drive;
-	AudioParameterFloat envAmount;
-	AudioParameterFloat mix;
-	AudioParameterBool envSpeed;
-	AudioParameterBool twoFourPole;
-
-	std::array<AudioParameterFloat*, 7> floatParameter {&inputGain, &outputGain, &resonance, 
-        &frequency, &drive, &envAmount, &mix};
+    std::array<AudioParameterFloat*, 7> floatParameter {&inputGain, &outputGain, &resonance, 
+														&frequency, &drive, &envAmount, &mix};
     std::array<AudioParameterBool*, 2> boolParameter {&envSpeed, &twoFourPole};
 
 
-    juce::dsp::ProcessorChain <dsp::Gain<float>, EnvelopeFollower,  dsp::LadderFilter<float>, dsp::Gain<float>> chain;
+    juce::dsp::ProcessorChain <dsp::Gain<float>,
+                               EnvelopeFollower,
+                               dsp::LadderFilter<float>,
+                               dsp::Gain<float>> chain;
 
    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Auto_AudioProcessor)

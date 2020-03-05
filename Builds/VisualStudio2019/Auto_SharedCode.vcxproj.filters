@@ -454,6 +454,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\StackFIFO.cpp">
+      <Filter>Auto\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GraphDisplay.cpp">
+      <Filter>Auto\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\EnvelopeFollower.cpp">
       <Filter>Auto\Source</Filter>
     </ClCompile>
@@ -2526,6 +2532,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\StackFIFO.h">
+      <Filter>Auto\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\GraphDisplay.h">
+      <Filter>Auto\Source</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\CustomLookAndFeel.h">
       <Filter>Auto\Source</Filter>
     </ClInclude>

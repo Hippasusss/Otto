@@ -3,6 +3,11 @@
 <JUCERPROJECT id="YSGQTv" name="Auto" projectType="audioplug" jucerVersion="5.4.7">
   <MAINGROUP id="vPwknA" name="Auto">
     <GROUP id="{62755887-84A8-E3C6-EC3D-D7338C224042}" name="Source">
+      <FILE id="XukOP2" name="StackFIFO.cpp" compile="1" resource="0" file="Source/StackFIFO.cpp"/>
+      <FILE id="Y8uo7V" name="StackFIFO.h" compile="0" resource="0" file="Source/StackFIFO.h"/>
+      <FILE id="pYgrCW" name="GraphDisplay.h" compile="0" resource="0" file="Source/GraphDisplay.h"/>
+      <FILE id="WuDCXs" name="GraphDisplay.cpp" compile="1" resource="0"
+            file="Source/GraphDisplay.cpp"/>
       <FILE id="zd3ATz" name="CustomLookAndFeel.h" compile="0" resource="0"
             file="Source/CustomLookAndFeel.h"/>
       <FILE id="kZtrtp" name="parameter_constants.h" compile="0" resource="0"

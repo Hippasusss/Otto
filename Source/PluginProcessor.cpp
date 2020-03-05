@@ -27,6 +27,7 @@ twoFourPole(parameter_constants::TWO_FOUR_POLE_ID, "2/4 Pole", false)
 
 Auto_AudioProcessor::~Auto_AudioProcessor() = default;
 
+
 const String Auto_AudioProcessor::getName() const
 {
     return JucePlugin_Name;
@@ -99,7 +100,7 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     initaliseParameters();
     chain.prepare(spec);
 
-    //Register envelope follower callback to set freqency parameter.
+    //Register envelope follower callback to set frequency parameter.
     dsp::LadderFilter<float>& filter = chain.get<filterIndex>();
 	chain.get<followerIndex>().callback = [this, &filter ](const float value)
 	{
@@ -113,7 +114,6 @@ void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& 
     ScopedNoDenormals noDenormals;
     auto block = dsp::AudioBlock<float>(buffer);
     const auto context = dsp::ProcessContextReplacing<float>(block);
-
     chain.process(context);
 }
 void Auto_AudioProcessor::releaseResources()
@@ -151,8 +151,14 @@ void Auto_AudioProcessor::buttonClicked(Button* button)
     }
 }
 
+const EnvelopeFollower& Auto_AudioProcessor::getEnvelopeFollowerReference() const
+{
+    return chain.get<followerIndex>();
+}
+
 void Auto_AudioProcessor::setParameter(const String& parameterID) 
 {
+    //TODO:ew
     if(parameterID == parameter_constants::INPUT_GAIN_ID)
     {
 		chain.get<inputGainIndex>().setGainDecibels(inputGain);
@@ -215,13 +221,10 @@ bool Auto_AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) co
     ignoreUnused (layouts);
     return true;
   #else
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
     if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
      && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
         return false;
 
-    // This checks if the input layout matches the output layout
    #if ! JucePlugin_IsSynth
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;
@@ -233,10 +236,9 @@ bool Auto_AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) co
 #endif
 
 
-//==============================================================================
 bool Auto_AudioProcessor::hasEditor() const
 {
-    return true; // (change this to false if you choose to not supply an editor)
+    return true;
 }
 
 AudioProcessorEditor* Auto_AudioProcessor::createEditor()
@@ -244,23 +246,14 @@ AudioProcessorEditor* Auto_AudioProcessor::createEditor()
     return new Auto_AudioProcessorEditor (*this);
 }
 
-//==============================================================================
 void Auto_AudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
 }
 
 void Auto_AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
 }
 
-
-//==============================================================================
-// This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new Auto_AudioProcessor();

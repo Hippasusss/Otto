@@ -15,7 +15,9 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& p)
     outputGain("Out", parameter_constants::OUTPUT_GAIN_ID),
     envSpeed("Env Speed", parameter_constants::ENV_SPEED_ID),
     twoFourPole("2/4 Pole", parameter_constants::TWO_FOUR_POLE_ID),
-    parameterGroup("parameterGroup")
+    parameterGroup("parameterGroup"),
+	display(p.getEnvelopeFollowerReference().getFIFO())
+    
 {
     setLookAndFeel(&lookAndFeel);
     setSize (800, 400);
@@ -33,8 +35,8 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& p)
     drive.setRange(Range<double>(1, 10), 0.1);
     resonance.setRange(Range<double>(0.0, 1.0), 0.001);
 
-    frequency.setRange(Range<double>(20, 20000), 0.1);
-    frequency.setSkewFactorFromMidPoint(2000);
+    frequency.setRange(Range<double>(20, 20000), 0.001);
+    frequency.setSkewFactorFromMidPoint(500);
 	frequency.setValue(1000.0f);
 
 	mix.setValue(1.0f);
@@ -75,6 +77,7 @@ void Auto_AudioProcessorEditor::resized()
 {
     auto rect = getLocalBounds();
     auto topRect = rect.removeFromTop(300);
+    display.setBounds(topRect);
 
     parameterGroup.setBounds(rect);
     auto tempRect = rect;
