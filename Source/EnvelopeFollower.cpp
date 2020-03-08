@@ -14,7 +14,7 @@
 EnvelopeFollower::EnvelopeFollower(): 
     sampleRate(44100),
 	numChannels(2),
-	blockSize(0),
+	maxBlockSize(0),
 	blockTime(0),
 	value(0),
 	inputScaling(0),
@@ -30,14 +30,16 @@ void EnvelopeFollower::prepare(const dsp::ProcessSpec& spec)
 {
     numChannels = spec.numChannels;
     sampleRate = spec.sampleRate;
-    blockSize = spec.maximumBlockSize;
-    blockTime = blockSize / sampleRate * 1000.0f; 
+    maxBlockSize = spec.maximumBlockSize;
+    blockTime = maxBlockSize / sampleRate * 1000.0f; 
 }
 
 void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& context) 
 {
 	float sum {0};
     const auto& block = context.getInputBlock();
+    const auto blockSize = context.getInputBlock().getNumSamples();
+    jassert(blockSize <= maxBlockSize);
 
     for(auto i = 0; i < numChannels; ++i)
     {
@@ -51,7 +53,7 @@ void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& contex
 	const float average = sum / (blockSize * numChannels);
     const float rate = average > value ? attackTime : releaseTime; 
     value += (blockTime / rate ) *  (average - value) * inputScaling;
-    setParameterCallback(value);
+    if(setParameterCallback != nullptr) setParameterCallback(value);
 }
 
 void EnvelopeFollower::reset()

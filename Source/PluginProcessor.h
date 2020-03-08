@@ -1,6 +1,8 @@
 #pragma once
 #include <JuceHeader.h>
 #include "EnvelopeFollower.h"
+#include "BufferStore.h"
+#include "Mixer.h"
 
 class Auto_AudioProcessor: public AudioProcessor,
                            public Slider::Listener,
@@ -56,8 +58,10 @@ private:
     enum processors
     {
         inputGainIndex,
+        bufferStoreIndex,
         followerIndex,
         filterIndex,
+        mixerIndex,
         outputGainIndex
     };
 
@@ -72,12 +76,14 @@ private:
     AudioParameterBool twoFourPole;
 
     std::array<AudioParameterFloat*, 7> floatParameter {&inputGain, &outputGain, &resonance, 
-														&frequency, &drive, &envAmount, &mix};
+                                                        &frequency, &drive, &envAmount, &mix};
     std::array<AudioParameterBool*, 2> boolParameter {&envSpeed, &twoFourPole};
 
     juce::dsp::ProcessorChain <dsp::Gain<float>,
+                               BufferStore,
                                EnvelopeFollower,
                                dsp::LadderFilter<float>,
+                               Mixer,
                                dsp::Gain<float>> chain;
 
 

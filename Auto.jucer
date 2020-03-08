@@ -12,10 +12,14 @@
               file="Source/parameter_constants.h"/>
       </GROUP>
       <GROUP id="{6EE6EECB-F0FA-67C5-6ED4-12606B817D60}" name="DSP">
+        <FILE id="oFObIn" name="BufferStore.cpp" compile="1" resource="0" file="Source/BufferStore.cpp"/>
+        <FILE id="pDaUvq" name="BufferStore.h" compile="0" resource="0" file="Source/BufferStore.h"/>
         <FILE id="vAvhHS" name="EnvelopeFollower.cpp" compile="1" resource="0"
               file="Source/EnvelopeFollower.cpp"/>
         <FILE id="rRMgJd" name="EnvelopeFollower.h" compile="0" resource="0"
               file="Source/EnvelopeFollower.h"/>
+        <FILE id="Hbl4XR" name="Mixer.cpp" compile="1" resource="0" file="Source/Mixer.cpp"/>
+        <FILE id="Din5QH" name="Mixer.h" compile="0" resource="0" file="Source/Mixer.h"/>
       </GROUP>
       <GROUP id="{5C837F25-B0D1-9AE4-9897-114DE1C33272}" name="Components">
         <FILE id="pYgrCW" name="GraphDisplay.h" compile="0" resource="0" file="Source/GraphDisplay.h"/>

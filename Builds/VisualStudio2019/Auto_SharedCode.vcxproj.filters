@@ -469,7 +469,13 @@
     <ClCompile Include="..\..\Source\RingBuffer.cpp">
       <Filter>Auto\Source\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\BufferStore.cpp">
+      <Filter>Auto\Source\DSP</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\EnvelopeFollower.cpp">
+      <Filter>Auto\Source\DSP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Mixer.cpp">
       <Filter>Auto\Source\DSP</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\GraphDisplay.cpp">
@@ -2553,7 +2559,13 @@
     <ClInclude Include="..\..\Source\parameter_constants.h">
       <Filter>Auto\Source\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\BufferStore.h">
+      <Filter>Auto\Source\DSP</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\EnvelopeFollower.h">
+      <Filter>Auto\Source\DSP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Mixer.h">
       <Filter>Auto\Source\DSP</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\GraphDisplay.h">

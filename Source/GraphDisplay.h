@@ -28,6 +28,6 @@ public:
 
 private:
     RingBuffer<float, RING_BUFFER_SIZE> valuesToDraw;
-    float* valueOffset{};
+    float valueOffset;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GraphDisplay)
 };

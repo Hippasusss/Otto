@@ -30,8 +30,8 @@ public:
 
 private:
     double sampleRate;
-    int numChannels;
-    int blockSize;
+    unsigned int numChannels;
+    unsigned int maxBlockSize;
     float blockTime;
 
     float value;

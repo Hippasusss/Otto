@@ -100,11 +100,13 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     initaliseParameters();
     chain.prepare(spec);
 
+	chain.get<mixerIndex>().setOtherBlock(chain.get<bufferStoreIndex>().getAudioBlockPointer());
+
     //Register envelope follower callback to set frequency parameter.
     dsp::LadderFilter<float>& filter = chain.get<filterIndex>();
 	chain.get<followerIndex>().setParameterCallback = [&](const float value) 
 	{
-        const float modulatedFrequency = jlimit<float>(0.1, 20000, this->frequency.get() + value * 20000);
+        const auto modulatedFrequency = jlimit<float>(0.1, 20000, this->frequency.get() + value * 20000);
         filter.setCutoffFrequencyHz(modulatedFrequency);
 	};
 }
@@ -124,7 +126,7 @@ void Auto_AudioProcessor::releaseResources()
 void Auto_AudioProcessor::sliderValueChanged(Slider* slider)
 {
 	const String& ID = slider->getComponentID();
-	const float value = static_cast<float>(slider->getValue());
+	const auto value = static_cast<float>(slider->getValue());
     for(auto floatParam : floatParameter)
     {
         if(floatParam->paramID == ID)
@@ -199,6 +201,10 @@ void Auto_AudioProcessor::setParameter(const String& parameterID)
     else if(parameterID == parameter_constants::OUTPUT_GAIN_ID)
     {
 		chain.get<outputGainIndex>().setGainDecibels(outputGain);
+    }
+    else if(parameterID == parameter_constants::MIX_ID)
+    {
+		chain.get<mixerIndex>().setMix(mix);
     }
 }
 
