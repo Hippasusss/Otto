@@ -26,19 +26,18 @@ public:
     void setRelease(float milliseconds);
     void setAmount(float amount);
     float getValue() const;
-    std::function<void(float)> callback;
+    std::function<void(float)> setParameterCallback;
 
 private:
     double sampleRate;
-    int numChannels;
-    int blockSize;
+    unsigned int numChannels;
+    unsigned int maxBlockSize;
     float blockTime;
 
     float value;
     float inputScaling;
     float attackTime, releaseTime;
 
-    SmoothedValue<float, ValueSmoothingTypes::Linear> smoothedValue;
 
 };
 

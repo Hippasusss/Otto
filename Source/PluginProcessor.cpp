@@ -12,20 +12,21 @@ Auto_AudioProcessor::Auto_AudioProcessor()
 		  .withOutput("Output", AudioChannelSet::stereo(), true)
 #endif
 	  ),
-inputGain(parameter_constants::INPUT_GAIN_ID, "In", NormalisableRange<float>(-30,30), 0),
-outputGain(parameter_constants::OUTPUT_GAIN_ID, "Out", NormalisableRange<float>(-30,30), 0),
-resonance(parameter_constants::RESONANCE_ID, "Res", NormalisableRange<float>(0,1), 0),
-frequency(parameter_constants::FREQUENCY_ID, "Freq", NormalisableRange<float>(20, 20000, 0.1f), 0.1),
-drive(parameter_constants::DRIVE_ID, "Drive", NormalisableRange<float>(1,10), 1),
-envAmount(parameter_constants::ENV_AMOUNT_ID, "Env Am", NormalisableRange<float>(0,1), 0),
-mix(parameter_constants::MIX_ID, "Mix", NormalisableRange<float>(0,1), 0),
-envSpeed(parameter_constants::ENV_SPEED_ID, "Env Speed", false),
-twoFourPole(parameter_constants::TWO_FOUR_POLE_ID, "2/4 Pole", false)
+	inputGain(parameter_constants::INPUT_GAIN_ID, "In", NormalisableRange<float>(-30,30), 0),
+	outputGain(parameter_constants::OUTPUT_GAIN_ID, "Out", NormalisableRange<float>(-30,30), 0),
+	resonance(parameter_constants::RESONANCE_ID, "Res", NormalisableRange<float>(0,1), 0),
+	frequency(parameter_constants::FREQUENCY_ID, "Freq", NormalisableRange<float>(20, 20000, 0.1f), 0.1),
+	drive(parameter_constants::DRIVE_ID, "Drive", NormalisableRange<float>(1,10), 1),
+	envAmount(parameter_constants::ENV_AMOUNT_ID, "Env Am", NormalisableRange<float>(0,1), 0),
+	mix(parameter_constants::MIX_ID, "Mix", NormalisableRange<float>(0,1), 0),
+	envSpeed(parameter_constants::ENV_SPEED_ID, "Env Speed", false),
+	twoFourPole(parameter_constants::TWO_FOUR_POLE_ID, "2/4 Pole", false)
 #endif
 {
 }
 
 Auto_AudioProcessor::~Auto_AudioProcessor() = default;
+
 
 const String Auto_AudioProcessor::getName() const
 {
@@ -99,11 +100,13 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     initaliseParameters();
     chain.prepare(spec);
 
-    //Register envelope follower callback to set freqency parameter.
+	chain.get<mixerIndex>().setOtherBlock(chain.get<bufferStoreIndex>().getAudioBlockPointer());
+
+    //Register envelope follower callback to set frequency parameter.
     dsp::LadderFilter<float>& filter = chain.get<filterIndex>();
-	chain.get<followerIndex>().callback = [this, &filter ](const float value)
+	chain.get<followerIndex>().setParameterCallback = [&](const float value) 
 	{
-        const float modulatedFrequency = jlimit<float>(0.1, 20000, this->frequency.get() + value * 20000);
+        const auto modulatedFrequency = jlimit<float>(0.1, 20000, this->frequency.get() + value * 20000);
         filter.setCutoffFrequencyHz(modulatedFrequency);
 	};
 }
@@ -113,7 +116,6 @@ void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& 
     ScopedNoDenormals noDenormals;
     auto block = dsp::AudioBlock<float>(buffer);
     const auto context = dsp::ProcessContextReplacing<float>(block);
-
     chain.process(context);
 }
 void Auto_AudioProcessor::releaseResources()
@@ -124,7 +126,7 @@ void Auto_AudioProcessor::releaseResources()
 void Auto_AudioProcessor::sliderValueChanged(Slider* slider)
 {
 	const String& ID = slider->getComponentID();
-	const float value = static_cast<float>(slider->getValue());
+	const auto value = static_cast<float>(slider->getValue());
     for(auto floatParam : floatParameter)
     {
         if(floatParam->paramID == ID)
@@ -151,8 +153,19 @@ void Auto_AudioProcessor::buttonClicked(Button* button)
     }
 }
 
+const EnvelopeFollower& Auto_AudioProcessor::getEnvelopeFollower() const
+{
+    return chain.get<followerIndex>();
+}
+
+const dsp::LadderFilter<float>& Auto_AudioProcessor::getLadderFilter() const
+{
+    return chain.get<filterIndex>();
+}
+
 void Auto_AudioProcessor::setParameter(const String& parameterID) 
 {
+    //TODO:ew
     if(parameterID == parameter_constants::INPUT_GAIN_ID)
     {
 		chain.get<inputGainIndex>().setGainDecibels(inputGain);
@@ -189,6 +202,10 @@ void Auto_AudioProcessor::setParameter(const String& parameterID)
     {
 		chain.get<outputGainIndex>().setGainDecibels(outputGain);
     }
+    else if(parameterID == parameter_constants::MIX_ID)
+    {
+		chain.get<mixerIndex>().setMix(mix);
+    }
 }
 
 void Auto_AudioProcessor::initaliseParameters()
@@ -215,13 +232,10 @@ bool Auto_AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) co
     ignoreUnused (layouts);
     return true;
   #else
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
     if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
      && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
         return false;
 
-    // This checks if the input layout matches the output layout
    #if ! JucePlugin_IsSynth
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;
@@ -233,10 +247,9 @@ bool Auto_AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) co
 #endif
 
 
-//==============================================================================
 bool Auto_AudioProcessor::hasEditor() const
 {
-    return true; // (change this to false if you choose to not supply an editor)
+    return true;
 }
 
 AudioProcessorEditor* Auto_AudioProcessor::createEditor()
@@ -244,23 +257,14 @@ AudioProcessorEditor* Auto_AudioProcessor::createEditor()
     return new Auto_AudioProcessorEditor (*this);
 }
 
-//==============================================================================
 void Auto_AudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
 }
 
 void Auto_AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
 }
 
-
-//==============================================================================
-// This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new Auto_AudioProcessor();

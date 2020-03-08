@@ -4,6 +4,7 @@
 #include "PluginProcessor.h"
 #include "LabeledSlider.h"
 #include "CustomLookAndFeel.h"
+#include "GraphDisplay.h"
 
 class Auto_AudioProcessorEditor  : public AudioProcessorEditor
 {
@@ -28,10 +29,11 @@ private:
     ToggleButton envSpeed;
     ToggleButton twoFourPole;
     GroupComponent parameterGroup;
+    GraphDisplay display;
 
     
-    std::array<Component*, 10> components {&inputGain, &drive, &envAmount, &frequency, 
-        &resonance, &mix, &outputGain, &envSpeed, &twoFourPole, &parameterGroup};
+    std::array<Component*, 11> components {&inputGain, &drive, &envAmount, &frequency, 
+        &resonance, &mix, &outputGain, &envSpeed, &twoFourPole, &parameterGroup, &display};
     std::array<LabeledSlider*, 7> sliders {&inputGain, &drive, &envAmount, &frequency, 
         &resonance, &mix, &outputGain};
     std::array<ToggleButton*, 2> buttons{&envSpeed, &twoFourPole};

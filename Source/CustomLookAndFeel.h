@@ -84,7 +84,7 @@ private:
 	const Colour backgroundColour {Colours::white};
 	
     template<typename T>
-    Rectangle<T>&& getLocalComponentArea(Component& component)
+    Rectangle<T>&& getLocalComponentArea(const Component& component)
     {
         const int width = component.getBounds().getWidth();
         const int height = component.getBounds().getHeight();
