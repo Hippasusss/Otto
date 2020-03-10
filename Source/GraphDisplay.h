@@ -21,10 +21,10 @@ public:
     GraphDisplay();
     ~GraphDisplay();
 
-
     void paint (Graphics&) override;
     void timerCallback() override;
     std::function<float()>getValueCallback;
+    std::function<float()>getValueOffsetCallback;
 
 private:
     RingBuffer<float, RING_BUFFER_SIZE> valuesToDraw;

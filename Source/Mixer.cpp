@@ -35,7 +35,7 @@ void Mixer::process(const dsp::ProcessContextReplacing<float>& context)
         const auto otherChan = otherBlock->getChannelPointer(i);
 		for(auto j = 0; j < blockSize; ++j)
 		{
-            outChan[j] = (outChan[j] * mix + otherChan[j] *(1 - mix)) / numChannels;
+            outChan[j] = (outChan[j] * mix + otherChan[j] *(1 - mix));
 		}
 	}
 }

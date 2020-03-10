@@ -2,6 +2,7 @@
 #include <JuceHeader.h>
 #include "EnvelopeFollower.h"
 #include "BufferStore.h"
+#include "Meter.h"
 #include "Mixer.h"
 
 class Auto_AudioProcessor: public AudioProcessor,
@@ -44,6 +45,8 @@ public:
     void buttonClicked(Button*) override;
     const EnvelopeFollower& getEnvelopeFollower() const;
     const dsp::LadderFilter<float>& getLadderFilter() const;
+     Meter* getInputMeter();
+     Meter* getOutputMeter();
 
 
 
@@ -59,10 +62,12 @@ private:
     {
         inputGainIndex,
         bufferStoreIndex,
+        inputMeterIndex,
         followerIndex,
         filterIndex,
         mixerIndex,
-        outputGainIndex
+        outputGainIndex,
+        outputMeterIndex
     };
 
     AudioParameterFloat inputGain;
@@ -81,10 +86,12 @@ private:
 
     juce::dsp::ProcessorChain <dsp::Gain<float>,
                                BufferStore,
+							   Meter, 
                                EnvelopeFollower,
                                dsp::LadderFilter<float>,
                                Mixer,
-                               dsp::Gain<float>> chain;
+                               dsp::Gain<float>,
+							   Meter> chain;
 
 
    

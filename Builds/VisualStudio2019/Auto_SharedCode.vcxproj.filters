@@ -466,7 +466,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\RingBuffer.cpp">
+    <ClCompile Include="..\..\Source\LevelValue.cpp">
       <Filter>Auto\Source\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\BufferStore.cpp">
@@ -475,8 +475,14 @@
     <ClCompile Include="..\..\Source\EnvelopeFollower.cpp">
       <Filter>Auto\Source\DSP</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Meter.cpp">
+      <Filter>Auto\Source\DSP</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Mixer.cpp">
       <Filter>Auto\Source\DSP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\MeterDisplay.cpp">
+      <Filter>Auto\Source\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\GraphDisplay.cpp">
       <Filter>Auto\Source\Components</Filter>
@@ -2550,13 +2556,22 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\LevelValue.h">
+      <Filter>Auto\Source\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\ValueSmoother.h">
+      <Filter>Auto\Source\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Constants.h">
+      <Filter>Auto\Source\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Helpers.h">
+      <Filter>Auto\Source\Utils</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\RingBuffer.h">
       <Filter>Auto\Source\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\CustomLookAndFeel.h">
-      <Filter>Auto\Source\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\parameter_constants.h">
       <Filter>Auto\Source\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\BufferStore.h">
@@ -2565,8 +2580,14 @@
     <ClInclude Include="..\..\Source\EnvelopeFollower.h">
       <Filter>Auto\Source\DSP</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Meter.h">
+      <Filter>Auto\Source\DSP</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\Mixer.h">
       <Filter>Auto\Source\DSP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\MeterDisplay.h">
+      <Filter>Auto\Source\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\GraphDisplay.h">
       <Filter>Auto\Source\Components</Filter>

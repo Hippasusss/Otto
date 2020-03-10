@@ -1,6 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "parameter_constants.h"
+#include "Constants.h"
 
 Auto_AudioProcessor::Auto_AudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -26,6 +26,7 @@ Auto_AudioProcessor::Auto_AudioProcessor()
 }
 
 Auto_AudioProcessor::~Auto_AudioProcessor() = default;
+
 
 
 const String Auto_AudioProcessor::getName() const
@@ -95,20 +96,24 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 										static_cast<uint32>(samplesPerBlock),
 										static_cast<uint32>(getTotalNumInputChannels())};
 
+    // Avoid clicks during gain parameter change
 	chain.get<outputGainIndex>().setRampDurationSeconds(0.1);
 	chain.get<inputGainIndex>().setRampDurationSeconds(0.1);
-    initaliseParameters();
-    chain.prepare(spec);
 
+    // Set source for dry buffer of mix control
 	chain.get<mixerIndex>().setOtherBlock(chain.get<bufferStoreIndex>().getAudioBlockPointer());
 
-    //Register envelope follower callback to set frequency parameter.
+    // Register envelope follower callback to set frequency parameter when running.
     dsp::LadderFilter<float>& filter = chain.get<filterIndex>();
 	chain.get<followerIndex>().setParameterCallback = [&](const float value) 
 	{
         const auto modulatedFrequency = jlimit<float>(0.1, 20000, this->frequency.get() + value * 20000);
         filter.setCutoffFrequencyHz(modulatedFrequency);
 	};
+
+    //initalise
+    initaliseParameters();
+    chain.prepare(spec);
 }
 
 void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
@@ -118,6 +123,7 @@ void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& 
     const auto context = dsp::ProcessContextReplacing<float>(block);
     chain.process(context);
 }
+
 void Auto_AudioProcessor::releaseResources()
 {
     chain.reset();
@@ -127,6 +133,7 @@ void Auto_AudioProcessor::sliderValueChanged(Slider* slider)
 {
 	const String& ID = slider->getComponentID();
 	const auto value = static_cast<float>(slider->getValue());
+
     for(auto floatParam : floatParameter)
     {
         if(floatParam->paramID == ID)
@@ -142,6 +149,7 @@ void Auto_AudioProcessor::buttonClicked(Button* button)
 {
     const String& ID = button->getComponentID();
     const bool value = button->getToggleState();
+	
     for(auto boolParam : boolParameter)
     {
         if(boolParam->paramID == ID)
@@ -162,6 +170,17 @@ const dsp::LadderFilter<float>& Auto_AudioProcessor::getLadderFilter() const
 {
     return chain.get<filterIndex>();
 }
+
+Meter* Auto_AudioProcessor::getInputMeter() 
+{
+    return &chain.get<inputMeterIndex>();
+}
+
+Meter* Auto_AudioProcessor::getOutputMeter() 
+{
+    return &chain.get<outputMeterIndex>();
+}
+
 
 void Auto_AudioProcessor::setParameter(const String& parameterID) 
 {

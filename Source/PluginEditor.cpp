@@ -1,7 +1,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "LabeledSlider.h"
-#include "parameter_constants.h"
+#include "Constants.h"
 
 Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& p)
     : AudioProcessorEditor (&p), 
@@ -16,12 +16,13 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& p)
     envSpeed("Env Speed", parameter_constants::ENV_SPEED_ID),
     twoFourPole("2/4 Pole", parameter_constants::TWO_FOUR_POLE_ID),
     parameterGroup("parameterGroup"),
-	display()
+	inputMeter(p.getInputMeter()),
+	outputMeter(p.getOutputMeter())
 {
     setLookAndFeel(&lookAndFeel);
-    setSize (800, 400);
+    setSize (800, 300);
 
-    for(auto slider : sliders)
+    for(auto& slider : sliders)
     {
         slider->setSliderStyle (Slider::RotaryVerticalDrag);
         slider->setRange(0, 1.0, 0.01);
@@ -41,14 +42,13 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& p)
 
 	mix.setValue(1.0f);
 
-
-    for(auto button : buttons)
+    for(auto& button : buttons)
     {
         button->setButtonText(button->getName());
         button->addListener(&processor);
     }
 
-    for(auto comp : components)
+    for(auto& comp : components)
     {
         if(comp != &parameterGroup)
         {
@@ -56,16 +56,28 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& p)
         }
         addAndMakeVisible(comp);
     }
+    for(auto& slider : sliders)
+    {
+	    slider->getSliderValueLabel().setVisible(false);
+    }
 
 	display.getValueCallback = [&]() -> float
     {
     	return p.getEnvelopeFollower().getValue();
     };
+
+	display.getValueOffsetCallback = [&]() -> float
+    {
+    	return frequency.getValue();
+    };
+
+	inputMeter.setMeter(p.getInputMeter());
+	outputMeter.setMeter(p.getOutputMeter());
+
 }
 
 Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
 {
-	
     setLookAndFeel(nullptr);
     for(auto slider : sliders)
     {
@@ -82,7 +94,10 @@ void Auto_AudioProcessorEditor::resized()
 {
     auto rect = getLocalBounds();
 
-    auto topRect = rect.removeFromTop(300);
+    auto topRect = rect.removeFromTop(200).reduced(5,1);
+    topRect.removeFromTop(4);
+    inputMeter.setBounds(topRect.removeFromLeft(20));
+    outputMeter.setBounds(topRect.removeFromRight(20));
     display.setBounds(topRect);
 
     parameterGroup.setBounds(rect);
@@ -91,7 +106,7 @@ void Auto_AudioProcessorEditor::resized()
     {
         tempRect = rect.removeFromLeft(100);
         slider->setBounds(tempRect.removeFromTop(80).reduced(11));
-        slider->getSliderLabel().setBounds(tempRect.translated(0,-3));
+        slider->getSliderNameLabel().setBounds(tempRect.translated(0,-3));
     }
 
     tempRect = rect.removeFromLeft(100);

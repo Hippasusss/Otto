@@ -10,6 +10,7 @@
 
 #include "EnvelopeFollower.h"
 #include "JuceHeader.h"
+#include "Helpers.h"
 
 EnvelopeFollower::EnvelopeFollower(): 
     sampleRate(44100),
@@ -36,21 +37,8 @@ void EnvelopeFollower::prepare(const dsp::ProcessSpec& spec)
 
 void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& context) 
 {
-	float sum {0};
     const auto& block = context.getInputBlock();
-    const auto blockSize = context.getInputBlock().getNumSamples();
-    jassert(blockSize <= maxBlockSize);
-
-    for(auto i = 0; i < numChannels; ++i)
-    {
-	    const auto chan = block.getChannelPointer(i);
-        for(auto j = 0; j < blockSize; ++j)
-        {
-	        sum += abs(chan[j]);
-        }
-    }
-
-	const float average = sum / (blockSize * numChannels);
+	const float average = Helpers::getAverageValue(block);
     const float rate = average > value ? attackTime : releaseTime; 
     value += (blockTime / rate ) *  (average - value) * inputScaling;
     if(setParameterCallback != nullptr) setParameterCallback(value);

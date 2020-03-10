@@ -23,3 +23,7 @@ namespace parameter_constants
 	const String TWO_FOUR_POLE_ID = "twoFourPole";
 	const String ENV_AMOUNT_ID = "envAmount";
 }
+namespace timer_constants 
+{
+	const int REFRESH_RATE = 60;
+}

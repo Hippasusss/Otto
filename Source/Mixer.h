@@ -8,7 +8,6 @@
   ==============================================================================
 */
 #include "JuceHeader.h"
-
 #pragma once
 class Mixer : dsp::ProcessorBase
 {

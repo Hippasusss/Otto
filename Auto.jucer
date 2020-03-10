@@ -4,12 +4,14 @@
   <MAINGROUP id="vPwknA" name="Auto">
     <GROUP id="{62755887-84A8-E3C6-EC3D-D7338C224042}" name="Source">
       <GROUP id="{AA83E59E-A34E-D4E2-1326-C1725F24E20A}" name="Utils">
-        <FILE id="XzHTVA" name="RingBuffer.cpp" compile="1" resource="0" file="Source/RingBuffer.cpp"/>
+        <FILE id="fJdt4M" name="LevelValue.cpp" compile="1" resource="0" file="Source/LevelValue.cpp"/>
+        <FILE id="vvQf06" name="LevelValue.h" compile="0" resource="0" file="Source/LevelValue.h"/>
+        <FILE id="iPXHiu" name="ValueSmoother.h" compile="0" resource="0" file="Source/ValueSmoother.h"/>
+        <FILE id="vNFLIQ" name="Constants.h" compile="0" resource="0" file="Source/Constants.h"/>
+        <FILE id="IhPtD0" name="Helpers.h" compile="0" resource="0" file="Source/Helpers.h"/>
         <FILE id="S8BKIO" name="RingBuffer.h" compile="0" resource="0" file="Source/RingBuffer.h"/>
         <FILE id="zd3ATz" name="CustomLookAndFeel.h" compile="0" resource="0"
               file="Source/CustomLookAndFeel.h"/>
-        <FILE id="kZtrtp" name="parameter_constants.h" compile="0" resource="0"
-              file="Source/parameter_constants.h"/>
       </GROUP>
       <GROUP id="{6EE6EECB-F0FA-67C5-6ED4-12606B817D60}" name="DSP">
         <FILE id="oFObIn" name="BufferStore.cpp" compile="1" resource="0" file="Source/BufferStore.cpp"/>
@@ -18,10 +20,15 @@
               file="Source/EnvelopeFollower.cpp"/>
         <FILE id="rRMgJd" name="EnvelopeFollower.h" compile="0" resource="0"
               file="Source/EnvelopeFollower.h"/>
+        <FILE id="ok6rso" name="Meter.cpp" compile="1" resource="0" file="Source/Meter.cpp"/>
+        <FILE id="iyJOOl" name="Meter.h" compile="0" resource="0" file="Source/Meter.h"/>
         <FILE id="Hbl4XR" name="Mixer.cpp" compile="1" resource="0" file="Source/Mixer.cpp"/>
         <FILE id="Din5QH" name="Mixer.h" compile="0" resource="0" file="Source/Mixer.h"/>
       </GROUP>
       <GROUP id="{5C837F25-B0D1-9AE4-9897-114DE1C33272}" name="Components">
+        <FILE id="kX1FSF" name="MeterDisplay.cpp" compile="1" resource="0"
+              file="Source/MeterDisplay.cpp"/>
+        <FILE id="P0p0nX" name="MeterDisplay.h" compile="0" resource="0" file="Source/MeterDisplay.h"/>
         <FILE id="pYgrCW" name="GraphDisplay.h" compile="0" resource="0" file="Source/GraphDisplay.h"/>
         <FILE id="WuDCXs" name="GraphDisplay.cpp" compile="1" resource="0"
               file="Source/GraphDisplay.cpp"/>

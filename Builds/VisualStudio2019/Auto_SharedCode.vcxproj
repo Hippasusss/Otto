@@ -136,10 +136,12 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\RingBuffer.cpp"/>
+    <ClCompile Include="..\..\Source\LevelValue.cpp"/>
     <ClCompile Include="..\..\Source\BufferStore.cpp"/>
     <ClCompile Include="..\..\Source\EnvelopeFollower.cpp"/>
+    <ClCompile Include="..\..\Source\Meter.cpp"/>
     <ClCompile Include="..\..\Source\Mixer.cpp"/>
+    <ClCompile Include="..\..\Source\MeterDisplay.cpp"/>
     <ClCompile Include="..\..\Source\GraphDisplay.cpp"/>
     <ClCompile Include="..\..\Source\LabeledSlider.cpp"/>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp"/>
@@ -2048,12 +2050,17 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_opengl.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\LevelValue.h"/>
+    <ClInclude Include="..\..\Source\ValueSmoother.h"/>
+    <ClInclude Include="..\..\Source\Constants.h"/>
+    <ClInclude Include="..\..\Source\Helpers.h"/>
     <ClInclude Include="..\..\Source\RingBuffer.h"/>
     <ClInclude Include="..\..\Source\CustomLookAndFeel.h"/>
-    <ClInclude Include="..\..\Source\parameter_constants.h"/>
     <ClInclude Include="..\..\Source\BufferStore.h"/>
     <ClInclude Include="..\..\Source\EnvelopeFollower.h"/>
+    <ClInclude Include="..\..\Source\Meter.h"/>
     <ClInclude Include="..\..\Source\Mixer.h"/>
+    <ClInclude Include="..\..\Source\MeterDisplay.h"/>
     <ClInclude Include="..\..\Source\GraphDisplay.h"/>
     <ClInclude Include="..\..\Source\LabeledSlider.h"/>
     <ClInclude Include="..\..\Source\PluginProcessor.h"/>
