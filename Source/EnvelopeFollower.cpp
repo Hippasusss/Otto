@@ -35,13 +35,22 @@ void EnvelopeFollower::prepare(const dsp::ProcessSpec& spec)
     blockTime = maxBlockSize / sampleRate * 1000.0f; 
 }
 
+//TODO: release not recovering when Env amount at 0
 void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& context) 
 {
     const auto& block = context.getInputBlock();
 	const float average = Helpers::getAverageValue(block);
-    const float rate = average > value ? attackTime : releaseTime; 
-    value += (blockTime / rate ) *  (average - value) * amount;
-    if(onValueCalculated) onValueCalculated(value);
+    bool attackRelease = average > value ? true : false; 
+    if(attackRelease)
+    {
+		value += (blockTime / attackTime) *  (average * amount - value) ;
+		if(onValueCalculated) onValueCalculated(value);
+    }
+    else
+    {
+		value += (blockTime / releaseTime) *  (average * amount - value);
+		if(onValueCalculated) onValueCalculated(value);
+    }
 }
 
 void EnvelopeFollower::reset()
@@ -58,9 +67,9 @@ void EnvelopeFollower::setRelease(const float milliseconds)
     releaseTime = milliseconds;
 }
 
-void EnvelopeFollower::setAmount(float amount)
+void EnvelopeFollower::setAmount(float newAmount)
 {
-    amount = amount;
+    amount = newAmount;
 }
 
 float EnvelopeFollower::getValue() const

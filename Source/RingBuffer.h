@@ -9,18 +9,19 @@
 */
 
 #pragma once
-#include <array>
+//TODO: heap allocate if needed?
+//TODO: Look into someone else's implementation of this. Should Read Backwards?
 template<typename arrayType, int size>
 class RingBuffer
 {
 public:
     RingBuffer();
 	void addValue(arrayType);
-    int getSize() const;
-    arrayType getValue(int i) const;
-    arrayType operator[](int i);
+    size_t getSize() const;
+    arrayType getValue(size_t i) const;
+    arrayType operator[](size_t i);
 private:
-	std::array<arrayType, size> valueArray {};
+	arrayType valueArray[size] {};
     int currentIndex;
     const int arraySize;
 };
@@ -41,19 +42,19 @@ void RingBuffer<arrayType, size>::addValue(arrayType value)
 }
 
 template <typename arrayType, int size>
-int RingBuffer<arrayType, size>::getSize() const
+size_t RingBuffer<arrayType, size>::getSize() const
 {
     return arraySize;
 }
 
 template <typename arrayType, int size>
-arrayType RingBuffer<arrayType, size>::getValue(int i) const
+arrayType RingBuffer<arrayType, size>::getValue(size_t i) const
 {
     return valueArray[(i + currentIndex) % arraySize];
 }
 
 template <typename arrayType, int size>
-arrayType RingBuffer<arrayType, size>::operator[](int i)
+arrayType RingBuffer<arrayType, size>::operator[](size_t i)
 {
     return valueArray[i];
 }

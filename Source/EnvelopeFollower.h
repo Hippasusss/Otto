@@ -24,7 +24,7 @@ public:
 
     void setAttack(float milliseconds);
     void setRelease(float milliseconds);
-    void setAmount(float amount);
+    void setAmount(float newAmount);
     float getValue() const;
     std::function<void(float)> onValueCalculated;
 

@@ -103,7 +103,7 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     // Set source for dry buffer of mix control
 	chain.get<mixerIndex>().setOtherBlock(chain.get<bufferStoreIndex>().getAudioBlockPointer());
 
-    // Register envelope follower callback to set frequency parameter when running.
+    // Register envelope follower callback to set frequency parameter 
     dsp::LadderFilter<float>& filter = chain.get<filterIndex>();
 	chain.get<followerIndex>().onValueCalculated = [&](const float value) 
 	{
@@ -115,7 +115,7 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
         filter.setCutoffFrequencyHz(modulatedFrequency);
 	};
 
-    //initalise
+    // initalise
     initaliseParameters();
     chain.prepare(spec);
 }
@@ -190,8 +190,8 @@ Meter* Auto_AudioProcessor::getOutputMeter()
 
 void Auto_AudioProcessor::setParameter(const String& parameterID) 
 {
-    //TODO:ew
-    //Input Gain
+    // TODO:ew ifififififif
+    // Input Gain
     if(parameterID == parameter_constants::INPUT_GAIN_ID)
     {
 		chain.get<inputGainIndex>().setGainDecibels(inputGain);

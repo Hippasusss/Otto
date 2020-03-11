@@ -20,12 +20,15 @@ public:
 	void mouseDoubleClick(const MouseEvent&) override;
 	void valueChanged() override;
     void resized() override;
+    void setDefault(float newDefault, bool setDefaultToo = true);
+    void returnToDefault();
 
 private:
     CustomLookAndFeel2 lookAndFeel2;
 private:
     Label sliderNameLabel;
     Label sliderValueLabel;
+    float defaultValue;
     const String name;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LabeledSlider)
 

@@ -84,16 +84,14 @@ private:
                                                         &frequency, &drive, &envAmount, &mix};
     std::array<AudioParameterBool*, 2> boolParameter {&envSpeed, &twoFourPole};
 
-    juce::dsp::ProcessorChain <dsp::Gain<float>,
-                               BufferStore,
-							   Meter, 
-                               EnvelopeFollower,
-                               dsp::LadderFilter<float>,
-                               Mixer,
-                               dsp::Gain<float>,
-							   Meter> chain;
-
-
+    dsp::ProcessorChain <dsp::Gain<float>,
+                         BufferStore,
+						 Meter, 
+                         EnvelopeFollower,
+                         dsp::LadderFilter<float>,
+                         Mixer,
+                         dsp::Gain<float>,
+						 Meter> chain;
    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Auto_AudioProcessor)
 };

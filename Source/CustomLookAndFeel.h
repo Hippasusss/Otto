@@ -23,16 +23,27 @@ public:
 
     void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
     {
-
+        const Font font {"Futara", 15, Font::bold};
         const int width = button.getBounds().getWidth();
         const int height = button.getBounds().getHeight();
 
-        const int fillOffset = button.getToggleState() ? 0 : width / 2;
+        int fillOffset = 0;
+        String text = button.getButtonText().initialSectionNotContaining("/");
+        if(! button.getToggleState())
+        {
+			text = button.getButtonText().fromFirstOccurrenceOf("/", false, true);
+	        fillOffset = width / 2;
+        }
+
 	    const Rectangle<int> area {0, 0 , width, height};
 	    const Rectangle<int> fillArea {fillOffset, 0 , width/2, height};
         graphics.setColour(mainColour);
         graphics.drawRect(area, lineThickness);
         graphics.fillRect(fillArea);
+
+        graphics.setColour(backgroundColour);
+        graphics.setFont(font);
+        graphics.drawText(text, fillArea, Justification::centred);
     }
 
     void drawRotarySlider(Graphics& graphics, int x, int y, int width, int height, 
@@ -117,12 +128,10 @@ public:
         {
 	        graphics.fillRect(fillArea);
             graphics.setColour(backgroundColour);
-			graphics.drawText(button.getButtonText(), fillArea,Justification::centredTop);
         }
         else
         {
             graphics.setColour(mainColour);
-			graphics.drawText(button.getButtonText(), fillArea,Justification::centredTop);
         }
     }
     void drawLabel(Graphics& graphics, Label& label) override

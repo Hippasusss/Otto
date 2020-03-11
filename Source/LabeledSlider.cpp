@@ -5,7 +5,7 @@
 
 LabeledSlider::LabeledSlider() = default;
 
-LabeledSlider::LabeledSlider(const String& name, const String& ID): sliderNameLabel(name, name) 
+LabeledSlider::LabeledSlider(const String& name, const String& ID): sliderNameLabel(name, name) , defaultValue(0)
 {
     setComponentID(ID);
     sliderNameLabel.setJustificationType(Justification::centredTop);
@@ -55,14 +55,14 @@ void LabeledSlider::mouseDown(const MouseEvent& mouseEvent)
     Slider::mouseDown(mouseEvent);
     if(mouseEvent.mods.isAltDown())
     {
-	    // TODO: Set Default Value
+		returnToDefault();
     }
 }
 
 void LabeledSlider::mouseDoubleClick(const MouseEvent& mouseEvent)
 {
     Slider::mouseDoubleClick(mouseEvent);
-	    // TODO: Set Default Value
+    returnToDefault();
 }
 
 //TODO: work out why this resets the child components bounds
@@ -80,6 +80,17 @@ void LabeledSlider::resized()
     auto bounds = getBounds().reduced(10, getBounds().getHeight()/2 -7);
     sliderValueLabel.setBounds(bounds);
     sliderValueLabel.setVisible(false);
+}
+
+void LabeledSlider::setDefault(float newDefault, bool setValueToo)
+{
+    defaultValue = newDefault;
+    if(setValueToo) setValue(defaultValue);
+}
+
+void LabeledSlider::returnToDefault()
+{
+    setValue(defaultValue);
 }
 
 
