@@ -45,8 +45,8 @@ public:
     void buttonClicked(Button*) override;
     const EnvelopeFollower& getEnvelopeFollower() const;
     const dsp::LadderFilter<float>& getLadderFilter() const;
-     Meter* getInputMeter();
-     Meter* getOutputMeter();
+    Meter* getInputMeter();
+    Meter* getOutputMeter();
 
 
 

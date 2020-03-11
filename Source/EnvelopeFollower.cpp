@@ -18,7 +18,7 @@ EnvelopeFollower::EnvelopeFollower():
 	maxBlockSize(0),
 	blockTime(0),
 	value(0),
-	inputScaling(0),
+	amount(0),
     attackTime(0.5f),
 	releaseTime(1.0f)
 {
@@ -40,8 +40,8 @@ void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& contex
     const auto& block = context.getInputBlock();
 	const float average = Helpers::getAverageValue(block);
     const float rate = average > value ? attackTime : releaseTime; 
-    value += (blockTime / rate ) *  (average - value) * inputScaling;
-    if(setParameterCallback != nullptr) setParameterCallback(value);
+    value += (blockTime / rate ) *  (average - value) * amount;
+    if(onValueCalculated) onValueCalculated(value);
 }
 
 void EnvelopeFollower::reset()
@@ -60,7 +60,7 @@ void EnvelopeFollower::setRelease(const float milliseconds)
 
 void EnvelopeFollower::setAmount(float amount)
 {
-    inputScaling = amount;
+    amount = amount;
 }
 
 float EnvelopeFollower::getValue() const

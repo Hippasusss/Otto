@@ -22,14 +22,9 @@ public:
 	LevelValue(ValueType value);
 	~LevelValue();
 
-    bool operator>(ValueType);
-    bool operator<(ValueType);
-    bool operator>(const LevelValue& other);
-    bool operator<(const LevelValue& other);
-    ValueType operator=(const LevelValue& other);
-    ValueType operator=(ValueType);
-    ValueType operator-(ValueType);
-    ValueType operator+(ValueType);
+    LevelValue& operator=(const LevelValue& other);
+    LevelValue& operator=(ValueType);
+    operator ValueType&();
 
     ValueType getValue() const;
     ValueType getValueUnitDB() const;
@@ -60,58 +55,28 @@ LevelValue<ValueType>::LevelValue(ValueType value) : value(value), smoother(valu
 }
 
 template <typename ValueType>
-LevelValue<ValueType>::~LevelValue()
-{
-}
+LevelValue<ValueType>::~LevelValue() = default;
+
 
 template <typename ValueType>
-bool LevelValue<ValueType>::operator>(ValueType other)
+LevelValue<ValueType>& LevelValue<ValueType>::operator=(const LevelValue& other)
 {
-    return value > other;
-}
-
-template <typename ValueType>
-bool LevelValue<ValueType>::operator<(ValueType other)
-{
-    return value < other;
-}
-
-template <typename ValueType>
-bool LevelValue<ValueType>::operator>(const LevelValue& other)
-{
-    return value > other.value;
-}
-
-template <typename ValueType>
-bool LevelValue<ValueType>::operator<(const LevelValue& other)
-{
-    return value < other.value;
-}
-
-template <typename ValueType>
-ValueType LevelValue<ValueType>::operator=(const LevelValue& other)
-{
+    if(&other == this) return *this;
     setValue(other.value);
-    return value;
+    return *this;
 }
 
 template <typename ValueType>
-ValueType LevelValue<ValueType>::operator=(ValueType other)
+LevelValue<ValueType>& LevelValue<ValueType>::operator=(ValueType other)
 {
     setValue(other);
+    return *this;
+}
+
+template <typename ValueType>
+LevelValue<ValueType>::operator ValueType&()
+{
     return value;
-}
-
-template <typename ValueType>
-ValueType LevelValue<ValueType>::operator-(ValueType other)
-{
-    return value - other;
-}
-
-template <typename ValueType>
-ValueType LevelValue<ValueType>::operator+(ValueType other)
-{
-    return value + other;
 }
 
 template <typename ValueType>

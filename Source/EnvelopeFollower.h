@@ -26,7 +26,7 @@ public:
     void setRelease(float milliseconds);
     void setAmount(float amount);
     float getValue() const;
-    std::function<void(float)> setParameterCallback;
+    std::function<void(float)> onValueCalculated;
 
 private:
     double sampleRate;
@@ -34,8 +34,8 @@ private:
     unsigned int maxBlockSize;
     float blockTime;
 
-    float value;
-    float inputScaling;
+    std::atomic<float> value;
+    float amount;
     float attackTime, releaseTime;
 
 

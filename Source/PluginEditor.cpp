@@ -31,16 +31,18 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& p)
         slider->addListener(&processor);
     }
 
-    inputGain.setRange(Range<double>(-30, 30), 0.1);
-    outputGain.setRange(Range<double>(-30, 30), 0.1);
-    drive.setRange(Range<double>(1, 10), 0.1);
-    resonance.setRange(Range<double>(0.0, 1.0), 0.001);
+    inputGain. setRange(-30, 30,    0.1);
+    outputGain.setRange(-30, 30,    0.1);
+    drive.     setRange(1,   10,    0.1);
+    resonance. setRange(0.0, 1.0,   0.001);
+    frequency. setRange(20,  20000, 0.001);
+    mix.       setRange(0,   100,   0.001);
+    envAmount. setRange(0,   100,   0.1);
 
-    frequency.setRange(Range<double>(20, 20000), 0.001);
     frequency.setSkewFactorFromMidPoint(500);
 	frequency.setValue(1000.0f);
 
-	mix.setValue(1.0f);
+	mix.setValue(100.0f);
 
     for(auto& button : buttons)
     {
@@ -61,14 +63,15 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& p)
 	    slider->getSliderValueLabel().setVisible(false);
     }
 
-	display.getValueCallback = [&]() -> float
+	display.onAddValue = [&]() -> float
     {
     	return p.getEnvelopeFollower().getValue();
     };
 
-	display.getValueOffsetCallback = [&]() -> float
+	display.onSetValueOffset = [&]() -> float
     {
-    	return frequency.getValue();
+		auto range = NormalisableRange<float>(frequency.getMinimum(), frequency.getMaximum(), frequency.getValue());
+    	return range.convertTo0to1(frequency.getValue());
     };
 
 	inputMeter.setMeter(p.getInputMeter());
@@ -94,14 +97,18 @@ void Auto_AudioProcessorEditor::resized()
 {
     auto rect = getLocalBounds();
 
+    // Top section with Graph and Meters
     auto topRect = rect.removeFromTop(200).reduced(5,1);
     topRect.removeFromTop(4);
     inputMeter.setBounds(topRect.removeFromLeft(20));
     outputMeter.setBounds(topRect.removeFromRight(20));
     display.setBounds(topRect);
 
+
+    // Bottom Section
     parameterGroup.setBounds(rect);
     auto tempRect = rect;
+    // Sliders
     for(auto slider: sliders)
     {
         tempRect = rect.removeFromLeft(100);
@@ -109,6 +116,7 @@ void Auto_AudioProcessorEditor::resized()
         slider->getSliderNameLabel().setBounds(tempRect.translated(0,-3));
     }
 
+    // Buttons 
     tempRect = rect.removeFromLeft(100);
     for(auto button: buttons)
     {

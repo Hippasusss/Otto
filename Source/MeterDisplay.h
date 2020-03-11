@@ -37,19 +37,20 @@ private:
     Label levelText;
     CustomLookAndFeel2 lookAndFeel2;
 
+    int channelCount;
     const float rate = 0.15f;
 	const int clipHoldTime = 3000;
 	const int peakHoldTime = 1500;
+    bool clip;
 
 	int clipHoldTimer = 0;
 	int peakHoldTimer = 0;
 
+
 	LevelValue<float> peak;
 	LevelValue<float> peakHold;
 	LevelValue<float> RMS;
-    bool clip;
 
 
-    int channelCount;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MeterDisplay)
 };

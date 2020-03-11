@@ -23,8 +23,8 @@ public:
 
     void paint (Graphics&) override;
     void timerCallback() override;
-    std::function<float()>getValueCallback;
-    std::function<float()>getValueOffsetCallback;
+    std::function<float()>onAddValue;
+    std::function<float()>onSetValueOffset;
 
 private:
     RingBuffer<float, RING_BUFFER_SIZE> valuesToDraw;

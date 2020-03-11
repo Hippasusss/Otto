@@ -16,6 +16,8 @@ public:
 
 	void mouseExit(const MouseEvent&) override;
 	void mouseEnter(const MouseEvent&) override;
+	void mouseDown(const MouseEvent&) override;
+	void mouseDoubleClick(const MouseEvent&) override;
 	void valueChanged() override;
     void resized() override;
 

@@ -13,6 +13,7 @@
 static class Helpers
 {
 public:
+	//returns the average value of samples (absolute)
     template<typename SampleType>
 	static SampleType getAverageValue(const dsp::AudioBlock<SampleType>& block)
     {

@@ -466,9 +466,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\LevelValue.cpp">
-      <Filter>Auto\Source\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\BufferStore.cpp">
       <Filter>Auto\Source\DSP</Filter>
     </ClCompile>

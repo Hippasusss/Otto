@@ -2,6 +2,7 @@
 #include "LabeledSlider.h"
 
 
+
 LabeledSlider::LabeledSlider() = default;
 
 LabeledSlider::LabeledSlider(const String& name, const String& ID): sliderNameLabel(name, name) 
@@ -49,19 +50,34 @@ void LabeledSlider::mouseEnter(const MouseEvent& mouseEvent)
     sliderValueLabel.setVisible(true);
 }
 
+void LabeledSlider::mouseDown(const MouseEvent& mouseEvent)
+{
+    Slider::mouseDown(mouseEvent);
+    if(mouseEvent.mods.isAltDown())
+    {
+	    // TODO: Set Default Value
+    }
+}
+
+void LabeledSlider::mouseDoubleClick(const MouseEvent& mouseEvent)
+{
+    Slider::mouseDoubleClick(mouseEvent);
+	    // TODO: Set Default Value
+}
+
 //TODO: work out why this resets the child components bounds
 void LabeledSlider::valueChanged()
 {
     Slider::valueChanged();
     sliderValueLabel.setText(String(getValue()), dontSendNotification);
-    auto bounds = getBounds().reduced(10, getBounds().getHeight()/2 -10);
+    auto bounds = getBounds().reduced(10, getBounds().getHeight()/2 -7);
     sliderValueLabel.setBounds(bounds);
 }
 
 void LabeledSlider::resized()
 {
     Slider::resized();
-    auto bounds = getBounds().reduced(10, getBounds().getHeight()/2 -10);
+    auto bounds = getBounds().reduced(10, getBounds().getHeight()/2 -7);
     sliderValueLabel.setBounds(bounds);
     sliderValueLabel.setVisible(false);
 }

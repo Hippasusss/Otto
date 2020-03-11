@@ -42,6 +42,7 @@ void MeterDisplay::paint (Graphics& graphics)
     {
         const int leftSeparation = i == 0 ? 0 : separation;
         const int rightSeparation = i == channelCount - 1 ? 0 : separation;
+
         // Get values of various levels
 		RMS = meter->getRMS(i);
 		peak = meter->getPeak(i);
@@ -77,6 +78,7 @@ void MeterDisplay::paint (Graphics& graphics)
 		clipMeter.setToggleState(clip, dontSendNotification);
         clipHoldTimer = clipHoldTime;
     }
+
     //disallow clicking back on the clip
     else if(!clipMeter.getToggleState())
     {
