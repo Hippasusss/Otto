@@ -86,9 +86,14 @@ public:
         graphics.drawRect(area, lineThickness);
     }
 
+	int getLineThickness()
+    {
+	    return lineThickness;
+    }
+
 private:
-    const int lineThickness = 4;
-    const Colour mainColour {Colours::lightcoral};
+    const int lineThickness = 3;
+    const Colour mainColour {Colours::lightblue};
 	const Colour textColour {Colours::black};
 	const Colour backgroundColour {Colours::white};
 	
@@ -148,7 +153,7 @@ public:
 
 private:
     const int lineThickness = 4;
-    const Colour mainColour {Colours::lightcoral};
+    const Colour mainColour {Colours::lightblue};
 	const Colour backgroundColour {Colours::white};
 	
     template<typename T>

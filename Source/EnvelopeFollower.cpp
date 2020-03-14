@@ -35,22 +35,15 @@ void EnvelopeFollower::prepare(const dsp::ProcessSpec& spec)
     blockTime = maxBlockSize / sampleRate * 1000.0f; 
 }
 
-//TODO: release not recovering when Env amount at 0
+//TODO: quick calculation. Needs fixing (NaN, Inf etc especially with fast AR).
 void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& context) 
 {
     const auto& block = context.getInputBlock();
-	const float average = Helpers::getAverageValue(block);
-    bool attackRelease = average > value ? true : false; 
-    if(attackRelease)
-    {
-		value += (blockTime / attackTime) *  (average * amount - value) ;
-		if(onValueCalculated) onValueCalculated(value);
-    }
-    else
-    {
-		value += (blockTime / releaseTime) *  (average * amount - value);
-		if(onValueCalculated) onValueCalculated(value);
-    }
+	const float average = Helpers::getAverageMagnitude(block);
+    //const bool attackRelease = average > value ? true : false; 
+    const float attackRelease = average > value ? attackTime: releaseTime; 
+	value += (blockTime / attackTime) *  (average * amount - value) ;
+	if(onValueCalculated) onValueCalculated(value);
 }
 
 void EnvelopeFollower::reset()

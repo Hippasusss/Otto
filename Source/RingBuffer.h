@@ -8,10 +8,12 @@
   ==============================================================================
 */
 
+//===============================================================================
+// Base 
+//===============================================================================
 #pragma once
 //TODO: heap allocate if needed?
-//TODO: Look into someone else's implementation of this. Should Read Backwards?
-template<typename arrayType, int size>
+template<typename arrayType, typename containerType>
 class RingBuffer
 {
 public:
@@ -20,42 +22,97 @@ public:
     size_t getSize() const;
     arrayType getValue(size_t i) const;
     arrayType operator[](size_t i);
-private:
-	arrayType valueArray[size] {};
-    int currentIndex;
-    const int arraySize;
+protected:
+    containerType valueArray;
+    size_t index;
+    size_t size;
 };
 
 //===============================================================================
 
-template <typename arrayType, int size>
-RingBuffer<arrayType, size>::RingBuffer(): currentIndex(0), arraySize(size)
+template <typename arrayType, typename containerType>
+RingBuffer<arrayType, containerType>::RingBuffer(): index(0), size(0) 
 {
 }
 
-template <typename arrayType, int size>
-void RingBuffer<arrayType, size>::addValue(arrayType value)
+template <typename arrayType, typename containerType>
+void RingBuffer<arrayType, containerType>::addValue(arrayType value)
 {
-    valueArray[currentIndex] = value;
-    ++currentIndex;
-    currentIndex %= arraySize;
+    valueArray[index] = value;
+    ++index;
+    index %= size;
 }
 
-template <typename arrayType, int size>
-size_t RingBuffer<arrayType, size>::getSize() const
+template <typename arrayType,  typename containerType>
+size_t RingBuffer<arrayType, containerType>::getSize() const
 {
-    return arraySize;
+    return size;
 }
 
-template <typename arrayType, int size>
-arrayType RingBuffer<arrayType, size>::getValue(size_t i) const
+template <typename arrayType, typename containerType>
+arrayType RingBuffer<arrayType, containerType>::getValue(size_t i) const
 {
-    return valueArray[(i + currentIndex) % arraySize];
+    return valueArray[(i + index) % size];
 }
 
-template <typename arrayType, int size>
-arrayType RingBuffer<arrayType, size>::operator[](size_t i)
+template <typename valueType, typename containerType>
+valueType RingBuffer<valueType, containerType>::operator[](size_t i)
 {
     return valueArray[i];
 }
+
+
+//===============================================================================
+// Vector
+//===============================================================================
+
+template<typename ValueType>
+class RingBufferVector : public RingBuffer<ValueType, std::vector<ValueType>>
+{
+public:
+    RingBufferVector();
+    RingBufferVector(size_t newSize);
+    void resize(size_t newSize);
+};
+
+//===============================================================================
+
+template <typename ValueType>
+RingBufferVector<ValueType>::RingBufferVector()
+{
+}
+
+template <typename ValueType>
+RingBufferVector<ValueType>::RingBufferVector(size_t newSize)  
+{
+    //TODO: construct without resize
+    resize(newSize);
+}
+
+template <typename ValueType>
+void RingBufferVector<ValueType>::resize(size_t newSize)
+{
+    this->size = newSize;
+    this->valueArray.resize(newSize);
+}
+
+//===============================================================================
+// Array 
+//===============================================================================
+
+template<typename ValueType, size_t Size>
+class RingBufferArray : public RingBuffer<ValueType, std::array<ValueType, Size>>
+{
+public:
+    RingBufferArray();
+};
+
+template <typename ValueType, size_t Size>
+RingBufferArray<ValueType, Size>::RingBufferArray()
+{
+    this->size = Size;
+}
+
+//===============================================================================
+
 
