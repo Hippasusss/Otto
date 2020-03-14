@@ -10,12 +10,12 @@
 #include "JuceHeader.h"
 
 #pragma once
-static class Helpers
+class Helpers
 {
 public:
-	//returns the average value of samples (absolute)
+	//returns the absolute average value of samples 
     template<typename SampleType>
-	static SampleType getAverageValue(const dsp::AudioBlock<SampleType>& block)
+	static SampleType getAverageMagnitude(const dsp::AudioBlock<SampleType>& block)
     {
 	    
 		float sum {0};
@@ -33,11 +33,34 @@ public:
 
 		return sum / (blockSize * numChannels);
     }
+
+    template<typename SampleType>
+	static SampleType getMagnitude(const dsp::AudioBlock<SampleType>& block)
+    {
+	    
+		float value {};
+	    const auto numChannels = block.getNumChannels();
+	    const auto blockSize = block.getNumSamples();
+
+	    for(auto i = 0; i < numChannels; ++i)
+	    {
+		    const auto chan = block.getChannelPointer(i);
+	        for(auto j = 0; j < blockSize; ++j)
+	        {
+				const SampleType sample = abs(chan[j]);
+		        value = sample > value ? sample : value;
+	        }
+	    }
+
+		return value / (blockSize * numChannels);
+    }
 	//TODO: make pass through 0
 	template<typename ValueType>
 	static ValueType getUnitDB(ValueType value, ValueType dbMinusInfinity = -100)
     {
 	    return jlimit<ValueType>(0.0f,1.0f,((ValueType(20.0) * std::log10f(value))/ ValueType(dbMinusInfinity)) + 1);
     }
+private:
+	Helpers() = default;
 };
 
