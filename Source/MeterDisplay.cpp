@@ -12,9 +12,9 @@
 #include "MeterDisplay.h"
 #include "Constants.h"
 
-MeterDisplay::MeterDisplay(Meter* met) :
-	meter(met),
-	channelCount(met->getNumChannels())
+MeterDisplay::MeterDisplay(Meter* newMeter) :
+	meter(newMeter),
+	channelCount(newMeter->getNumChannels())
 {
     meter->prepareCallback = [&]()
     {
@@ -53,9 +53,9 @@ void MeterDisplay::paint (Graphics& graphics)
         }
 
         //calculate height of each level meter
-        const int heightRMS = RMS.getSmoothedValueUnitDB() * height;
-        const int heightPeak= peak.getSmoothedValueUnitDB() * height;
-        const int heightPeakHold= peakHold.getSmoothedValueUnitDB() * height;
+        const int heightRMS = RMS.getSmoothedValueNormalisedDB() * height;
+        const int heightPeak= peak.getSmoothedValueNormalisedDB() * height;
+        const int heightPeakHold= peakHold.getSmoothedValueNormalisedDB() * height;
     	
 		//draw RMS
         graphics.fillRect((i * width) + leftSeparation , getHeight() - heightRMS, width - leftSeparation - rightSeparation, heightRMS);

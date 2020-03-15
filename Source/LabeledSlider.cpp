@@ -70,14 +70,14 @@ void LabeledSlider::valueChanged()
 {
     Slider::valueChanged();
     sliderValueLabel.setText(String(getValue()), dontSendNotification);
-    auto bounds = getBounds().reduced(10, getBounds().getHeight()/2 -7);
+    const auto bounds = getBounds().reduced(10, getBounds().getHeight()/2 -7);
     sliderValueLabel.setBounds(bounds);
 }
 
 void LabeledSlider::resized()
 {
     Slider::resized();
-    auto bounds = getBounds().reduced(10, getBounds().getHeight()/2 -7);
+    const auto bounds = getBounds().reduced(10, getBounds().getHeight()/2 -7);
     sliderValueLabel.setBounds(bounds);
     sliderValueLabel.setVisible(false);
 }

@@ -24,28 +24,28 @@ class MeterDisplay    : public Component,
 						public Timer
 {
 public: void timerCallback() override;
-	MeterDisplay(Meter* met);
+	MeterDisplay(Meter* newMeter);
     ~MeterDisplay();
 
     void paint (Graphics&) override;
 	void resized() override;
-    void setMeter(Meter* meter);
+    void setMeter(Meter* newMeter);
 
 private:
+    const float rate = 0.15f;
+	const int clipHoldTime = 3000;
+	const int peakHoldTime = 1500;
+
     Meter* meter;
     ToggleButton clipMeter;
     Label levelText;
     CustomLookAndFeel2 lookAndFeel2;
 
     int channelCount;
-    const float rate = 0.15f;
-	const int clipHoldTime = 3000;
-	const int peakHoldTime = 1500;
-    bool clip;
+    bool clip = false;
 
 	int clipHoldTimer = 0;
 	int peakHoldTimer = 0;
-
 
 	LevelValue<float> peak;
 	LevelValue<float> peakHold;

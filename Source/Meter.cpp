@@ -23,8 +23,9 @@ Meter::~Meter()
 void Meter::prepare(const dsp::ProcessSpec& spec)
 {
     numChannels = spec.numChannels;
-    RMS.resize(numChannels);
-    peak.resize(numChannels);
+    channelRMSValues.resize(numChannels);
+    channelPeakValues.resize(numChannels);
+	RMSAudioBuffer.resize(numChannels, RMSTime * spec.sampleRate);
     if(prepareCallback) prepareCallback();
 }
 
@@ -37,8 +38,8 @@ void Meter::process(const dsp::ProcessContextReplacing<float>& context)
 
 void Meter::reset()
 {
-    RMS.clear();
-    peak.clear();
+    channelRMSValues.clear();
+    channelPeakValues.clear();
 }
 
 void Meter::clearClip()
@@ -46,30 +47,27 @@ void Meter::clearClip()
     clip = false;
 }
 
+//TODO: issue with RMS holding for random amount of time once signal has decayed
 void Meter::calculateRMS(const dsp::AudioBlock<float>& block)
 {
-	
-    const int blockSize = block.getNumSamples();
-
-    for(int i = 0; i < numChannels; ++i)
+    RMSAudioBuffer.addBlock(block);
+    const auto RMSBlock = RMSAudioBuffer.getBlock();
+    const int blockSize = RMSBlock.getNumSamples();
+    for(auto i = 0; i < numChannels; ++i)
     {
 		float sum = 0.0f;
-        const auto chan = block.getChannelPointer(i);
-		for (int j = 0; j < blockSize; ++j)
+        const auto chan = RMSBlock.getChannelPointer(i);
+		for (auto j = 0; j < blockSize; ++j)
 		{
 			const auto sample = chan[j];
 			sum += sample * sample;
 		}
-		RMS[i] = static_cast<float>(std::sqrt (sum / blockSize));
+        channelRMSValues[i] = (std::sqrt (sum / blockSize));
     }
-
 }
-
 void Meter::calculatePeak(const dsp::AudioBlock<float>& block)
 {
-	
     const int numSamples = block.getNumSamples();
-
     for(int i = 0; i < numChannels; ++i)
     {
 		float max = 0.0f;
@@ -79,21 +77,21 @@ void Meter::calculatePeak(const dsp::AudioBlock<float>& block)
 			const auto sample = abs(data[j]);
 			max = sample > max ? sample : max;
 		}
-		peak[i] = max;
+		channelPeakValues[i] = max;
         clip = max >= 1.0f ? true : false;
     }
 }
 
 float Meter::getRMS(size_t channel) const
 {
-    jassert(channel < RMS.size());
-    return RMS[channel];
+    jassert(channel < channelRMSValues.size());
+    return channelRMSValues[channel];
 }
 
 float Meter::getPeak(size_t channel) const
 {
-    jassert(channel < peak.size());
-    return peak[channel];
+    jassert(channel < channelPeakValues.size());
+    return channelPeakValues[channel];
 }
 
 bool Meter::getClip() const

@@ -111,7 +111,7 @@ void Auto_AudioProcessorEditor::resized()
     topRect.removeFromTop(4);
     inputMeter.setBounds(topRect.removeFromLeft(20));
     outputMeter.setBounds(topRect.removeFromRight(20));
-    display.setBounds(topRect);
+    //display.setBounds(topRect);
 
 
     // Bottom Section

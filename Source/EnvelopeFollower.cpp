@@ -40,9 +40,10 @@ void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& contex
 {
     const auto& block = context.getInputBlock();
 	const float average = Helpers::getAverageMagnitude(block);
+    value += ( average - value) * amount;
     //const bool attackRelease = average > value ? true : false; 
-    const float attackRelease = average > value ? attackTime: releaseTime; 
-	value += (blockTime / attackTime) *  (average * amount - value) ;
+    //const float attackRelease = average > value ? attackTime: releaseTime; 
+	//value += (blockTime / attackRelease) *  (average * amount - value) ;
 	if(onValueCalculated) onValueCalculated(value);
 }
 

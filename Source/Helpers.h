@@ -56,10 +56,22 @@ public:
     }
 	//TODO: make pass through 0
 	template<typename ValueType>
-	static ValueType getUnitDB(ValueType value, ValueType dbMinusInfinity = -100)
+	static ValueType getNormalisedDB(ValueType value, ValueType dbMinusInfinity = -100)
     {
 	    return jlimit<ValueType>(0.0f,1.0f,((ValueType(20.0) * std::log10f(value))/ ValueType(dbMinusInfinity)) + 1);
     }
+
+	template<typename ValueType>
+	static void copyAudioBlockIntoBuffer(const dsp::AudioBlock<ValueType>& block, AudioBuffer<ValueType>& buffer, size_t sourceStartSample, size_t destStartSample, size_t numSamples)
+	{
+	    jassert(block.getNumChannels() == buffer.getNumChannels());
+		for(auto channel = 0; channel < buffer.getNumChannels(); ++channel)
+		{
+			auto* channelPointer = block.getChannelPointer(channel);
+			channelPointer += sourceStartSample;
+			buffer.copyFrom(channel, destStartSample, channelPointer, numSamples);
+		}
+	}
 private:
 	Helpers() = default;
 };

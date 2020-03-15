@@ -12,51 +12,53 @@
 // Base 
 //===============================================================================
 #pragma once
-//TODO: heap allocate if needed?
-template<typename arrayType, typename containerType>
+#include "Helpers.h"
+
+template<typename ValueType, typename ContainerType>
 class RingBuffer
 {
 public:
-    RingBuffer();
-	void addValue(arrayType);
-    size_t getSize() const;
-    arrayType getValue(size_t i) const;
-    arrayType operator[](size_t i);
+	virtual ~RingBuffer() = default;
+	virtual void addValue(ValueType);
+    virtual size_t getSize() const;
+    virtual ValueType getValue(size_t i) const;
+    virtual ValueType operator[](size_t i);
 protected:
-    containerType valueArray;
+    RingBuffer();
+    ContainerType valueArray;
     size_t index;
     size_t size;
 };
 
 //===============================================================================
 
-template <typename arrayType, typename containerType>
-RingBuffer<arrayType, containerType>::RingBuffer(): index(0), size(0) 
+template <typename ValueType, typename ContainerType>
+RingBuffer<ValueType, ContainerType>::RingBuffer(): index(0), size(0) 
 {
 }
 
-template <typename arrayType, typename containerType>
-void RingBuffer<arrayType, containerType>::addValue(arrayType value)
+template <typename ValueType, typename ContainerType>
+void RingBuffer<ValueType, ContainerType>::addValue(ValueType value)
 {
     valueArray[index] = value;
     ++index;
     index %= size;
 }
 
-template <typename arrayType,  typename containerType>
-size_t RingBuffer<arrayType, containerType>::getSize() const
+template <typename ValueType,  typename ContainerType>
+size_t RingBuffer<ValueType, ContainerType>::getSize() const
 {
     return size;
 }
 
-template <typename arrayType, typename containerType>
-arrayType RingBuffer<arrayType, containerType>::getValue(size_t i) const
+template <typename ValueType, typename ContainerType>
+ValueType RingBuffer<ValueType, ContainerType>::getValue(size_t i) const
 {
     return valueArray[(i + index) % size];
 }
 
-template <typename valueType, typename containerType>
-valueType RingBuffer<valueType, containerType>::operator[](size_t i)
+template <typename ValueType, typename ContainerType>
+ValueType RingBuffer<ValueType, ContainerType>::operator[](size_t i)
 {
     return valueArray[i];
 }
@@ -114,5 +116,63 @@ RingBufferArray<ValueType, Size>::RingBufferArray()
 }
 
 //===============================================================================
+// Audio Block
+//===============================================================================
+template<typename ValueType>
+class RingBufferAudioBlock 
+{
+public:
+    RingBufferAudioBlock() = default;
+    RingBufferAudioBlock(size_t channels, size_t length);
+    void resize(size_t channels, size_t length);
+	void addBlock(const dsp::AudioBlock<ValueType>& newBlock);
+	const dsp::AudioBlock<ValueType>& getBlock();
+private:
+	AudioBuffer<ValueType> aggregateBuffer;
+    size_t size =0;
+    size_t index =0;
+};
 
+template <typename ValueType>
+RingBufferAudioBlock<ValueType>::RingBufferAudioBlock(size_t channels, size_t length) :
+	aggregateBuffer(channels, length)
+{
+    this->size = length;
+    this->index = 0;
+}
+
+template <typename ValueType>
+void RingBufferAudioBlock<ValueType>::resize(size_t channels, size_t length)
+{
+    aggregateBuffer.setSize(channels, length);
+    this->size = length;
+}
+
+template <typename ValueType>
+void RingBufferAudioBlock<ValueType>::addBlock(const dsp::AudioBlock<ValueType>& newBlock)
+{
+    const auto copySize = newBlock.getNumSamples();
+    const auto remainingSpace = aggregateBuffer.getNumSamples() - this->index;
+    if(copySize > remainingSpace)
+    {
+        //Copy to end of block
+        Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, this->index, 0, remainingSpace);
+
+        //Reset and copy remaining samples
+        this->index = 0;
+		Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, remainingSpace, this->index, copySize - remainingSpace);
+    	this->index = copySize - remainingSpace;
+    }
+    else
+    {
+		Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, 0, this->index, copySize);
+        this->index += copySize;
+    }
+}
+
+template <typename ValueType>
+const dsp::AudioBlock<ValueType>& RingBufferAudioBlock<ValueType>::getBlock() 
+{
+    return dsp::AudioBlock<ValueType>(aggregateBuffer);
+}
 

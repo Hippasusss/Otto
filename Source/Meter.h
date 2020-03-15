@@ -10,6 +10,7 @@
 #pragma once
 #pragma once
 #include "JuceHeader.h"
+#include "RingBuffer.h"
 
 //TODO: implement ring buffer to make time constant regardless of block size
 class Meter: dsp::ProcessorBase
@@ -31,15 +32,18 @@ public:
     int getNumChannels() const;
 
 	std::function<void()> prepareCallback;
+
 private:
 	void calculateRMS(const dsp::AudioBlock<float>&);
 	void calculatePeak(const dsp::AudioBlock<float>&);
 
-    std::vector<float> RMS {0, 0};
-    std::vector<float> peak {0, 0};
+    std::vector<float> channelRMSValues {0, 0};
+    std::vector<float> channelPeakValues {0, 0};
+
+	RingBufferAudioBlock<float> RMSAudioBuffer;
+	const float RMSTime = 0.3;
 
     bool clip;
-	
     int numChannels;
 	
 };

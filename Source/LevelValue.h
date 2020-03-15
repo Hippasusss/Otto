@@ -27,10 +27,10 @@ public:
     operator ValueType&();
 
     ValueType getValue() const;
-    ValueType getValueUnitDB() const;
+    ValueType getValueNormalisedDB() const;
     ValueType getValueDBFS() const;
     ValueType getSmoothedValue() const;
-    ValueType getSmoothedValueUnitDB() const;
+    ValueType getSmoothedValueNormalisedDB() const;
     ValueType getSmoothedValueDBFS() const;
     void setValue(ValueType newValue);
 
@@ -86,9 +86,9 @@ ValueType LevelValue<ValueType>::getValue() const
 }
 
 template <typename ValueType>
-ValueType LevelValue<ValueType>::getValueUnitDB() const
+ValueType LevelValue<ValueType>::getValueNormalisedDB() const
 {
-	return Helpers::getUnitDB(value, dbMinusInfinity);
+	return Helpers::getNormalisedDB(value, dbMinusInfinity);
 }
 
 template <typename ValueType>
@@ -104,9 +104,9 @@ ValueType LevelValue<ValueType>::getSmoothedValue() const
 }
 
 template <typename ValueType>
-ValueType LevelValue<ValueType>::getSmoothedValueUnitDB() const
+ValueType LevelValue<ValueType>::getSmoothedValueNormalisedDB() const
 {
-	return Helpers::getUnitDB(smoother.getValue(), dbMinusInfinity);
+	return Helpers::getNormalisedDB(smoother.getValue(), dbMinusInfinity);
 }
 
 template <typename ValueType>
