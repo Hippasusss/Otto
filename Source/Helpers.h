@@ -54,7 +54,8 @@ public:
 
 		return value / (blockSize * numChannels);
     }
-	//TODO: make pass through 0
+	// TODO: Create properly normalised dB range which passes through 0.
+	// Wouldn't be properly logarithmic but would avoid random -inf valuePossible?
 	template<typename ValueType>
 	static ValueType getNormalisedDB(ValueType value, ValueType dbMinusInfinity = -100)
     {
@@ -62,14 +63,18 @@ public:
     }
 
 	template<typename ValueType>
-	static void copyAudioBlockIntoBuffer(const dsp::AudioBlock<ValueType>& block, AudioBuffer<ValueType>& buffer, size_t sourceStartSample, size_t destStartSample, size_t numSamples)
+	static void copyAudioBlockIntoBuffer(const dsp::AudioBlock<ValueType>& sourceBlock, 
+													AudioBuffer<ValueType>& destinationBuffer, 
+													size_t sourceStartSample, 
+													size_t destStartSample, 
+													size_t numSamples)
 	{
-	    jassert(block.getNumChannels() == buffer.getNumChannels());
-		for(auto channel = 0; channel < buffer.getNumChannels(); ++channel)
+	    jassert(sourceBlock.getNumChannels() == destinationBuffer.getNumChannels());
+		for(auto channel = 0; channel < destinationBuffer.getNumChannels(); ++channel)
 		{
-			auto* channelPointer = block.getChannelPointer(channel);
+			auto* channelPointer = sourceBlock.getChannelPointer(channel);
 			channelPointer += sourceStartSample;
-			buffer.copyFrom(channel, destStartSample, channelPointer, numSamples);
+			destinationBuffer.copyFrom(channel, destStartSample, channelPointer, numSamples);
 		}
 	}
 private:

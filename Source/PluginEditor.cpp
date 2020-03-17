@@ -41,7 +41,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     mix.       setRange(0,   100,   0.001);
     envAmount. setRange(0,   100,   0.1);
 
-    frequency.setSkewFactorFromMidPoint(500);
+    frequency.setSkewFactor(0.5);
 	frequency.setDefault(1000.0f);
 
 	mix.setDefault(100.0f);

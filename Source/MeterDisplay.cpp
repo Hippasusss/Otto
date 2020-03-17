@@ -16,7 +16,7 @@ MeterDisplay::MeterDisplay(Meter* newMeter) :
 	meter(newMeter),
 	channelCount(newMeter->getNumChannels())
 {
-    meter->prepareCallback = [&]()
+    meter->onPrepareCallback = [&]()
     {
         channelCount = meter->getNumChannels();
     };

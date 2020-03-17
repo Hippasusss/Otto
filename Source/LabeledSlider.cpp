@@ -65,7 +65,7 @@ void LabeledSlider::mouseDoubleClick(const MouseEvent& mouseEvent)
     returnToDefault();
 }
 
-//TODO: work out why this resets the child components bounds
+// TODO: Work out why this resets the child components bounds.
 void LabeledSlider::valueChanged()
 {
     Slider::valueChanged();

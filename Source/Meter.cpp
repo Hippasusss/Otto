@@ -12,13 +12,8 @@
 
 #include "Helpers.h"
 
-Meter::Meter()
-{
-}
-
-Meter::~Meter()
-{
-}
+Meter::Meter(): RMSAudioBuffer() {}
+Meter::~Meter() = default;
 
 void Meter::prepare(const dsp::ProcessSpec& spec)
 {
@@ -26,7 +21,7 @@ void Meter::prepare(const dsp::ProcessSpec& spec)
     channelRMSValues.resize(numChannels);
     channelPeakValues.resize(numChannels);
 	RMSAudioBuffer.resize(numChannels, RMSTime * spec.sampleRate);
-    if(prepareCallback) prepareCallback();
+    if(onPrepareCallback) onPrepareCallback();
 }
 
 void Meter::process(const dsp::ProcessContextReplacing<float>& context)
@@ -47,10 +42,9 @@ void Meter::clearClip()
     clip = false;
 }
 
-//TODO: issue with RMS holding for random amount of time once signal has decayed
 void Meter::calculateRMS(const dsp::AudioBlock<float>& block)
 {
-    RMSAudioBuffer.addBlock(block);
+    RMSAudioBuffer.appendBlock(block);
     const auto RMSBlock = RMSAudioBuffer.getBlock();
     const int blockSize = RMSBlock.getNumSamples();
     for(auto i = 0; i < numChannels; ++i)

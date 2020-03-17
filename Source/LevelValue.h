@@ -14,6 +14,7 @@
 #include "ValueSmoother.h"
 #include "Constants.h"
 #include "Helpers.h"
+
 template<typename ValueType>
 class LevelValue : Timer
 {

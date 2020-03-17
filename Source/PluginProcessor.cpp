@@ -110,7 +110,7 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
         const float frequencySet = frequency.get();
         const float maxFrequency = frequency.range.end;
         const float frequencyRemainder = maxFrequency - frequencySet;
-        //TODO: change mapping?
+        // TODO: Change mapping? currently not logarithmic.
         const auto modulatedFrequency = jlimit<float>(20, 20000, (this->frequency.get() + value * frequencyRemainder));
         filter.setCutoffFrequencyHz(modulatedFrequency);
 	};
@@ -190,7 +190,6 @@ Meter* Auto_AudioProcessor::getOutputMeter()
 
 void Auto_AudioProcessor::setParameter(const String& parameterID) 
 {
-    // TODO:ew ifififififif
     // Input Gain
     if(parameterID == parameter_constants::INPUT_GAIN_ID)
     {

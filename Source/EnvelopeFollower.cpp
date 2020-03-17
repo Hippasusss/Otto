@@ -35,7 +35,7 @@ void EnvelopeFollower::prepare(const dsp::ProcessSpec& spec)
     blockTime = maxBlockSize / sampleRate * 1000.0f; 
 }
 
-//TODO: quick calculation. Needs fixing (NaN, Inf etc especially with fast AR).
+// TODO: Implement proper envelope follower. Low oscillation for faster values.
 void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& context) 
 {
     const auto& block = context.getInputBlock();

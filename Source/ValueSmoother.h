@@ -75,5 +75,5 @@ public:
 private:
 	ValueType value;
 	ValueType destinationValue;
-	float rate = 0.3;
+	float rate = 0.5;
 };
