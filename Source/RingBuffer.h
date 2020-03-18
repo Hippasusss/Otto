@@ -119,39 +119,38 @@ RingBufferArray<ValueType, Size>::RingBufferArray()
 //===============================================================================
 // Audio Block
 //===============================================================================
-//TODO: Thread.
-template<typename ValueType>
+template<typename SampleType>
 class RingBufferAudio 
 {
 public:
     RingBufferAudio() = default;
     RingBufferAudio(size_t channels, size_t length);
     void resize(size_t channels, size_t length);
-	void appendBlock(const dsp::AudioBlock<ValueType>& newBlock);
-	dsp::AudioBlock<ValueType> getBlock();
+	void appendBlock(const dsp::AudioBlock<const SampleType>& newBlock);
+	dsp::AudioBlock<SampleType> getBlock();
 private:
-	AudioBuffer<ValueType> aggregateBuffer;
+	AudioBuffer<SampleType> aggregateBuffer;
     size_t size = 0;
     size_t index = 0;
 };
 
-template <typename ValueType>
-RingBufferAudio<ValueType>::RingBufferAudio(size_t channels, size_t length) :
+template <typename SampleType>
+RingBufferAudio<SampleType>::RingBufferAudio(size_t channels, size_t length) :
 	aggregateBuffer(channels, length)
 {
     this->size = length;
     this->index = 0;
 }
 
-template <typename ValueType>
-void RingBufferAudio<ValueType>::resize(size_t channels, size_t length)
+template <typename SampleType>
+void RingBufferAudio<SampleType>::resize(size_t channels, size_t length)
 {
     aggregateBuffer.setSize(channels, length);
     this->size = length;
 }
 
-template <typename ValueType>
-void RingBufferAudio<ValueType>::appendBlock(const dsp::AudioBlock<ValueType>& newBlock)
+template <typename SampleType>
+void RingBufferAudio<SampleType>::appendBlock(const dsp::AudioBlock<const SampleType>& newBlock)
 {
     const auto numSamplesToCopy = newBlock.getNumSamples();
     const auto remainingSpace = aggregateBuffer.getNumSamples() - this->index;
@@ -160,26 +159,26 @@ void RingBufferAudio<ValueType>::appendBlock(const dsp::AudioBlock<ValueType>& n
     {
         // Copy to end of block
         Helpers::copyAudioBlockIntoBuffer
-    		(newBlock, aggregateBuffer, 0, this->index, remainingSpace);
+    		(newBlock, aggregateBuffer, remainingSpace, 0, this->index);
 
         // Reset and copy remaining samples
         this->index = 0;
 		Helpers::copyAudioBlockIntoBuffer
-    		(newBlock, aggregateBuffer, remainingSpace, this->index, numSamplesToCopy - remainingSpace);
+    		(newBlock, aggregateBuffer, numSamplesToCopy - remainingSpace, remainingSpace, this->index);
     	this->index = numSamplesToCopy - remainingSpace;
     }
     else
     {
         // Just copy whole block if room
-		Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, 0, this->index, numSamplesToCopy);
+		Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, numSamplesToCopy, 0, this->index);
         this->index += numSamplesToCopy % size;
     }
 }
 
-template <typename ValueType>
-dsp::AudioBlock<ValueType> RingBufferAudio<ValueType>::getBlock() 
+template <typename SampleType>
+dsp::AudioBlock<SampleType> RingBufferAudio<SampleType>::getBlock() 
 {
-    return dsp::AudioBlock<ValueType>(aggregateBuffer);
+    return dsp::AudioBlock<SampleType>(aggregateBuffer);
 }
 
 

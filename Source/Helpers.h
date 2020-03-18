@@ -13,7 +13,7 @@
 class Helpers
 {
 public:
-	//returns the absolute average value of samples 
+	// Returns the absolute average value of samples 
     template<typename SampleType>
 	static SampleType getAverageMagnitude(const dsp::AudioBlock<SampleType>& block)
     {
@@ -34,6 +34,7 @@ public:
 		return sum / (blockSize * numChannels);
     }
 
+	// Returns the average magnitude of all channels
     template<typename SampleType>
 	static SampleType getMagnitude(const dsp::AudioBlock<SampleType>& block)
     {
@@ -54,20 +55,14 @@ public:
 
 		return value / (blockSize * numChannels);
     }
-	// TODO: Create properly normalised dB range which passes through 0.
-	// Wouldn't be properly logarithmic but would avoid random -inf valuePossible?
-	template<typename ValueType>
-	static ValueType getNormalisedDB(ValueType value, ValueType dbMinusInfinity = -100)
-    {
-	    return jlimit<ValueType>(0.0f,1.0f,((ValueType(20.0) * std::log10f(value))/ ValueType(dbMinusInfinity)) + 1);
-    }
 
-	template<typename ValueType>
-	static void copyAudioBlockIntoBuffer(const dsp::AudioBlock<ValueType>& sourceBlock, 
-													AudioBuffer<ValueType>& destinationBuffer, 
-													size_t sourceStartSample, 
-													size_t destStartSample, 
-													size_t numSamples)
+	// Copies the audio from the provided AudioBlock into the provided audio buffer
+	template<typename SampleType>
+	static void copyAudioBlockIntoBuffer(const dsp::AudioBlock<const SampleType>& sourceBlock,
+	                                     AudioBuffer<SampleType>& destinationBuffer,
+	                                     size_t numSamples,
+	                                     size_t sourceStartSample = 0,
+	                                     size_t destStartSample = 0)
 	{
 	    jassert(sourceBlock.getNumChannels() == destinationBuffer.getNumChannels());
 		for(auto channel = 0; channel < destinationBuffer.getNumChannels(); ++channel)
@@ -77,6 +72,13 @@ public:
 			destinationBuffer.copyFrom(channel, destStartSample, channelPointer, numSamples);
 		}
 	}
+
+	template<typename ValueType>
+	static ValueType getNormalisedDB(ValueType value, ValueType dbMinusInfinity = -100)
+    {
+	    return jlimit<ValueType>(0.0f,1.0f,((ValueType(20.0) * std::log10f(value))/ ValueType(dbMinusInfinity)) + 1);
+    }
+
 private:
 	Helpers() = default;
 };

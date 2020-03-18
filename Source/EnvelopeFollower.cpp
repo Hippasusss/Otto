@@ -20,7 +20,8 @@ EnvelopeFollower::EnvelopeFollower():
 	value(0),
 	amount(0),
     attackTime(0.5f),
-	releaseTime(1.0f)
+	releaseTime(1.0f),
+    audioBuffer(new RingBufferAudio<float>(numChannels, sampleRate))
 {
 
 }
@@ -33,12 +34,14 @@ void EnvelopeFollower::prepare(const dsp::ProcessSpec& spec)
     sampleRate = spec.sampleRate;
     maxBlockSize = spec.maximumBlockSize;
     blockTime = maxBlockSize / sampleRate * 1000.0f; 
+    audioBuffer->resize(numChannels, spec.sampleRate);
 }
 
 // TODO: Implement proper envelope follower. Low oscillation for faster values.
 void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& context) 
 {
-    const auto& block = context.getInputBlock();
+    const dsp::AudioBlock<const float> block = context.getInputBlock();
+    audioBuffer->appendBlock(block);
 	const float average = Helpers::getAverageMagnitude(block);
     value += ( average - value) * amount;
     //const bool attackRelease = average > value ? true : false; 

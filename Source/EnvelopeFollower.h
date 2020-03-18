@@ -39,6 +39,8 @@ private:
     float amount;
     float attackTime, releaseTime;
 
+	std::unique_ptr<RingBufferAudio<float>> audioBuffer;
+
 
 };
 
