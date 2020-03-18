@@ -23,6 +23,7 @@ MeterDisplay::MeterDisplay(Meter* newMeter) :
     startTimerHz(timer_constants::REFRESH_RATE);
     addAndMakeVisible(clipMeter);
     addAndMakeVisible(levelText);
+    peak.getValueSmoother().setRate(0.2);
 }
 
 MeterDisplay::~MeterDisplay()
@@ -50,7 +51,6 @@ void MeterDisplay::paint (Graphics& graphics)
         }
 
         // Calculate height of each level meter
-        const bool vertical = height > width;
         const int leftSeparation = i == 0 ? 0 : separation;
         const int rightSeparation = i == channelCount - 1 ? 0 : separation;
         const int scalar = vertical ? height : width;
@@ -83,8 +83,8 @@ void MeterDisplay::paint (Graphics& graphics)
     }
 
     // Set level readout at top of meter
-	const float phVal = peakHold.getSmoothedValueDBFS();
-    const String labelText = phVal > -60 ? String(phVal, 0): String("");
+	const long phVal = peakHold.getSmoothedValueDBFS();
+    const String labelText = phVal > -60 ? String(phVal): String("");
     levelText.setText(labelText, dontSendNotification);
 
     // Set clip indicator
@@ -106,10 +106,21 @@ void MeterDisplay::paint (Graphics& graphics)
 
 void MeterDisplay::resized() 
 {
-    clipMeter.setLookAndFeel(&lookAndFeel2);
-    clipMeter.setBounds(0,0, getBounds().getWidth(), 5);
-    levelText.setLookAndFeel(&lookAndFeel2);
-    levelText.setBounds(0,5, getBounds().getWidth(), 15);
+	clipMeter.setLookAndFeel(&lookAndFeel2);
+	levelText.setLookAndFeel(&lookAndFeel2);
+    vertical = getHeight() > getWidth();
+    const int clipSize = 5;
+    if(vertical)
+    {
+	    clipMeter.setBounds(0,0, getWidth(), clipSize);
+	    levelText.setBounds(0,5, getWidth(), 15);
+    }
+    else
+    {
+        const int textSize = 40;
+	    clipMeter.setBounds(getWidth() - clipSize,0, clipSize, getHeight());
+	    levelText.setBounds(getWidth() - textSize + clipSize, 0, textSize, getHeight());
+    }
 }
 
 void MeterDisplay::setMeter(Meter* meter)

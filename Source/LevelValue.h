@@ -33,6 +33,7 @@ public:
     ValueType getSmoothedValue() const;
     ValueType getSmoothedValueNormalisedDB() const;
     ValueType getSmoothedValueDBFS() const;
+    ValueSmoother<ValueType>& getValueSmoother();
     void setValue(ValueType newValue);
 
 	void timerCallback() override;
@@ -114,6 +115,12 @@ template <typename ValueType>
 ValueType LevelValue<ValueType>::getSmoothedValueDBFS() const
 {
     return Decibels::gainToDecibels<ValueType>(smoother.getValue(), -dbMinusInfinity);
+}
+
+template <typename ValueType>
+ValueSmoother<ValueType>& LevelValue<ValueType>::getValueSmoother() 
+{
+    return smoother;
 }
 
 template <typename ValueType>

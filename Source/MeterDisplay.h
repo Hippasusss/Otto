@@ -32,18 +32,18 @@ public: void timerCallback() override;
     void setMeter(Meter* newMeter);
 
 private:
-    const float rate = 0.15f;
-	const int clipHoldTime = 3000;
-	const int peakHoldTime = 1500;
-
     Meter* meter;
     ToggleButton clipMeter;
     Label levelText;
     CustomLookAndFeel2 lookAndFeel2;
 
-    int channelCount;
-    bool clip = false;
+    const float rate = 0.15f;
+	const int clipHoldTime = 3000;
+	const int peakHoldTime = 1500;
 
+    int channelCount = 0;
+    bool clip = false;
+    bool vertical = false;
 	int clipHoldTimer = 0;
 	int peakHoldTimer = 0;
 
