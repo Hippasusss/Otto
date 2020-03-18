@@ -35,14 +35,11 @@ void MeterDisplay::paint (Graphics& graphics)
 {
     const int separation = 1;
     const int height = getHeight();
-    const int width = (getWidth() /  channelCount);
+    const int width = getWidth();
 
     graphics.setColour(getLookAndFeel().findColour(Slider::ColourIds::rotarySliderOutlineColourId));
     for(int i = 0; i < channelCount; ++i)
     {
-        const int leftSeparation = i == 0 ? 0 : separation;
-        const int rightSeparation = i == channelCount - 1 ? 0 : separation;
-
         // Get values of various levels
 		RMS = meter->getRMS(i);
 		peak = meter->getPeak(i);
@@ -52,25 +49,45 @@ void MeterDisplay::paint (Graphics& graphics)
             peakHoldTimer = peakHoldTime;
         }
 
-        //calculate height of each level meter
-        const int heightRMS = RMS.getSmoothedValueNormalisedDB() * height;
-        const int heightPeak= peak.getSmoothedValueNormalisedDB() * height;
-        const int heightPeakHold= peakHold.getSmoothedValueNormalisedDB() * height;
-    	
-		//draw RMS
-        graphics.fillRect((i * width) + leftSeparation , getHeight() - heightRMS, width - leftSeparation - rightSeparation, heightRMS);
-		//draw Peak 
-        graphics.drawRect((i * width) + leftSeparation , getHeight() - heightPeak, width - leftSeparation- rightSeparation, heightPeak);
-        //draw Peak Hold
-        graphics.drawRect((i * width) + leftSeparation , getHeight() - heightPeakHold, width - leftSeparation- rightSeparation, 1);
+        // Calculate height of each level meter
+        const bool vertical = height > width;
+        const int leftSeparation = i == 0 ? 0 : separation;
+        const int rightSeparation = i == channelCount - 1 ? 0 : separation;
+        const int scalar = vertical ? height : width;
+		const int channelWidth = vertical ? width / channelCount : height / channelCount;
+		const int scalarRMS = RMS.getSmoothedValueNormalisedDB() * scalar;
+		const int scalarPeak = peak.getSmoothedValueNormalisedDB() * scalar;
+		const int scalarPeakHold= peakHold.getSmoothedValueNormalisedDB() * scalar;
+
+        // Vertical
+        if(height >= width)
+        {
+
+			// Draw RMS
+	        graphics.fillRect((i * channelWidth) + leftSeparation , height - scalarRMS, channelWidth - leftSeparation - rightSeparation, scalarRMS);
+			// Draw Peak 
+	        graphics.drawRect((i * channelWidth) + leftSeparation , height - scalarPeak, channelWidth - leftSeparation- rightSeparation, scalarPeak);
+	        // Draw Peak Hold
+	        graphics.drawRect((i * channelWidth) + leftSeparation , height - scalarPeakHold, channelWidth - leftSeparation- rightSeparation, 1);
+        }
+        // Horizontal
+        if(height < width)
+        {
+			// Draw RMS
+	        graphics.fillRect(0, i * channelWidth + leftSeparation, scalarRMS, channelWidth - rightSeparation - leftSeparation);
+			// Draw Peak 
+	        graphics.drawRect(0, i * channelWidth + leftSeparation, scalarPeak, channelWidth - rightSeparation - leftSeparation);
+	        // Draw Peak Hold
+	        graphics.drawRect(scalarPeakHold, i * channelWidth + leftSeparation, 2 , channelWidth - rightSeparation - leftSeparation);
+        }
     }
 
-    //set level readout at top of meter
+    // Set level readout at top of meter
 	const float phVal = peakHold.getSmoothedValueDBFS();
     const String labelText = phVal > -60 ? String(phVal, 0): String("");
     levelText.setText(labelText, dontSendNotification);
 
-    //set clip indicator
+    // Set clip indicator
     clip = meter->getClip();
     if (clip)
     {
@@ -79,7 +96,7 @@ void MeterDisplay::paint (Graphics& graphics)
         clipHoldTimer = clipHoldTime;
     }
 
-    //disallow clicking back on the clip
+    // Disallow clicking back on the clip
     else if(!clipMeter.getToggleState())
     {
         clipMeter.setInterceptsMouseClicks(false, false);

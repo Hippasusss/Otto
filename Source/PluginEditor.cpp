@@ -20,7 +20,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
 	outputMeter(processor.getOutputMeter())
 {
     setLookAndFeel(&lookAndFeel);
-    setSize (800, 300);
+    setSize (800, 154);
 
     // Default setup for sliders
     for(auto& slider : sliders)
@@ -107,12 +107,10 @@ void Auto_AudioProcessorEditor::resized()
     auto rect = getLocalBounds();
 
     // Top section with Graph and Meters
-    auto topRect = rect.removeFromTop(200).reduced(5,1);
+    auto topRect = rect.removeFromTop(54).reduced(5,1);
     topRect.removeFromTop(4);
-    inputMeter.setBounds(topRect.removeFromLeft(20));
-    outputMeter.setBounds(topRect.removeFromRight(20));
-    //display.setBounds(topRect);
-
+    inputMeter.setBounds(topRect.removeFromTop(20));
+    outputMeter.setBounds(topRect.removeFromBottom(20));
 
     // Bottom Section
     parameterGroup.setBounds(rect);
