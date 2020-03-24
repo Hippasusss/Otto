@@ -2049,6 +2049,7 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_opengl.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\LevelValueDisplay.h"/>
     <ClInclude Include="..\..\Source\RampSmoother.h"/>
     <ClInclude Include="..\..\Source\Constants.h"/>
     <ClInclude Include="..\..\Source\Helpers.h"/>

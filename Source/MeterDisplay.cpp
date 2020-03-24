@@ -23,7 +23,7 @@ MeterDisplay::MeterDisplay(Meter* newMeter) :
     startTimerHz(timer_constants::REFRESH_RATE);
     addAndMakeVisible(clipMeter);
     addAndMakeVisible(levelText);
-    peak.getValueSmoother().setRate(0.2);
+    peak.setRate(0.2);
 }
 
 MeterDisplay::~MeterDisplay()
@@ -62,7 +62,6 @@ void MeterDisplay::paint (Graphics& graphics)
         // Vertical
         if(height >= width)
         {
-
 			// Draw RMS
 	        graphics.fillRect((i * channelWidth) + leftSeparation , height - scalarRMS, channelWidth - leftSeparation - rightSeparation, scalarRMS);
 			// Draw Peak 

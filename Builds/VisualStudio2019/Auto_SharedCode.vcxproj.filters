@@ -2553,6 +2553,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\LevelValueDisplay.h">
+      <Filter>Auto\Source\Utils</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\RampSmoother.h">
       <Filter>Auto\Source\Utils</Filter>
     </ClInclude>

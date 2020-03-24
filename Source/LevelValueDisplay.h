@@ -34,6 +34,7 @@ public:
     ValueType getSmoothedValueNormalisedDB() const;
     ValueType getSmoothedValueDBFS() const;
     void setValue(ValueType newValue);
+    void setRate(float value);
 
 private:
     ValueType value;
@@ -117,5 +118,12 @@ void LevelValueDisplay<ValueType>::setValue(ValueType newValue)
 {
     value = newValue;
     smoother = newValue;
+}
+
+template <typename ValueType>
+void LevelValueDisplay<ValueType>::setRate(float value)
+{
+    smoother.setAttack(value);
+    smoother.setRelease(value);
 }
 
