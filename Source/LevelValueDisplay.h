@@ -11,20 +11,20 @@
 
 #pragma once
 #include <JuceHeader.h>
-#include "ValueSmoother.h"
+#include "RampSmoother.h"
 #include "Constants.h"
 #include "Helpers.h"
 
 template<typename ValueType>
-class LevelValue : Timer
+class LevelValueDisplay 
 {
 public:
-	LevelValue();
-	LevelValue(ValueType value);
-	~LevelValue();
+	LevelValueDisplay();
+	LevelValueDisplay(ValueType value);
+	~LevelValueDisplay();
 
-    LevelValue& operator=(const LevelValue& other);
-    LevelValue& operator=(ValueType);
+    LevelValueDisplay& operator=(const LevelValueDisplay& other);
+    LevelValueDisplay& operator=(ValueType);
     operator ValueType&();
 
     ValueType getValue() const;
@@ -35,32 +35,28 @@ public:
     ValueType getSmoothedValueDBFS() const;
     void setValue(ValueType newValue);
 
-	void timerCallback() override;
 private:
     ValueType value;
-    ValueSmoother<ValueType> smoother;
+    RampSmoother<ValueType> smoother;
     const float dbMinusInfinity = 60;
+    const float AttackRelease = 0.2;
 	
 };
 
 template <typename ValueType>
-LevelValue<ValueType>::LevelValue() : value(0), smoother(0)
-{
-    startTimerHz(timer_constants::REFRESH_RATE);
-}
+LevelValueDisplay<ValueType>::LevelValueDisplay() : value(0), smoother(0, timer_constants::REFRESH_RATE, AttackRelease)
+{}
 
 template <typename ValueType>
-LevelValue<ValueType>::LevelValue(ValueType value) : value(value), smoother(value)
-{
-    startTimerHz(timer_constants::REFRESH_RATE);
-}
+LevelValueDisplay<ValueType>::LevelValueDisplay(ValueType value) : value(value), smoother(value, timer_constants::REFRESH_RATE, AttackRelease)
+{}
 
 template <typename ValueType>
-LevelValue<ValueType>::~LevelValue() = default;
+LevelValueDisplay<ValueType>::~LevelValueDisplay() = default;
 
 
 template <typename ValueType>
-LevelValue<ValueType>& LevelValue<ValueType>::operator=(const LevelValue& other)
+LevelValueDisplay<ValueType>& LevelValueDisplay<ValueType>::operator=(const LevelValueDisplay& other)
 {
     if(&other == this) return *this;
     setValue(other.value);
@@ -68,63 +64,58 @@ LevelValue<ValueType>& LevelValue<ValueType>::operator=(const LevelValue& other)
 }
 
 template <typename ValueType>
-LevelValue<ValueType>& LevelValue<ValueType>::operator=(ValueType other)
+LevelValueDisplay<ValueType>& LevelValueDisplay<ValueType>::operator=(ValueType other)
 {
     setValue(other);
     return *this;
 }
 
 template <typename ValueType>
-LevelValue<ValueType>::operator ValueType&()
+LevelValueDisplay<ValueType>::operator ValueType&()
 {
     return value;
 }
 
 template <typename ValueType>
-ValueType LevelValue<ValueType>::getValue() const
+ValueType LevelValueDisplay<ValueType>::getValue() const
 {
     return value;
 }
 
 template <typename ValueType>
-ValueType LevelValue<ValueType>::getValueNormalisedDB() const
+ValueType LevelValueDisplay<ValueType>::getValueNormalisedDB() const
 {
 	return Helpers::getNormalisedDB(value, dbMinusInfinity);
 }
 
 template <typename ValueType>
-ValueType LevelValue<ValueType>::getValueDBFS() const
+ValueType LevelValueDisplay<ValueType>::getValueDBFS() const
 {
     return Decibels::gainToDecibels(value, -dbMinusInfinity);
 }
 
 template <typename ValueType>
-ValueType LevelValue<ValueType>::getSmoothedValue() const
+ValueType LevelValueDisplay<ValueType>::getSmoothedValue() const
 {
     return smoother.getValue();
 }
 
 template <typename ValueType>
-ValueType LevelValue<ValueType>::getSmoothedValueNormalisedDB() const
+ValueType LevelValueDisplay<ValueType>::getSmoothedValueNormalisedDB() const
 {
 	return Helpers::getNormalisedDB(smoother.getValue(), dbMinusInfinity);
 }
 
 template <typename ValueType>
-ValueType LevelValue<ValueType>::getSmoothedValueDBFS() const
+ValueType LevelValueDisplay<ValueType>::getSmoothedValueDBFS() const
 {
     return Decibels::gainToDecibels<ValueType>(smoother.getValue(), -dbMinusInfinity);
 }
 
 template <typename ValueType>
-void LevelValue<ValueType>::setValue(ValueType newValue)
+void LevelValueDisplay<ValueType>::setValue(ValueType newValue)
 {
     value = newValue;
     smoother = newValue;
 }
 
-template <typename ValueType>
-void LevelValue<ValueType>::timerCallback()
-{
-    smoother.incrementValue();
-}

@@ -14,7 +14,7 @@
 
 
 #include "CustomLookAndFeel.h"
-#include "LevelValue.h"
+#include "LevelValueDisplay.h"
 #include "Meter.h"
 
 //==============================================================================
@@ -47,9 +47,9 @@ private:
 	int clipHoldTimer = 0;
 	int peakHoldTimer = 0;
 
-	LevelValue<float> peak;
-	LevelValue<float> peakHold;
-	LevelValue<float> RMS;
+	LevelValueDisplay<float> peak;
+	LevelValueDisplay<float> peakHold;
+	LevelValueDisplay<float> RMS;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MeterDisplay)

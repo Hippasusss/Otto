@@ -96,6 +96,7 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 										static_cast<uint32>(samplesPerBlock),
 										static_cast<uint32>(getTotalNumInputChannels())};
 
+
     // Avoid clicks during gain parameter change
 	chain.get<outputGainIndex>().setRampDurationSeconds(0.1);
 	chain.get<inputGainIndex>().setRampDurationSeconds(0.1);
@@ -103,21 +104,22 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     // Set source for dry buffer of mix control
 	chain.get<mixerIndex>().setOtherBlock(chain.get<bufferStoreIndex>().getAudioBlockPointer());
 
-    // Register envelope follower callback to set frequency parameter 
+    // Register envelope follower callback to set frequency parameter at runtime
     dsp::LadderFilter<float>& filter = chain.get<filterIndex>();
 	chain.get<followerIndex>().onValueCalculated = [&](const float value) 
+
 	{
-        const float frequencySet = frequency.get();
         const float maxFrequency = frequency.range.end;
+        const float frequencySet = frequency;
         const float frequencyRemainder = maxFrequency - frequencySet;
         // TODO: Change mapping? currently not logarithmic.
-        const auto modulatedFrequency = jlimit<float>(20, 20000, (this->frequency.get() + value * frequencyRemainder));
+        const auto modulatedFrequency = jlimit<float>(20, 20000, (this->frequency + value * frequencyRemainder));
         filter.setCutoffFrequencyHz(modulatedFrequency);
 	};
 
     // initalise
-    initaliseParameters();
     chain.prepare(spec);
+    initaliseParameters();
 }
 
 void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)

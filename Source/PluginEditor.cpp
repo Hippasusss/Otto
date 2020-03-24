@@ -91,12 +91,12 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
 Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
 {
     setLookAndFeel(nullptr);
-    for(auto slider : sliders)
+    for(auto& slider : sliders)
     {
         slider->removeListener(&processor);
     }
 
-    for(auto button : buttons)
+    for(auto& button : buttons)
     {
         button->removeListener(&processor);
     }

@@ -169,7 +169,7 @@ call &quot;..\\..\\..\\..\\..\\Programs\\Juce\\Utilities\\AAX_SDK_2p3p2\\Utiliti
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_plugin_client_AAX.cpp"/>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Programs\Juce\JUCE\modules\juce_audio_plugin_client\AAX\juce_AAX_Modifier_Injector.h"/>
+    <ClInclude Include="..\..\..\..\..\..\Programs\Juce\JUCE\modules\juce_audio_plugin_client\AAX\juce_AAX_Modifier_Injector.h"/>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include=".\resources.rc"/>

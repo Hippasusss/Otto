@@ -17,8 +17,8 @@ EnvelopeFollower::EnvelopeFollower():
 	numChannels(2),
 	maxBlockSize(0),
 	blockTime(0),
-	value(0),
 	amount(0),
+	value(0, 1000),
     attackTime(0.5f),
 	releaseTime(1.0f),
     audioBuffer(new RingBufferAudio<float>(numChannels, sampleRate))
@@ -35,19 +35,26 @@ void EnvelopeFollower::prepare(const dsp::ProcessSpec& spec)
     maxBlockSize = spec.maximumBlockSize;
     blockTime = maxBlockSize / sampleRate * 1000.0f; 
     audioBuffer->resize(numChannels, spec.sampleRate);
+    value.setAttack(0.1);
+    value.setRelease(0.7);
 }
 
-// TODO: Implement proper envelope follower. Low oscillation for faster values.
 void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& context) 
 {
-    const dsp::AudioBlock<const float> block = context.getInputBlock();
+    // Average EF (ringing at faster speeds, AR either equal or controlled by separate logic)
+    const int length = attackTime * sampleRate;
+    jassert(length <= sampleRate);
+
+    const dsp::AudioBlock<const float>& block = context.getInputBlock();
     audioBuffer->appendBlock(block);
-	const float average = Helpers::getAverageMagnitude(block);
-    value += ( average - value) * amount;
-    //const bool attackRelease = average > value ? true : false; 
-    //const float attackRelease = average > value ? attackTime: releaseTime; 
-	//value += (blockTime / attackRelease) *  (average * amount - value) ;
-	if(onValueCalculated) onValueCalculated(value);
+
+	const float average = Helpers::getAverageMagnitude(audioBuffer->getBlock().getSubBlock(0, length));
+    value = average * amount;
+	if(onValueCalculated) onValueCalculated(getValue());
+
+	// One-pole LP Filer EF
+
+	// Hilbert Transform EF?
 }
 
 void EnvelopeFollower::reset()
@@ -71,5 +78,10 @@ void EnvelopeFollower::setAmount(float newAmount)
 
 float EnvelopeFollower::getValue() const
 {
-    return value;
+    return value.getValue();
+}
+
+float EnvelopeFollower::getValueNormalisedDB() const
+{
+    return value.getValue();
 }

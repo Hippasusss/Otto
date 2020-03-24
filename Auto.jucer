@@ -7,8 +7,7 @@
   <MAINGROUP id="vPwknA" name="Auto">
     <GROUP id="{62755887-84A8-E3C6-EC3D-D7338C224042}" name="Source">
       <GROUP id="{AA83E59E-A34E-D4E2-1326-C1725F24E20A}" name="Utils">
-        <FILE id="vvQf06" name="LevelValue.h" compile="0" resource="0" file="Source/LevelValue.h"/>
-        <FILE id="iPXHiu" name="ValueSmoother.h" compile="0" resource="0" file="Source/ValueSmoother.h"/>
+        <FILE id="WkI6HL" name="RampSmoother.h" compile="0" resource="0" file="Source/RampSmoother.h"/>
         <FILE id="vNFLIQ" name="Constants.h" compile="0" resource="0" file="Source/Constants.h"/>
         <FILE id="IhPtD0" name="Helpers.h" compile="0" resource="0" file="Source/Helpers.h"/>
         <FILE id="S8BKIO" name="RingBuffer.h" compile="0" resource="0" file="Source/RingBuffer.h"/>

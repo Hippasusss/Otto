@@ -54,8 +54,8 @@ void MeterDisplay::paint (Graphics& graphics)
 
         //calculate height of each level meter
         const int heightRMS = RMS.getSmoothedValueNormalisedDB() * height;
-        const int heightPeak= peak.getSmoothedValueNormalisedDB() * height;
-        const int heightPeakHold= peakHold.getSmoothedValueNormalisedDB() * height;
+        const int heightPeak = peak.getSmoothedValueNormalisedDB() * height;
+        const int heightPeakHold = peakHold.getSmoothedValueNormalisedDB() * height;
     	
 		//draw RMS
         graphics.fillRect((i * width) + leftSeparation , getHeight() - heightRMS, width - leftSeparation - rightSeparation, heightRMS);

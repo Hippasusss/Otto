@@ -52,8 +52,8 @@ public:
 
 private:
 
-    const float slow = 40;
-    const float fast = 10;
+    const float slow = 1.0;
+    const float fast = 0.3;
 
     void setParameter(const String& parameterID);
     void initaliseParameters();
