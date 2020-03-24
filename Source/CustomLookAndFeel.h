@@ -142,6 +142,7 @@ public:
     void drawLabel(Graphics& graphics, Label& label) override
     {
 	    
+        label.setInterceptsMouseClicks(false,false);
         const Font font {"Futara", 15, Font::plain};
         const String text = label.getText();
 	    const Rectangle<int> fillArea = getLocalComponentArea<int>(label);
