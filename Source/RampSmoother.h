@@ -14,88 +14,24 @@ class RampSmoother : Timer
 {
 public:
 	RampSmoother() : value(0), destinationValue(0){}
-	RampSmoother(ValueType initValue, int refreshRateHz) : value(initValue), destinationValue(initValue)
-	{
-		startTimerHz(refreshRateHz);
-	}
+	RampSmoother(ValueType initValue, int refreshRateHz);
+	RampSmoother(ValueType initValue, int refreshRateHz, float ARTime);
+	RampSmoother& operator=(RampSmoother&& other) noexcept;
+	RampSmoother& operator=(const RampSmoother& other) noexcept;
+	RampSmoother& operator=(ValueType other) noexcept;
+	ValueType operator-(ValueType other) noexcept;
+	ValueType operator+(ValueType other) noexcept;
+	operator ValueType&();
+	bool operator>(const RampSmoother& other) noexcept;
+	bool operator<(const RampSmoother& other) noexcept;
 
-	RampSmoother(ValueType initValue, int refreshRateHz, float ARTime) : value(initValue), destinationValue(initValue)
-	{
-		release = ARTime;
-		attack = ARTime;
-		startTimerHz(refreshRateHz);
-	}
+	void setValue(ValueType val);
+	void setAttack(float newRate);
+	void setRelease(float newRate);
+	void setRefreshRate(int newRate);
+	ValueType getValue() const;
 
-	RampSmoother& operator=(RampSmoother&& other) noexcept
-	{
-		if (this == &other)
-			return other;
-		return *this;
-	}
-
-	RampSmoother& operator=(const RampSmoother& other) noexcept
-	{
-		destinationValue = other.destinationValue;
-		return *this;
-	}
-	RampSmoother& operator=(ValueType other) noexcept
-	{
-		destinationValue = other;
-		return *this;
-	}
-
-	ValueType operator-(ValueType other) noexcept
-	{
-		return destinationValue - other;
-	}
-
-	ValueType operator+(ValueType other) noexcept
-	{
-		return destinationValue + other;
-	}
-
-	bool operator>(const RampSmoother& other) noexcept
-	{
-		return destinationValue > other.destinationValue;
-	}
-	bool operator<(const RampSmoother& other) noexcept
-	{
-		return destinationValue < other.destinationValue;
-	}
-
-	void setValue(ValueType val)
-	{
-		destinationValue = val;
-	}
-	
-	void setAttack(float newRate)
-	{
-		attack = newRate / getTimerInterval();
-	}
-
-	void setRelease(float newRate)
-	{
-		release = newRate / getTimerInterval();
-	}
-
-	void setRefreshRate(int newRate)
-	{
-		stopTimer();
-		startTimerHz(newRate);
-	}
-
-	ValueType getValue() const
-	{
-		return value;
-	}
-
-	void timerCallback() override
-	{
-		const float envelopeTime = destinationValue > value ? attack : release;
-		const float timerInterval = static_cast<float>(getTimerInterval()) / 1000;
-		const float delta = destinationValue - value;
-		value += (delta) / (envelopeTime / timerInterval);
-	}
+	void timerCallback() override;
 
 private:
 	std::atomic<ValueType> value;
@@ -103,4 +39,114 @@ private:
 	float attack  = 0.5;
 	float release = 0.5;
 };
+
+template <typename ValueType>
+RampSmoother<ValueType>::RampSmoother(ValueType initValue, int refreshRateHz): value(initValue),
+                                                                               destinationValue(initValue)
+{
+	startTimerHz(refreshRateHz);
+}
+
+template <typename ValueType>
+RampSmoother<ValueType>::RampSmoother(ValueType initValue, int refreshRateHz, float ARTime): value(initValue),
+                                                                                             destinationValue(initValue)
+{
+	release = ARTime;
+	attack = ARTime;
+	startTimerHz(refreshRateHz);
+}
+
+template <typename ValueType>
+RampSmoother<ValueType>& RampSmoother<ValueType>::operator=(RampSmoother&& other) noexcept
+{
+	if (this == &other)
+		return other;
+	return *this;
+}
+
+template <typename ValueType>
+RampSmoother<ValueType>& RampSmoother<ValueType>::operator=(const RampSmoother& other) noexcept
+{
+	destinationValue = other.destinationValue;
+	return *this;
+}
+
+template <typename ValueType>
+RampSmoother<ValueType>& RampSmoother<ValueType>::operator=(ValueType other) noexcept
+{
+	destinationValue = other;
+	return *this;
+}
+
+template <typename ValueType>
+ValueType RampSmoother<ValueType>::operator-(ValueType other) noexcept
+{
+	return destinationValue - other;
+}
+
+template <typename ValueType>
+ValueType RampSmoother<ValueType>::operator+(ValueType other) noexcept
+{
+	return destinationValue + other;
+}
+
+template <typename ValueType>
+RampSmoother<ValueType>::operator ValueType&()
+{
+	return value;
+}
+
+template <typename ValueType>
+bool RampSmoother<ValueType>::operator>(const RampSmoother& other) noexcept
+{
+	return destinationValue > other.destinationValue;
+}
+
+template <typename ValueType>
+bool RampSmoother<ValueType>::operator<(const RampSmoother& other) noexcept
+{
+	return destinationValue < other.destinationValue;
+}
+
+template <typename ValueType>
+void RampSmoother<ValueType>::setValue(ValueType val)
+{
+	destinationValue = val;
+}
+
+template <typename ValueType>
+void RampSmoother<ValueType>::setAttack(float newRate)
+{
+	attack = newRate / getTimerInterval();
+}
+
+template <typename ValueType>
+void RampSmoother<ValueType>::setRelease(float newRate)
+{
+	release = newRate / getTimerInterval();
+}
+
+template <typename ValueType>
+void RampSmoother<ValueType>::setRefreshRate(int newRate)
+{
+	stopTimer();
+	startTimerHz(newRate);
+}
+
+template <typename ValueType>
+ValueType RampSmoother<ValueType>::getValue() const
+{
+	return value;
+}
+
+template <typename ValueType>
+void RampSmoother<ValueType>::timerCallback()
+{
+	jassert(value < 10);
+	jassert(value > -10);
+	const float envelopeTime = destinationValue > value ? attack : release;
+	const float timerInterval = static_cast<float>(getTimerInterval()) / 1000.0f;
+	const float delta = destinationValue - value;
+	value += delta / (envelopeTime / timerInterval);
+}
 

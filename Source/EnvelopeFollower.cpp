@@ -8,6 +8,7 @@
   ==============================================================================
 */
 
+
 #include "EnvelopeFollower.h"
 #include "JuceHeader.h"
 #include "Helpers.h"
@@ -21,9 +22,9 @@ EnvelopeFollower::EnvelopeFollower():
 	value(0, 1000),
     attackTime(0.5f),
 	releaseTime(1.0f),
-    audioBuffer(new RingBufferAudio<float>(numChannels, sampleRate))
+    audioBuffer(new RingBufferAudio<float>(numChannels, sampleRate)),
+    copyBuffer(numChannels, 0)
 {
-
 }
 
 EnvelopeFollower::~EnvelopeFollower() = default;
@@ -35,30 +36,43 @@ void EnvelopeFollower::prepare(const dsp::ProcessSpec& spec)
     maxBlockSize = spec.maximumBlockSize;
     blockTime = maxBlockSize / sampleRate * 1000.0f; 
     audioBuffer->resize(numChannels, spec.sampleRate);
+
     value.setAttack(0.1);
     value.setRelease(0.7);
+
+    copyBuffer.setSize(numChannels, maxBlockSize);
+    
+    filter.state = dsp::IIR::Coefficients<float>::makeLowPass(sampleRate, 5);
+    filter.prepare(spec);
 }
 
 void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& context) 
 {
     // Average EF (ringing at faster speeds, AR either equal or controlled by separate logic)
-    const int length = attackTime * sampleRate;
-    jassert(length <= sampleRate);
+	 //   const int length = attackTime * sampleRate;
+	 //   jassert(length <= sampleRate);
 
+	 //   const dsp::AudioBlock<const float>& block = context.getInputBlock();
+	 //   audioBuffer->appendBlock(block);
+
+	//const float average = Helpers::getAverageMagnitude(audioBuffer->getBlock().getSubBlock(0, length));
+	//   value = average * amount;
+	//if(onValueCalculated) onValueCalculated(getValue());
+
+	// IIR Filter
     const dsp::AudioBlock<const float>& block = context.getInputBlock();
-    audioBuffer->appendBlock(block);
+    dsp::AudioBlock<float> copyBlock(copyBuffer);
+    Helpers::copyAudioBlockIntoBuffer(block, copyBuffer, copyBuffer.getNumSamples());
+    const dsp::ProcessContextReplacing<float> copyContext(copyBlock);
+    filter.process(copyContext);
+    auto max = copyBlock.findMinAndMax().getEnd();
+    onValueCalculated(max);
 
-	const float average = Helpers::getAverageMagnitude(audioBuffer->getBlock().getSubBlock(0, length));
-    value = average * amount;
-	if(onValueCalculated) onValueCalculated(getValue());
-
-	// One-pole LP Filer EF
-
-	// Hilbert Transform EF?
 }
 
 void EnvelopeFollower::reset()
 {
+    filter.reset();
 }
 
 void EnvelopeFollower::setAttack(const float milliseconds)

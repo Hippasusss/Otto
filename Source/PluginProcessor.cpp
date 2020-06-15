@@ -107,12 +107,10 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     // Register envelope follower callback to set frequency parameter at runtime
     dsp::LadderFilter<float>& filter = chain.get<filterIndex>();
 	chain.get<followerIndex>().onValueCalculated = [&](const float value) 
-
 	{
         const float maxFrequency = frequency.range.end;
         const float frequencySet = frequency;
         const float frequencyRemainder = maxFrequency - frequencySet;
-        // TODO: Change mapping? currently not logarithmic.
         const auto modulatedFrequency = jlimit<float>(20, 20000, (this->frequency + value * frequencyRemainder));
         filter.setCutoffFrequencyHz(modulatedFrequency);
 	};
@@ -122,6 +120,7 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     initaliseParameters();
 }
 
+//Todo: split process block into parts so as processing is the same regardless of block size
 void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
     ScopedNoDenormals noDenormals;

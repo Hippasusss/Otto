@@ -23,7 +23,9 @@ MeterDisplay::MeterDisplay(Meter* newMeter) :
     startTimerHz(timer_constants::REFRESH_RATE);
     addAndMakeVisible(clipMeter);
     addAndMakeVisible(levelText);
-    peak.setRate(0.2);
+    peak.setRate(0.5);
+    RMS.setRate(0.5);
+    peakHold.setRate(0.5);
 }
 
 MeterDisplay::~MeterDisplay()
@@ -55,12 +57,13 @@ void MeterDisplay::paint (Graphics& graphics)
         const int rightSeparation = i == channelCount - 1 ? 0 : separation;
         const int scalar = vertical ? height : width;
 		const int channelWidth = vertical ? width / channelCount : height / channelCount;
+
 		const int scalarRMS = RMS.getSmoothedValueNormalisedDB() * scalar;
+		const int scalarPeakHold = peakHold.getSmoothedValueNormalisedDB() * scalar;
 		const int scalarPeak = peak.getSmoothedValueNormalisedDB() * scalar;
-		const int scalarPeakHold= peakHold.getSmoothedValueNormalisedDB() * scalar;
 
         // Vertical
-        if(height >= width)
+        if(vertical)
         {
 			// Draw RMS
 	        graphics.fillRect((i * channelWidth) + leftSeparation , height - scalarRMS, channelWidth - leftSeparation - rightSeparation, scalarRMS);
@@ -70,7 +73,7 @@ void MeterDisplay::paint (Graphics& graphics)
 	        graphics.drawRect((i * channelWidth) + leftSeparation , height - scalarPeakHold, channelWidth - leftSeparation- rightSeparation, 1);
         }
         // Horizontal
-        if(height < width)
+        else if(!vertical)
         {
 			// Draw RMS
 	        graphics.fillRect(0, i * channelWidth + leftSeparation, scalarRMS, channelWidth - rightSeparation - leftSeparation);

@@ -41,6 +41,9 @@ private:
     float amount;
     float attackTime, releaseTime;
 
+    dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>> filter;
+    AudioBuffer<float> copyBuffer;
+
 	std::unique_ptr<RingBufferAudio<float>> audioBuffer;
 
 

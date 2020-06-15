@@ -39,7 +39,7 @@ public:
 private:
     ValueType value;
     RampSmoother<ValueType> smoother;
-    const float dbMinusInfinity = 60;
+    const float dbMinusInfinity = -60;
     const float AttackRelease = 0.2;
 	
 };
@@ -92,7 +92,7 @@ ValueType LevelValueDisplay<ValueType>::getValueNormalisedDB() const
 template <typename ValueType>
 ValueType LevelValueDisplay<ValueType>::getValueDBFS() const
 {
-    return Decibels::gainToDecibels(value, -dbMinusInfinity);
+    return Decibels::gainToDecibels(value, dbMinusInfinity);
 }
 
 template <typename ValueType>
@@ -110,7 +110,7 @@ ValueType LevelValueDisplay<ValueType>::getSmoothedValueNormalisedDB() const
 template <typename ValueType>
 ValueType LevelValueDisplay<ValueType>::getSmoothedValueDBFS() const
 {
-    return Decibels::gainToDecibels<ValueType>(smoother.getValue(), -dbMinusInfinity);
+    return Decibels::gainToDecibels<ValueType>(smoother.getValue(), dbMinusInfinity);
 }
 
 template <typename ValueType>

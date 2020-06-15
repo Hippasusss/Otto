@@ -76,10 +76,11 @@ public:
 	template<typename ValueType>
 	static ValueType getNormalisedDB(ValueType value, ValueType dbMinusInfinity = -100)
     {
-	    return jlimit<ValueType>(0.0f,1.0f,((ValueType(20.0) * std::log10f(value))/ ValueType(dbMinusInfinity)) + 1);
+	    return jlimit<ValueType>(0.0f, 1.0f, ((ValueType(20.0) * std::log10f(abs(value)) / ValueType(-dbMinusInfinity)) + 1));
     }
 
 private:
 	Helpers() = default;
+	~Helpers() = default;
 };
 
