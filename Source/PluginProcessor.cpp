@@ -116,7 +116,6 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
         const float frequencyRemainder = maxFrequency - frequencySet;
 
         const auto modulatedFrequency = jlimit<float>(20, 20000, (this->frequency + value * frequencyRemainder));
-        std::cout << value << std::endl;
         filter.setCutoffFrequencyHz(modulatedFrequency);
     };
 

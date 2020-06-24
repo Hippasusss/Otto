@@ -65,7 +65,7 @@ void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& contex
     Helpers::copyAudioBlockIntoBuffer(block, copyBuffer, copyBuffer.getNumSamples());
     const dsp::ProcessContextReplacing<float> copyContext(copyBlock);
     filter.process(copyContext);
-    auto max = copyBlock.findMinAndMax().getEnd();
+    auto max = copyContext.getOutputBlock().findMinAndMax().getEnd();
     onValueCalculated(max);
 
 }
