@@ -1,33 +1,36 @@
 /*
-  ==============================================================================
+   ==============================================================================
 
-    GraphDisplay.h
-    Created: 3 Mar 2020 11:27:17pm
-    Author:  Danny Herbert
+   GraphDisplay.h
+Created: 3 Mar 2020 11:27:17pm
+Author:  Danny Herbert
 
-  ==============================================================================
+==============================================================================
 */
 
 #pragma once
 
 #include <JuceHeader.h>
+
+#include "CustomLookAndFeel.h"
 #include "RingBuffer.h"
 class GraphDisplay    : public Component,
-						public Timer
+    public Timer
 {
-public:
-	static const int RING_BUFFER_SIZE = 50;
+    public:
+        static const int RING_BUFFER_SIZE = 50;
 
-    GraphDisplay();
-    ~GraphDisplay();
+        GraphDisplay();
+        ~GraphDisplay();
 
-    void paint (Graphics&) override;
-    void timerCallback() override;
-    std::function<float()>onAddValue;
-    std::function<float()>onSetValueOffset;
+        void paint (Graphics&) override;
+        void timerCallback() override;
+        void resized() override;
+        AudioVisualiserComponent graph;
+        CustomLookAndFeel2 lookAndFeel2;
 
-private:
-    RingBufferArray<float, RING_BUFFER_SIZE> valuesToDraw;
-    float valueOffset;
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GraphDisplay)
+    private:
+        RingBufferAudio<float> valuesToDraw;
+        float valueOffset;
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GraphDisplay)
 };

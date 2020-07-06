@@ -128,6 +128,7 @@ public:
     void resize(size_t channels, size_t length);
 	void appendBlock(const dsp::AudioBlock<const SampleType>& newBlock);
 	dsp::AudioBlock<SampleType> getBlock();
+	AudioBuffer<SampleType> getBuffer();
 private:
 	AudioBuffer<SampleType> aggregateBuffer;
     size_t size = 0;
@@ -179,6 +180,12 @@ template <typename SampleType>
 dsp::AudioBlock<SampleType> RingBufferAudio<SampleType>::getBlock() 
 {
     return dsp::AudioBlock<SampleType>(aggregateBuffer);
+}
+
+template <typename SampleType>
+AudioBuffer<SampleType> RingBufferAudio<SampleType>::getBuffer()
+{
+    return aggregateBuffer;
 }
 
 

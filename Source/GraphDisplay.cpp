@@ -14,11 +14,15 @@
 
 //==============================================================================
 
-GraphDisplay::GraphDisplay() : valuesToDraw(), valueOffset(0) 
+GraphDisplay::GraphDisplay() : valuesToDraw(1, 512), valueOffset(0) , graph(1)
 {
     startTimerHz(timer_constants::REFRESH_RATE);
+    graph.setLookAndFeel(&lookAndFeel2);
 }
-GraphDisplay::~GraphDisplay() = default;
+GraphDisplay::~GraphDisplay()
+{
+	graph.setLookAndFeel(nullptr);
+}
 
 void GraphDisplay::paint (Graphics& graphics)
 {
@@ -27,23 +31,17 @@ void GraphDisplay::paint (Graphics& graphics)
     const int x = width/2;
     const int y = height/2;
     const int offset = valueOffset; 
-    const float valuesSize = valuesToDraw.getSize();
+    graph.pushBuffer(valuesToDraw.getBuffer());
 
-    for(int i = 0; i < valuesSize; ++i)
-    {
-        const float value = valuesToDraw.getValue(i) + valueOffset;
-        const float shapeWidth = width * value + offset;
-        const float shapeHeight = height * value + offset;
+}
 
-        graphics.setColour(Colours::lightcoral);
-        graphics.drawRect(x - shapeWidth/2 , y - shapeHeight/2, shapeWidth, shapeHeight, 2.0f);
-    }
+void GraphDisplay::resized()
+{
+    graph.clear();
 }
 
 void GraphDisplay::timerCallback()
 {
-    valuesToDraw.addValue(onAddValue());
-    valueOffset = onSetValueOffset();
     repaint();
 }
 

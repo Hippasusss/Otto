@@ -3,7 +3,7 @@
 <JUCERPROJECT id="YSGQTv" name="Auto" projectType="audioplug" jucerVersion="5.4.7"
               pluginFormats="buildAAX,buildAU,buildVST3" pluginVST3Category="Filter"
               pluginRTASCategory="1" pluginAAXCategory="1" cppLanguageStandard="latest"
-              companyName="Hippasus">
+              companyName="Hippasus" displaySplashScreen="1">
   <MAINGROUP id="vPwknA" name="Auto">
     <GROUP id="{62755887-84A8-E3C6-EC3D-D7338C224042}" name="Source">
       <GROUP id="{AA83E59E-A34E-D4E2-1326-C1725F24E20A}" name="Utils">
