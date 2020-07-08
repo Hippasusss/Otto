@@ -85,8 +85,8 @@ void MeterDisplay::paint (Graphics& graphics)
     }
 
     // Set level readout at top of meter
-	const long phVal = peakHold.getSmoothedValueDBFS();
-    const String labelText = phVal > -60 ? String(phVal): String("");
+	const long peakHoldValue = peakHold.getSmoothedValueDBFS();
+    const String labelText = peakHoldValue > -60 ? String(peakHoldValue): String("");
     levelText.setText(labelText, dontSendNotification);
 
     // Set clip indicator

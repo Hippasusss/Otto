@@ -1,7 +1,7 @@
 /*
    ==============================================================================
 
-   MeterDisplay.h
+MeterDisplay.h
 Created: 8 Mar 2020 6:57:26pm
 Author:  Danny Herbert
 
@@ -9,9 +9,7 @@ Author:  Danny Herbert
 */
 
 #pragma once
-
 #include <JuceHeader.h>
-
 
 #include "CustomLookAndFeel.h"
 #include "LevelValueDisplay.h"
