@@ -19,7 +19,7 @@ EnvelopeFollower::EnvelopeFollower():
 	maxBlockSize(0),
 	blockTime(0),
 	amount(0),
-	value(0, 1000),
+	value(0),
     attackTime(0.5f),
 	releaseTime(1.0f),
     audioBuffer(new RingBufferAudio<float>(numChannels, sampleRate)),
@@ -36,9 +36,6 @@ void EnvelopeFollower::prepare(const dsp::ProcessSpec& spec)
     maxBlockSize = spec.maximumBlockSize;
     blockTime = maxBlockSize / sampleRate * 1000.0f; 
     audioBuffer->resize(numChannels, spec.sampleRate);
-
-    value.setAttack(0.1);
-    value.setRelease(0.7);
 
     copyBuffer.setSize(numChannels, maxBlockSize);
     
@@ -92,10 +89,10 @@ void EnvelopeFollower::setAmount(float newAmount)
 
 float EnvelopeFollower::getValue() const
 {
-    return value.getValue();
+    return value.getCurrentValue();
 }
 
 float EnvelopeFollower::getValueNormalisedDB() const
 {
-    return value.getValue();
+    return value.getCurrentValue();
 }

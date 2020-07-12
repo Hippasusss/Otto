@@ -10,7 +10,6 @@
 
 #pragma once
 #include "JuceHeader.h"
-#include "LevelValueDisplay.h"
 #include "RingBuffer.h"
 
 class EnvelopeFollower: dsp::ProcessorBase
@@ -37,7 +36,7 @@ private:
     unsigned int maxBlockSize;
     float blockTime;
 
-    RampSmoother<float> value;
+    SmoothedValue<float> value;
     float amount;
     float attackTime, releaseTime;
 

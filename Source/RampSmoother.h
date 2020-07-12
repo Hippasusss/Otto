@@ -142,8 +142,6 @@ ValueType RampSmoother<ValueType>::getValue() const
 template <typename ValueType>
 void RampSmoother<ValueType>::timerCallback()
 {
-	jassert(value < 10);
-	jassert(value > -10);
 	const float envelopeTime = destinationValue > value ? attack : release;
 	const float timerInterval = static_cast<float>(getTimerInterval()) / 1000.0f;
 	const float delta = destinationValue - value;

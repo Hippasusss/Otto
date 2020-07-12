@@ -13,6 +13,7 @@ Author:  Danny Herbert
 //===============================================================================
 #pragma once
 #include "Helpers.h"
+#include <algorithm>
 
 template <typename ValueType, typename ContainerType>
 class RingBuffer
@@ -162,28 +163,31 @@ void RingBufferAudio<SampleType>::writeBlock(const dsp::AudioBlock<const SampleT
 	const auto numSamplesToCopy = newBlock.getNumSamples();
 	const auto remainingSpace = size - writeIndex;
 
-	Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, remainingSpace, 0, writeIndex);
-	Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, numSamplesToCopy - remainingSpace, remainingSpace, 0);
+	const auto extra = remainingSpace < numSamplesToCopy ? remainingSpace : numSamplesToCopy;
+	Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, extra, 0, writeIndex);
+    const auto overflow = numSamplesToCopy > remainingSpace ? numSamplesToCopy - remainingSpace : 0;
+	Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, overflow , remainingSpace, 0);
 
-	writeIndex += numSamplesToCopy % size;
+	writeIndex = (writeIndex + numSamplesToCopy) % size;
 }
 
 template <typename SampleType>
 void RingBufferAudio<SampleType>::readBlock(AudioBuffer<SampleType>& bufferToFill)
 {
-	const size_t difference = writeIndex - readIndex;
+	const auto difference = writeIndex - readIndex;
 	if (difference == 0) return;
 
-	const size_t numSamplesToCopy = difference > 0 ? difference : difference + size;
-	const size_t remainingSpace = size - readIndex;
+	const auto numSamplesToCopy = difference > 0 ? difference : difference + size;
+	const auto remainingSpace = size - readIndex;
 
 	bufferToFill.setSize(numSamplesToCopy);
 	dsp::AudioBlock<SampleType> tempBlock = dsp::AudioBlock<SampleType>(aggregateBuffer);
 
 	Helpers::copyAudioBlockIntoBuffer(tempBlock, bufferToFill, remainingSpace, readIndex);
-	Helpers::copyAudioBlockIntoBuffer(tempBlock, bufferToFill, numSamplesToCopy - remainingSpace, 0, remainingSpace); // Only if there is no spill over
+    const auto overflow = numSamplesToCopy > remainingSpace ? numSamplesToCopy - remainingSpace : 0;
+	Helpers::copyAudioBlockIntoBuffer(tempBlock, bufferToFill, overflow, 0, remainingSpace); // Only if there is no spill over
 
-	readIndex += numSamplesToCopy % size;
+	readIndex = (readIndex + numSamplesToCopy) % size;
 }
 
 template <typename SampleType>
