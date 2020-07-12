@@ -13,7 +13,6 @@ Author:  Danny Herbert
 //===============================================================================
 #pragma once
 #include "Helpers.h"
-#include <algorithm>
 
 template <typename ValueType, typename ContainerType>
 class RingBuffer
