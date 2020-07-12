@@ -44,8 +44,8 @@ void Meter::clearClip()
 
 void Meter::calculateRMS(const dsp::AudioBlock<float>& block)
 {
-    RMSAudioBuffer.appendBlock(block);
-    const auto RMSBlock = RMSAudioBuffer.getBlock();
+    RMSAudioBuffer.writeBlock(block);
+    const auto RMSBlock = RMSAudioBuffer.getBlock(); // buffer is the length required for the RMS calc. Set in ctor
     const int blockSize = RMSBlock.getNumSamples();
     for(auto i = 0; i < numChannels; ++i)
     {
