@@ -162,23 +162,10 @@ void RingBufferAudio<SampleType>::writeBlock(const dsp::AudioBlock<const SampleT
 	const auto numSamplesToCopy = newBlock.getNumSamples();
 	const auto remainingSpace = size - writeIndex;
 
-	if (numSamplesToCopy > remainingSpace)
-	{
-		// Copy to end of block
-		Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, remainingSpace, 0, writeIndex);
+	Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, remainingSpace, 0, writeIndex);
+	Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, numSamplesToCopy - remainingSpace, remainingSpace, 0);
 
-		// Reset and copy remaining samples
-		writeIndex = 0;
-		Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, numSamplesToCopy - remainingSpace, remainingSpace,
-		                                  writeIndex);
-		writeIndex = numSamplesToCopy - remainingSpace;
-	}
-	else
-	{
-		// Just copy whole block if room
-		Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, numSamplesToCopy, 0, writeIndex);
-		writeIndex += numSamplesToCopy % size;
-	}
+	writeIndex += numSamplesToCopy % size;
 }
 
 template <typename SampleType>
@@ -188,12 +175,13 @@ void RingBufferAudio<SampleType>::readBlock(AudioBuffer<SampleType>& bufferToFil
 	if (difference == 0) return;
 
 	const size_t numSamplesToCopy = difference > 0 ? difference : difference + size;
+	const size_t remainingSpace = size - readIndex;
+
 	bufferToFill.setSize(numSamplesToCopy);
 	dsp::AudioBlock<SampleType> tempBlock = dsp::AudioBlock<SampleType>(aggregateBuffer);
 
-	const size_t remainingSpace = size - readIndex;
 	Helpers::copyAudioBlockIntoBuffer(tempBlock, bufferToFill, remainingSpace, readIndex);
-	Helpers::copyAudioBlockIntoBuffer(tempBlock, bufferToFill, numSamplesToCopy - remainingSpace, 0, remainingSpace);
+	Helpers::copyAudioBlockIntoBuffer(tempBlock, bufferToFill, numSamplesToCopy - remainingSpace, 0, remainingSpace); // Only if there is no spill over
 
 	readIndex += numSamplesToCopy % size;
 }
