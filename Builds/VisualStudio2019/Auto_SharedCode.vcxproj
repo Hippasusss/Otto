@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Source\BufferStore.cpp"/>
     <ClCompile Include="..\..\Source\EnvelopeFollower.cpp"/>
+    <ClCompile Include="..\..\Source\Graph.cpp"/>
     <ClCompile Include="..\..\Source\Meter.cpp"/>
     <ClCompile Include="..\..\Source\Mixer.cpp"/>
     <ClCompile Include="..\..\Source\MeterDisplay.cpp"/>
@@ -2216,6 +2217,7 @@
     <ClInclude Include="..\..\Source\CustomLookAndFeel.h"/>
     <ClInclude Include="..\..\Source\BufferStore.h"/>
     <ClInclude Include="..\..\Source\EnvelopeFollower.h"/>
+    <ClInclude Include="..\..\Source\Graph.h"/>
     <ClInclude Include="..\..\Source\Meter.h"/>
     <ClInclude Include="..\..\Source\Mixer.h"/>
     <ClInclude Include="..\..\Source\MeterDisplay.h"/>

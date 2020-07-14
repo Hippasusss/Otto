@@ -493,6 +493,9 @@
     <ClCompile Include="..\..\Source\EnvelopeFollower.cpp">
       <Filter>Auto\Source\DSP</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Graph.cpp">
+      <Filter>Auto\Source\DSP</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Meter.cpp">
       <Filter>Auto\Source\DSP</Filter>
     </ClCompile>
@@ -2752,6 +2755,9 @@
       <Filter>Auto\Source\DSP</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\EnvelopeFollower.h">
+      <Filter>Auto\Source\DSP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Graph.h">
       <Filter>Auto\Source\DSP</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Meter.h">

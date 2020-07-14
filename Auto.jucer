@@ -23,6 +23,8 @@
               file="Source/EnvelopeFollower.cpp"/>
         <FILE id="rRMgJd" name="EnvelopeFollower.h" compile="0" resource="0"
               file="Source/EnvelopeFollower.h"/>
+        <FILE id="pmjeuo" name="Graph.cpp" compile="1" resource="0" file="Source/Graph.cpp"/>
+        <FILE id="eQm6pW" name="Graph.h" compile="0" resource="0" file="Source/Graph.h"/>
         <FILE id="ok6rso" name="Meter.cpp" compile="1" resource="0" file="Source/Meter.cpp"/>
         <FILE id="iyJOOl" name="Meter.h" compile="0" resource="0" file="Source/Meter.h"/>
         <FILE id="Hbl4XR" name="Mixer.cpp" compile="1" resource="0" file="Source/Mixer.cpp"/>
