@@ -203,6 +203,11 @@ Meter* Auto_AudioProcessor::getOutputMeter()
     return &chain.get<outputMeterIndex>();
 }
 
+Graph* Auto_AudioProcessor::getGraph()
+{
+    return &chain.get<graphIndex>();
+}
+
 
 void Auto_AudioProcessor::setParameter(const String& parameterID) 
 {

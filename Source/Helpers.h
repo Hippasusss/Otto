@@ -60,9 +60,9 @@ public:
 	template<typename SampleType>
 	static void copyAudioBlockIntoBuffer(const dsp::AudioBlock<const SampleType>& sourceBlock,
 	                                     AudioBuffer<SampleType>& destinationBuffer,
-	                                     size_t numSamples,
-	                                     size_t sourceStartSample = 0,
-	                                     size_t destStartSample = 0)
+	                                     const size_t numSamples,
+	                                     const size_t sourceStartSample = 0,
+	                                     const size_t destStartSample = 0)
 	{
 	    jassert(sourceBlock.getNumChannels() == destinationBuffer.getNumChannels());
 		for(auto channel = 0; channel < destinationBuffer.getNumChannels(); ++channel)

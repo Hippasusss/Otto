@@ -17,7 +17,9 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     twoFourPole("2/4", parameter_constants::TWO_FOUR_POLE_ID),
     parameterGroup("parameterGroup"),
     inputMeter(processor.getInputMeter()),
-    outputMeter(processor.getOutputMeter())
+    outputMeter(processor.getOutputMeter()),
+	graphDisplay(processor.getGraph())
+
 {
     setLookAndFeel(&lookAndFeel);
     setSize (800, 400);
@@ -56,10 +58,6 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     // Make all components visible
     for(auto& comp : components)
     {
-        if(comp != &parameterGroup)
-        {
-            parameterGroup.addChildComponent(comp);
-        }
         addAndMakeVisible(comp);
     }
 
@@ -68,11 +66,6 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     {
         slider->getSliderValueLabel().setVisible(false);
     }
-
-    // Ref to update the i/o meters display
-    inputMeter.setMeter(processor.getInputMeter());
-    outputMeter.setMeter(processor.getOutputMeter());
-
 }
 
 Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
@@ -98,7 +91,7 @@ void Auto_AudioProcessorEditor::resized()
     parameterGroup.setBounds(parameterBounds);
 
     // Sliders
-    for(auto slider: sliders)
+    for(auto* slider: sliders)
     {
         parameterGroup.addChildComponent(slider);
         auto bounds = parameterBounds.removeFromLeft(100);
@@ -108,7 +101,7 @@ void Auto_AudioProcessorEditor::resized()
 
     // Buttons 
     parameterBounds = parameterBounds.removeFromLeft(100);
-    for(auto button: buttons)
+    for(auto* button: buttons)
     {
         button->setBounds(parameterBounds.removeFromTop(50).reduced(10,13));
     }
@@ -124,7 +117,7 @@ void Auto_AudioProcessorEditor::resized()
 
 	// Waveform Display
     auto graphRect = rect;
-    display.setBounds(graphRect);
+    graphDisplay.setBounds(graphRect);
 
 	//----------------------------------
 }

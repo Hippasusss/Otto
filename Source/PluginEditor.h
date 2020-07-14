@@ -29,13 +29,13 @@ private:
     ToggleButton envSpeed;
     ToggleButton twoFourPole;
     GroupComponent parameterGroup;
-    GraphDisplay display;
+    GraphDisplay graphDisplay;
     MeterDisplay inputMeter;
     MeterDisplay outputMeter;
     CustomLookAndFeel lookAndFeel;
     
     std::array<Component*, 13> components {&inputGain, &drive, &envAmount, &frequency, 
-        &resonance, &mix, &outputGain, &envSpeed, &twoFourPole, &parameterGroup, &display,
+        &resonance, &mix, &outputGain, &envSpeed, &twoFourPole, &parameterGroup, &graphDisplay,
     	&inputMeter, &outputMeter};
     std::array<LabeledSlider*, 7> sliders {&inputGain, &drive, &envAmount, &frequency, 
         &resonance, &mix, &outputGain};

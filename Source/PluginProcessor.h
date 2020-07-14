@@ -2,6 +2,7 @@
 #include <JuceHeader.h>
 #include "EnvelopeFollower.h"
 #include "BufferStore.h"
+#include "Graph.h"
 #include "Meter.h"
 #include "Mixer.h"
 
@@ -47,6 +48,7 @@ public:
     const dsp::LadderFilter<float>& getLadderFilter() const;
     Meter* getInputMeter();
     Meter* getOutputMeter();
+    Graph* getGraph();
 
 
 
@@ -63,6 +65,7 @@ private:
         inputGainIndex,
         bufferStoreIndex,
         inputMeterIndex,
+        graphIndex,
         followerIndex,
         filterIndex,
         mixerIndex,
@@ -87,6 +90,7 @@ private:
     dsp::ProcessorChain <dsp::Gain<float>,
                          BufferStore,
 						 Meter, 
+						 Graph,
                          EnvelopeFollower,
                          dsp::LadderFilter<float>,
                          Mixer,
