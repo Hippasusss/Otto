@@ -13,24 +13,25 @@ Author:  Danny Herbert
 #include <JuceHeader.h>
 
 #include "CustomLookAndFeel.h"
-#include "RingBuffer.h"
+#include "Graph.h"
 class GraphDisplay    : public Component,
     public Timer
 {
     public:
         static const int RING_BUFFER_SIZE = 50;
 
-        GraphDisplay();
+        GraphDisplay(Graph* newGraph);
         ~GraphDisplay();
 
         void paint (Graphics&) override;
         void timerCallback() override;
         void resized() override;
-        AudioVisualiserComponent graph;
         CustomLookAndFeel2 lookAndFeel2;
 
     private:
-        RingBufferAudio<float> valuesToDraw;
-        float valueOffset;
+        Graph* graph;
+        AudioVisualiserComponent graphView;
+        AudioBuffer<float> displayBuffer;
+        AudioBuffer<float> dataBuffer;
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GraphDisplay)
 };

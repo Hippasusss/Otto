@@ -14,12 +14,17 @@
 class Graph : dsp::ProcessorBase
 {
 public:
-    Graph();
-    ~Graph();
+    Graph() = default;
+    ~Graph() = default;
 	void prepare(const dsp::ProcessSpec&) override;
 	void process(const dsp::ProcessContextReplacing<float>&) override;
 	void reset() override;
 
+    RingBufferAudio<float>& getBuffer();
+    size_t getNumChannels();
+
 private:
     RingBufferAudio<float> buffer;
+    AudioBuffer<float> displayBuffer;
+    size_t numChannels;
 };

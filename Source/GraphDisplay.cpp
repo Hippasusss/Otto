@@ -14,30 +14,51 @@
 
 //==============================================================================
 
-GraphDisplay::GraphDisplay() : valuesToDraw(1, 512), valueOffset(0) , graph(1)
+GraphDisplay::GraphDisplay(Graph* newGraph) : graph(newGraph), graphView(1), displayBuffer(1, 100)
 {
     startTimerHz(timer_constants::REFRESH_RATE);
-    graph.setLookAndFeel(&lookAndFeel2);
+
+    //graphView.setLookAndFeel(&lookAndFeel2);
+    graphView.setNumChannels(1);
+    graphView.setBufferSize(1000);
+    graphView.setColours(Colours::red, Colours::lightblue);
 }
 GraphDisplay::~GraphDisplay()
 {
-	graph.setLookAndFeel(nullptr);
+	graphView.setLookAndFeel(nullptr);
 }
 
 void GraphDisplay::paint (Graphics& graphics)
 {
-    const int width = getBounds().getWidth();
-    const int height = getBounds().getHeight();
-    const int x = width/2;
-    const int y = height/2;
-    const int offset = valueOffset; 
-    graph.pushBuffer(valuesToDraw.getBuffer());
+    const size_t numChannels = graph->getNumChannels();
+    graph->getBuffer().readBlock(dataBuffer);
 
+    const size_t numSamples = dataBuffer.getNumSamples();
+
+    displayBuffer.setSize(1, numSamples);
+
+    // Sum channels in tempBuffer to mono for display buffer
+    const auto channelWrite = displayBuffer.getWritePointer(0);
+	for(auto i = 0; i < numChannels; ++i)
+	{
+        const auto channel = dataBuffer.getReadPointer(i);
+        for(auto j = 0; j < numSamples; ++j)
+        {
+	        channelWrite[j] += channel[j];
+        }
+	}
+
+    for (auto i = 0; i < numSamples; ++i)
+    {
+        channelWrite[i] = channelWrite[i] / numChannels;
+    }
+    graphView.pushBuffer(displayBuffer);
 }
 
 void GraphDisplay::resized()
 {
-    graph.clear();
+    graphView.clear();
+    graphView.setBounds(getBounds());
 }
 
 void GraphDisplay::timerCallback()

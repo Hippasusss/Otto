@@ -10,9 +10,11 @@
 
 #include "Graph.h"
 
+
 void Graph::prepare(const dsp::ProcessSpec& spec)
 {
-    buffer.resize(spec.numChannels, spec.sampleRate); // take in a second worth of audio. ensures write doesnt catch read. 
+    numChannels = spec.numChannels;
+    buffer.resize(spec.numChannels, spec.sampleRate); // take in a second worth of audio. ensures write doesnt catch up with read. 
 }
 
 void Graph::process(const dsp::ProcessContextReplacing<float>& context)
@@ -22,4 +24,14 @@ void Graph::process(const dsp::ProcessContextReplacing<float>& context)
 
 void Graph::reset()
 {
+}
+
+RingBufferAudio<float>& Graph::getBuffer()
+{
+    return buffer;
+}
+
+size_t Graph::getNumChannels()
+{
+    return numChannels;
 }

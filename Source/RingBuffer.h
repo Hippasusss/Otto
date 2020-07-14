@@ -159,13 +159,18 @@ void RingBufferAudio<SampleType>::resize(size_t channels, size_t length)
 template <typename SampleType>
 void RingBufferAudio<SampleType>::writeBlock(const dsp::AudioBlock<const SampleType>& newBlock)
 {
-	const auto numSamplesToCopy = newBlock.getNumSamples();
-	const auto remainingSpace = size - writeIndex;
+	const size_t numSamplesToCopy = newBlock.getNumSamples();
+	const size_t remainingSpace = size - writeIndex;
 
-	const auto extra = remainingSpace < numSamplesToCopy ? remainingSpace : numSamplesToCopy;
-	Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, extra, 0, writeIndex);
-    const auto overflow = numSamplesToCopy > remainingSpace ? numSamplesToCopy - remainingSpace : 0;
-	Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, overflow , remainingSpace, 0);
+	if(numSamplesToCopy > remainingSpace)
+	{
+		Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, remainingSpace, 0, writeIndex);
+		Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, numSamplesToCopy - remainingSpace, remainingSpace, 0);
+	}
+	else
+	{
+		Helpers::copyAudioBlockIntoBuffer(newBlock, aggregateBuffer, numSamplesToCopy, 0, writeIndex);
+	}
 
 	writeIndex = (writeIndex + numSamplesToCopy) % size;
 }
@@ -173,18 +178,24 @@ void RingBufferAudio<SampleType>::writeBlock(const dsp::AudioBlock<const SampleT
 template <typename SampleType>
 void RingBufferAudio<SampleType>::readBlock(AudioBuffer<SampleType>& bufferToFill)
 {
-	const auto difference = writeIndex - readIndex;
+	const size_t difference = writeIndex - readIndex;
+	const size_t remainingSpace = size - readIndex;
 	if (difference == 0) return;
 
-	const auto numSamplesToCopy = difference > 0 ? difference : difference + size;
-	const auto remainingSpace = size - readIndex;
+	const size_t numSamplesToCopy = writeIndex > readIndex ? difference : remainingSpace + writeIndex;
 
-	bufferToFill.setSize(numSamplesToCopy);
-	dsp::AudioBlock<SampleType> tempBlock = dsp::AudioBlock<SampleType>(aggregateBuffer);
+	bufferToFill.setSize(aggregateBuffer.getNumChannels(), numSamplesToCopy, true, false, true);
+	const dsp::AudioBlock<const SampleType> tempBlock = dsp::AudioBlock<SampleType>(aggregateBuffer);
 
-	Helpers::copyAudioBlockIntoBuffer(tempBlock, bufferToFill, remainingSpace, readIndex);
-    const auto overflow = numSamplesToCopy > remainingSpace ? numSamplesToCopy - remainingSpace : 0;
-	Helpers::copyAudioBlockIntoBuffer(tempBlock, bufferToFill, overflow, 0, remainingSpace); // Only if there is no spill over
+	if(numSamplesToCopy <= remainingSpace)
+	{
+		Helpers::copyAudioBlockIntoBuffer(tempBlock, bufferToFill, numSamplesToCopy, readIndex);
+	}
+	else
+	{
+		Helpers::copyAudioBlockIntoBuffer(tempBlock, bufferToFill, remainingSpace, readIndex);
+		Helpers::copyAudioBlockIntoBuffer(tempBlock, bufferToFill, writeIndex, 0, remainingSpace);
+	}
 
 	readIndex = (readIndex + numSamplesToCopy) % size;
 }
