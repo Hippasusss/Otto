@@ -14,55 +14,74 @@
 
 //==============================================================================
 
-GraphDisplay::GraphDisplay(Graph* newGraph) : graph(newGraph), graphView(1), displayBuffer(1, 100)
+GraphDisplay::GraphDisplay(Graph* newGraph) : graph(newGraph), displayBuffer(1, 100), dataBuffer(2, 100)
 {
     startTimerHz(timer_constants::REFRESH_RATE);
-
-    //graphView.setLookAndFeel(&lookAndFeel2);
-    graphView.setNumChannels(1);
-    graphView.setBufferSize(1000);
-    graphView.setColours(Colours::red, Colours::lightblue);
 }
 GraphDisplay::~GraphDisplay()
 {
-	graphView.setLookAndFeel(nullptr);
 }
 
 void GraphDisplay::paint (Graphics& graphics)
 {
-    const size_t numChannels = graph->getNumChannels();
-    graph->getBuffer().readBlock(dataBuffer);
+}
 
-    const size_t numSamples = dataBuffer.getNumSamples();
+void GraphDisplay::resized()
+{
+}
 
-    displayBuffer.setSize(1, numSamples);
+void GraphDisplay::pushIntoDisplayBuffer(AudioBuffer<float>& buffer)
+{
+    const size_t numSamples = buffer.getNumSamples();
+    const size_t numChannels = buffer.getNumChannels();
 
-    // Sum channels in tempBuffer to mono for display buffer
-    const auto channelWrite = displayBuffer.getWritePointer(0);
+    // Move samples along to make room
+    displayBuffer.copyFrom(0, 0, displayBuffer, 0, numSamples, displayBuffer.getNumSamples());
+
+    auto* const displayWrite = displayBuffer.getWritePointer(0);
 	for(auto i = 0; i < numChannels; ++i)
 	{
-        const auto channel = dataBuffer.getReadPointer(i);
+		const auto* const dataChannelRead = tempBuffer.getReadPointer(i);
         for(auto j = 0; j < numSamples; ++j)
         {
-	        channelWrite[j] += channel[j];
+	        displayWrite[j] += dataChannelRead[j];
         }
 	}
 
     for (auto i = 0; i < numSamples; ++i)
     {
-        channelWrite[i] = channelWrite[i] / numChannels;
+        displayWrite[i] = displayWrite[i] / numChannels;
+        //displayWrite[i] = 0.5f;
     }
-    graphView.pushBuffer(displayBuffer);
-}
-
-void GraphDisplay::resized()
-{
-    graphView.clear();
-    graphView.setBounds(getBounds());
 }
 
 void GraphDisplay::timerCallback()
 {
+    const size_t numChannels = graph->getNumChannels();
+    AudioBuffer<float> tempBuffer = AudioBuffer<float>();
+    graph->getBuffer().readBlock(tempBuffer);
+
+    const size_t numSamples = tempBuffer.getNumSamples();
+
+    displayBuffer.setSize(1, numSamples);
+
+    // Sum channels in tempBuffer to mono for display buffer
+    auto* const displayWrite = displayBuffer.getWritePointer(0);
+	for(auto i = 0; i < numChannels; ++i)
+	{
+		const auto* const dataChannelRead = tempBuffer.getReadPointer(i);
+        for(auto j = 0; j < numSamples; ++j)
+        {
+	        displayWrite[j] += dataChannelRead[j];
+        }
+	}
+
+    for (auto i = 0; i < numSamples; ++i)
+    {
+        displayWrite[i] = displayWrite[i] / numChannels;
+        //displayWrite[i] = 0.5f;
+    }
     repaint();
 }
+
 

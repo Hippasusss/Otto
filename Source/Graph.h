@@ -25,6 +25,5 @@ public:
 
 private:
     RingBufferAudio<float> buffer;
-    AudioBuffer<float> displayBuffer;
     size_t numChannels;
 };

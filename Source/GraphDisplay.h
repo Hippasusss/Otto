@@ -26,12 +26,13 @@ class GraphDisplay    : public Component,
         void paint (Graphics&) override;
         void timerCallback() override;
         void resized() override;
-        CustomLookAndFeel2 lookAndFeel2;
+
 
     private:
         Graph* graph;
-        AudioVisualiserComponent graphView;
         AudioBuffer<float> displayBuffer;
         AudioBuffer<float> dataBuffer;
+        CustomLookAndFeel2 lookAndFeel2;
+		void pushIntoDisplayBuffer(AudioBuffer<float>&);
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GraphDisplay)
 };

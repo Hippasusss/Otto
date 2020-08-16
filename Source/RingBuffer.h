@@ -194,7 +194,7 @@ void RingBufferAudio<SampleType>::readBlock(AudioBuffer<SampleType>& bufferToFil
 	else
 	{
 		Helpers::copyAudioBlockIntoBuffer(tempBlock, bufferToFill, remainingSpace, readIndex);
-		Helpers::copyAudioBlockIntoBuffer(tempBlock, bufferToFill, writeIndex, 0, remainingSpace);
+		Helpers::copyAudioBlockIntoBuffer(tempBlock, bufferToFill, numSamplesToCopy - remainingSpace, 0, remainingSpace);
 	}
 
 	readIndex = (readIndex + numSamplesToCopy) % size;
