@@ -14,7 +14,7 @@
 
 //==============================================================================
 
-GraphDisplay::GraphDisplay(Graph* newGraph) : graph(newGraph), displayBuffer(1, 100), dataBuffer(2, 100)
+GraphDisplay::GraphDisplay(Graph* newGraph) : graph(newGraph), displayBuffer(1, 48000) 
 {
     startTimerHz(timer_constants::REFRESH_RATE);
 }
@@ -24,6 +24,7 @@ GraphDisplay::~GraphDisplay()
 
 void GraphDisplay::paint (Graphics& graphics)
 {
+    graphics.setColour(getLookAndFeel().findColour(Slider::ColourIds::rotarySliderOutlineColourId));
 }
 
 void GraphDisplay::resized()
@@ -34,53 +35,61 @@ void GraphDisplay::pushIntoDisplayBuffer(AudioBuffer<float>& buffer)
 {
     const size_t numSamples = buffer.getNumSamples();
     const size_t numChannels = buffer.getNumChannels();
+    const int writeIndex = displayBuffer.getNumSamples() > numSamples ? displayBuffer.getNumSamples() - numSamples : 0;
 
+
+    // TODO: Can't copy from to the same buffer
     // Move samples along to make room
-    displayBuffer.copyFrom(0, 0, displayBuffer, 0, numSamples, displayBuffer.getNumSamples());
+    displayBuffer.copyFrom(0, 0, displayBuffer, 0, numSamples, displayBuffer.getNumSamples() - numSamples);
 
-    auto* const displayWrite = displayBuffer.getWritePointer(0);
-	for(auto i = 0; i < numChannels; ++i)
+    // Sum data in place
+	auto* const dataChannelWrite = buffer.getWritePointer(0);
+	for(size_t i = 1; i < numChannels; ++i)
 	{
-		const auto* const dataChannelRead = tempBuffer.getReadPointer(i);
-        for(auto j = 0; j < numSamples; ++j)
+		const auto* const dataChannelRead = buffer.getReadPointer(i);
+        for(size_t j = 0; j < numSamples; ++j)
         {
-	        displayWrite[j] += dataChannelRead[j];
+	        dataChannelWrite[j] += dataChannelRead[j];
         }
 	}
 
-    for (auto i = 0; i < numSamples; ++i)
+    // Average in place
+    for (size_t i = 0; i < numSamples; ++i)
     {
-        displayWrite[i] = displayWrite[i] / numChannels;
-        //displayWrite[i] = 0.5f;
+        dataChannelWrite[i] /= numChannels;
     }
+
+    // Copy into display buffer
+	displayBuffer.copyFrom(0, writeIndex, buffer, 0, 0, numSamples);
 }
 
 void GraphDisplay::timerCallback()
 {
-    const size_t numChannels = graph->getNumChannels();
     AudioBuffer<float> tempBuffer = AudioBuffer<float>();
-    graph->getBuffer().readBlock(tempBuffer);
+    graph->getBuffer().getPreviousSamples(tempBuffer);
 
+    const size_t numChannels = tempBuffer.getNumChannels();
     const size_t numSamples = tempBuffer.getNumSamples();
-
-    displayBuffer.setSize(1, numSamples);
-
-    // Sum channels in tempBuffer to mono for display buffer
-    auto* const displayWrite = displayBuffer.getWritePointer(0);
-	for(auto i = 0; i < numChannels; ++i)
+	auto* const dataChannelWrite = tempBuffer.getWritePointer(0);
+	for(size_t i = 1; i < numChannels; ++i)
 	{
 		const auto* const dataChannelRead = tempBuffer.getReadPointer(i);
-        for(auto j = 0; j < numSamples; ++j)
+        for(size_t j = 0; j < numSamples; ++j)
         {
-	        displayWrite[j] += dataChannelRead[j];
+	        dataChannelWrite[j] += dataChannelRead[j];
         }
 	}
 
-    for (auto i = 0; i < numSamples; ++i)
+    // Average in place
+    for (size_t i = 0; i < numSamples; ++i)
     {
-        displayWrite[i] = displayWrite[i] / numChannels;
-        //displayWrite[i] = 0.5f;
+        dataChannelWrite[i] /= numChannels;
     }
+
+	displayBuffer.copyFrom(0,0, tempBuffer, 0, 0, numSamples);
+    //graph->getBuffer().readBlock(tempBuffer);
+    //pushIntoDisplayBuffer(tempBuffer);
+
     repaint();
 }
 

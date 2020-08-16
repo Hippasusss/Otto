@@ -31,7 +31,6 @@ class GraphDisplay    : public Component,
     private:
         Graph* graph;
         AudioBuffer<float> displayBuffer;
-        AudioBuffer<float> dataBuffer;
         CustomLookAndFeel2 lookAndFeel2;
 		void pushIntoDisplayBuffer(AudioBuffer<float>&);
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GraphDisplay)

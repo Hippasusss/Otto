@@ -21,7 +21,7 @@ public:
 	void reset() override;
 
     RingBufferAudio<float>& getBuffer();
-    size_t getNumChannels();
+    size_t getNumChannels() const;
 
 private:
     RingBufferAudio<float> buffer;

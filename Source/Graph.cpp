@@ -31,7 +31,7 @@ RingBufferAudio<float>& Graph::getBuffer()
     return buffer;
 }
 
-size_t Graph::getNumChannels()
+size_t Graph::getNumChannels() const
 {
     return numChannels;
 }
