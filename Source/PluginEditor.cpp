@@ -61,7 +61,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
         addAndMakeVisible(comp);
     }
 
-    // Hide the slider readouts (enabled by mouse over)
+    // Hide the slider readouts (enabled by mouse over instead)
     for(auto& slider : sliders)
     {
         slider->getSliderValueLabel().setVisible(false);
@@ -116,7 +116,7 @@ void Auto_AudioProcessorEditor::resized()
     outputMeter.setBounds(rect.removeFromRight(20));
 
 	// Waveform Display
-    auto graphRect = rect;
+    const auto graphRect = rect;
     graphDisplay.setBounds(graphRect);
 
 	//----------------------------------

@@ -21,9 +21,10 @@ public:
 	void reset() override;
 
     RingBufferAudio<float>& getBuffer();
-    size_t getNumChannels() const;
+    void fillVectorWithDisplayData(std::vector<float>& data);
 
 private:
     RingBufferAudio<float> buffer;
     size_t numChannels;
+    size_t sampleRate;
 };

@@ -14,24 +14,23 @@ Author:  Danny Herbert
 
 #include "CustomLookAndFeel.h"
 #include "Graph.h"
-class GraphDisplay    : public Component,
-    public Timer
+class GraphDisplay : public Component,
+	public Timer
 {
-    public:
-        static const int RING_BUFFER_SIZE = 50;
+public:
+	static const int RING_BUFFER_SIZE = 50;
 
-        GraphDisplay(Graph* newGraph);
-        ~GraphDisplay();
+	GraphDisplay(Graph* newGraph);
+	~GraphDisplay();
 
-        void paint (Graphics&) override;
-        void timerCallback() override;
-        void resized() override;
+	void paint(Graphics&) override;
+	void timerCallback() override;
+	void resized() override;
 
+private:
+	Graph* graph;
+	std::vector<float> displayVector;
+	CustomLookAndFeel2 lookAndFeel2;
 
-    private:
-        Graph* graph;
-        AudioBuffer<float> displayBuffer;
-        CustomLookAndFeel2 lookAndFeel2;
-		void pushIntoDisplayBuffer(AudioBuffer<float>&);
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GraphDisplay)
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GraphDisplay)
 };

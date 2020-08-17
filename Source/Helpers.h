@@ -73,6 +73,28 @@ public:
 		}
 	}
 
+	template<typename SampleType>
+	static void sumChannelsToFirstChannel(AudioBuffer<SampleType>& buffer)
+    {
+		const size_t numChannels = buffer.getNumChannels();
+		const size_t numSamples = buffer.getNumSamples();
+		auto* const dataChannelWrite = buffer.getWritePointer(0);
+		for (size_t i = 1; i < numChannels; ++i)
+		{
+			const auto* const dataChannelRead = buffer.getReadPointer(i);
+			for (size_t j = 0; j < numSamples; ++j)
+			{
+				dataChannelWrite[j] += dataChannelRead[j];
+			}
+		}
+
+		// Average in place
+		for (size_t i = 0; i < numSamples; ++i)
+		{
+			dataChannelWrite[i] /= numChannels;
+		}
+	}
+
 	template<typename ValueType>
 	static ValueType getNormalisedDB(ValueType value, ValueType dbMinusInfinity = -100)
     {

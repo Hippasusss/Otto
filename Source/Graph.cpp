@@ -14,7 +14,8 @@
 void Graph::prepare(const dsp::ProcessSpec& spec)
 {
     numChannels = spec.numChannels;
-    buffer.resize(spec.numChannels, spec.sampleRate); // take in a second worth of audio. ensures write doesnt catch up with read. 
+    sampleRate = spec.sampleRate;
+    buffer.resize(spec.numChannels, spec.sampleRate * 1.5);  //1.5 gives extra space to write into to avoid the write pointer wrapping into the data being read. 
 }
 
 void Graph::process(const dsp::ProcessContextReplacing<float>& context)
@@ -31,7 +32,27 @@ RingBufferAudio<float>& Graph::getBuffer()
     return buffer;
 }
 
-size_t Graph::getNumChannels() const
+void Graph::fillVectorWithDisplayData(std::vector<float>& data)
 {
-    return numChannels;
+	AudioBuffer<float> tempBuffer = AudioBuffer<float>(numChannels, sampleRate);
+	buffer.getPreviousSamples(tempBuffer);
+	const size_t numSamples = tempBuffer.getNumSamples();
+
+	Helpers::sumChannelsToFirstChannel(tempBuffer);
+
+    const float samplesPerDatum = sampleRate/data.size();
+	const float* readPointer = tempBuffer.getReadPointer(0);
+    for (float& datum : data)
+    {
+
+        float sum = 0;
+        for(int i =0; i < samplesPerDatum; ++i)
+        {
+	        sum += readPointer[i];
+        }
+
+        const float average = sum / samplesPerDatum;
+
+        datum = average;
+    }
 }
