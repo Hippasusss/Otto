@@ -18,29 +18,30 @@ GraphDisplay::GraphDisplay(Graph* newGraph) : graph(newGraph), displayVector(300
 {
 	startTimerHz(timer_constants::REFRESH_RATE);
 }
-GraphDisplay::~GraphDisplay()
-{
-}
+GraphDisplay::~GraphDisplay() = default;
 
 void GraphDisplay::paint(Graphics& graphics)
 {
 	graphics.setColour(getLookAndFeel().findColour(Slider::ColourIds::rotarySliderOutlineColourId));
 
+	const int width = getBounds().getWidth();
+	const int height = getBounds().getHeight(); 
 	const int numPointsInPath = displayVector.size();
-	const int segmentWidth = getBounds().getWidth() / numPointsInPath;
+	const float segmentWidth = static_cast<float>(width) / numPointsInPath;
 	Path path = Path();
-	path.preallocateSpace(numPointsInPath * 3 + 1); // *3 for each line segment, +1 to close path
-	path.startNewSubPath(0, 0);
+	path.preallocateSpace(numPointsInPath * 3 + 3 + 1); // * 3 for each line segment, +3 to end path,  +1 to close path
+	path.startNewSubPath(0, height);
 
 	for (int i = 0; i < numPointsInPath; i++)
 	{
 		const float value = 0;
-		path.lineTo(i * segmentWidth, 0);
+		path.lineTo(i * segmentWidth, height - (displayVector[i] * height) );
 	}
+	path.lineTo(width, height);
 
 	path.closeSubPath();
 
-	graphics.strokePath(path, PathStrokeType(2));
+	graphics.fillPath(path);
 }
 
 void GraphDisplay::resized()

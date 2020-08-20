@@ -37,22 +37,24 @@ void Graph::fillVectorWithDisplayData(std::vector<float>& data)
 	AudioBuffer<float> tempBuffer = AudioBuffer<float>(numChannels, sampleRate);
 	buffer.getPreviousSamples(tempBuffer);
 	const size_t numSamples = tempBuffer.getNumSamples();
+	const size_t numData = data.size();
 
 	Helpers::sumChannelsToFirstChannel(tempBuffer);
 
-    const float samplesPerDatum = sampleRate/data.size();
+    const size_t samplesPerDatum = sampleRate/numData;
 	const float* readPointer = tempBuffer.getReadPointer(0);
-    for (float& datum : data)
+    for (int j = 0; j < numData; ++j)
     {
 
         float sum = 0;
         for(int i =0; i < samplesPerDatum; ++i)
         {
-	        sum += readPointer[i];
+            const int offset = j * samplesPerDatum;
+	        sum += readPointer[i + offset];
         }
 
         const float average = sum / samplesPerDatum;
 
-        datum = average;
+        data[j] = Helpers::getNormalisedDB(average);
     }
 }
