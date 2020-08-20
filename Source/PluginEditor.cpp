@@ -116,7 +116,7 @@ void Auto_AudioProcessorEditor::resized()
     outputMeter.setBounds(rect.removeFromRight(20));
 
 	// Waveform Display
-    const auto graphRect = rect;
+    const auto graphRect = rect.reduced(2, 0);
     graphDisplay.setBounds(graphRect);
 
 	//----------------------------------

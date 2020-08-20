@@ -28,6 +28,7 @@ void GraphDisplay::paint(Graphics& graphics)
 	const int height = getBounds().getHeight(); 
 	const int numPointsInPath = displayVector.size();
 	const float segmentWidth = static_cast<float>(width) / numPointsInPath;
+
 	Path path = Path();
 	path.preallocateSpace(numPointsInPath * 3 + 3 + 1); // * 3 for each line segment, +3 to end path,  +1 to close path
 	path.startNewSubPath(0, height);

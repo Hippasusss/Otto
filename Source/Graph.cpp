@@ -42,12 +42,14 @@ void Graph::fillVectorWithDisplayData(std::vector<float>& data)
 	Helpers::sumChannelsToFirstChannel(tempBuffer);
 
     const size_t samplesPerDatum = sampleRate/numData;
+    size_t remainder = sampleRate%numData;
 	const float* readPointer = tempBuffer.getReadPointer(0);
     for (int j = 0; j < numData; ++j)
     {
 
+        const int extra = remainder-- > 0 ? 1 : 0;
         float sum = 0;
-        for(int i =0; i < samplesPerDatum; ++i)
+        for(int i =0; i < samplesPerDatum + extra; ++i)
         {
             const int offset = j * samplesPerDatum;
 	        sum += readPointer[i + offset];
@@ -55,6 +57,6 @@ void Graph::fillVectorWithDisplayData(std::vector<float>& data)
 
         const float average = sum / samplesPerDatum;
 
-        data[j] = Helpers::getNormalisedDB(average);
+        data[j] = Helpers::getNormalisedDB(average, -60.0f);
     }
 }
