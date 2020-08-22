@@ -15,48 +15,22 @@ void Graph::prepare(const dsp::ProcessSpec& spec)
 {
     numChannels = spec.numChannels;
     sampleRate = spec.sampleRate;
-    buffer.resize(spec.numChannels, spec.sampleRate * 1.5);  //1.5 gives extra space to write into to avoid the write pointer wrapping into the data being read. 
+    spareSamples.setSize(numChannels, spec.maximumBlockSize);
+    numSamplesToAverage = sampleRate / 300;
+    displayData.resize(400);
 }
 
 void Graph::process(const dsp::ProcessContextReplacing<float>& context)
 {
-    buffer.writeBlock(context.getInputBlock());
+    const dsp::AudioBlock<const float>inputBuffer = context.getInputBlock();
+    const size_t inputSize = inputBuffer.getNumSamples();
+	
 }
 
 void Graph::reset()
 {
 }
 
-RingBufferAudio<float>& Graph::getBuffer()
-{
-    return buffer;
-}
-
 void Graph::fillVectorWithDisplayData(std::vector<float>& data)
 {
-	AudioBuffer<float> tempBuffer = AudioBuffer<float>(numChannels, sampleRate);
-	buffer.getPreviousSamples(tempBuffer);
-	const size_t numSamples = tempBuffer.getNumSamples();
-	const size_t numData = data.size();
-
-	Helpers::sumChannelsToFirstChannel(tempBuffer);
-
-    const size_t samplesPerDatum = sampleRate/numData;
-    size_t remainder = sampleRate%numData;
-	const float* readPointer = tempBuffer.getReadPointer(0);
-    for (int j = 0; j < numData; ++j)
-    {
-
-        const int extra = remainder-- > 0 ? 1 : 0;
-        float sum = 0;
-        for(int i =0; i < samplesPerDatum + extra; ++i)
-        {
-            const int offset = j * samplesPerDatum;
-	        sum += readPointer[i + offset];
-        }
-
-        const float average = sum / samplesPerDatum;
-
-        data[j] = Helpers::getNormalisedDB(average, -60.0f);
-    }
 }

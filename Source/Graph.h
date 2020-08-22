@@ -20,11 +20,12 @@ public:
 	void process(const dsp::ProcessContextReplacing<float>&) override;
 	void reset() override;
 
-    RingBufferAudio<float>& getBuffer();
     void fillVectorWithDisplayData(std::vector<float>& data);
 
 private:
-    RingBufferAudio<float> buffer;
+    AudioBuffer<float> spareSamples;
+    RingBufferVector<float> displayData;
     size_t numChannels;
     size_t sampleRate;
+    size_t numSamplesToAverage;
 };

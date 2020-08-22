@@ -19,37 +19,50 @@ class RingBuffer
 {
 public:
 	virtual ~RingBuffer() = default;
-	virtual void addValue(ValueType);
+	virtual void writeValue(ValueType);
+	virtual ValueType readValue();
+	virtual void readPreviousValues(ContainerType& values) = 0;
+
 	virtual size_t getSize() const;
-	virtual ValueType getValue(size_t i) const;
 	virtual ValueType operator[](size_t i);
 protected:
 	RingBuffer();
 	RingBuffer(size_t size);
 	ContainerType valueArray;
-	size_t index;
+	size_t writeIndex;
+	size_t readIndex;
 	size_t size;
 };
 
 //===============================================================================
 
 template <typename ValueType, typename ContainerType>
-RingBuffer<ValueType, ContainerType>::RingBuffer() : index(0), size(0)
+RingBuffer<ValueType, ContainerType>::RingBuffer() : writeIndex(0), readIndex(0), size(0)
 {
 }
 
 template <typename ValueType, typename ContainerType>
-RingBuffer<ValueType, ContainerType>::RingBuffer(size_t size) : index(0), size(size)
+RingBuffer<ValueType, ContainerType>::RingBuffer(size_t size) : writeIndex(0), readIndex(0), size(size)
 {
 }
 
 template <typename ValueType, typename ContainerType>
-void RingBuffer<ValueType, ContainerType>::addValue(ValueType value)
+void RingBuffer<ValueType, ContainerType>::writeValue(ValueType value)
 {
-	valueArray[index] = value;
-	++index;
-	index %= size;
+	valueArray[writeIndex] = value;
+	++writeIndex;
+	writeIndex %= size;
 }
+
+template <typename ValueType, typename ContainerType>
+ValueType RingBuffer<ValueType, ContainerType>::readValue()
+{
+	readIndex %= size;
+	const ValueType returnValue = valueArray[readIndex];
+	readIndex++;
+	return returnValue;
+}
+
 
 template <typename ValueType, typename ContainerType>
 size_t RingBuffer<ValueType, ContainerType>::getSize() const
@@ -57,11 +70,6 @@ size_t RingBuffer<ValueType, ContainerType>::getSize() const
 	return size;
 }
 
-template <typename ValueType, typename ContainerType>
-ValueType RingBuffer<ValueType, ContainerType>::getValue(size_t i) const
-{
-	return valueArray[(i + index) % size];
-}
 
 template <typename ValueType, typename ContainerType>
 ValueType RingBuffer<ValueType, ContainerType>::operator[](size_t i)
@@ -81,6 +89,8 @@ public:
 	RingBufferVector();
 	RingBufferVector(size_t newSize);
 	void resize(size_t newSize);
+	void readPreviousValues(std::vector<ValueType>&) override;
+
 };
 
 //===============================================================================
@@ -101,6 +111,19 @@ void RingBufferVector<ValueType>::resize(size_t newSize)
 {
 	this->size = newSize;
 	this->valueArray.resize(newSize);
+}
+
+template <typename ValueType>
+void RingBufferVector<ValueType>::readPreviousValues(std::vector<ValueType>& values)
+{
+	const size_t size = values.size();
+
+	for (size_t i = 0; i < size; i++)
+	{
+		// vile one liner takes care of wraparound of index when copying
+		const size_t copyIndex = (((writeIndex - (i +1) % size) + size) % size);
+		values[i] = valueArray[copyIndex];
+	}
 }
 
 //===============================================================================
