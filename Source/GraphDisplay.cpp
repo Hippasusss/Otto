@@ -14,7 +14,7 @@
 
 //==============================================================================
 
-GraphDisplay::GraphDisplay(Graph* newGraph) : graph(newGraph), displayVector(300) // 300 is biggest factor of all sample rates. 
+GraphDisplay::GraphDisplay(Graph* newGraph) : graph(newGraph), displayVector(RING_BUFFER_SIZE, 0) 
 {
 	startTimerHz(timer_constants::REFRESH_RATE);
 }

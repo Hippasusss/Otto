@@ -18,7 +18,7 @@ class GraphDisplay : public Component,
 	public Timer
 {
 public:
-	static const int RING_BUFFER_SIZE = 50;
+	static const int RING_BUFFER_SIZE = 300; // 300 is highest common factor of all sample rates. 
 
 	GraphDisplay(Graph* newGraph);
 	~GraphDisplay();

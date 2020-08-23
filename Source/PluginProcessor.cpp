@@ -156,7 +156,7 @@ void Auto_AudioProcessor::sliderValueChanged(Slider* slider)
     const String& ID = slider->getComponentID();
     const auto value = static_cast<float>(slider->getValue());
 
-    for(auto floatParam : floatParameter)
+    for(auto* floatParam : floatParameter)
     {
         if(floatParam->paramID == ID)
         {
@@ -172,7 +172,7 @@ void Auto_AudioProcessor::buttonClicked(Button* button)
     const String& ID = button->getComponentID();
     const bool value = button->getToggleState();
 
-    for(auto boolParam : boolParameter)
+    for(auto* boolParam : boolParameter)
     {
         if(boolParam->paramID == ID)
         {

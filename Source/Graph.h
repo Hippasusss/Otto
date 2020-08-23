@@ -23,7 +23,7 @@ public:
     void fillVectorWithDisplayData(std::vector<float>& data);
 
 private:
-    AudioBuffer<float> spareSamples;
+    AudioBuffer<float> sumBuffer;
     RingBufferVector<float> displayData;
     size_t numChannels;
     size_t sampleRate;
