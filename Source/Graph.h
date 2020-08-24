@@ -14,7 +14,7 @@
 class Graph : dsp::ProcessorBase
 {
 public:
-    Graph() = default;
+    Graph();
     ~Graph() = default;
 	void prepare(const dsp::ProcessSpec&) override;
 	void process(const dsp::ProcessContextReplacing<float>&) override;

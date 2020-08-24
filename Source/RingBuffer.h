@@ -42,7 +42,7 @@ RingBuffer<ValueType, ContainerType>::RingBuffer() : writeIndex(0), readIndex(0)
 }
 
 template <typename ValueType, typename ContainerType>
-RingBuffer<ValueType, ContainerType>::RingBuffer(size_t size) : writeIndex(0), readIndex(0), size(size)
+RingBuffer<ValueType, ContainerType>::RingBuffer(size_t size) : writeIndex(0), readIndex(0), size(size), valueArray(size, 0)
 {
 }
 
@@ -50,16 +50,14 @@ template <typename ValueType, typename ContainerType>
 void RingBuffer<ValueType, ContainerType>::writeValue(ValueType value)
 {
 	valueArray[writeIndex] = value;
-	++writeIndex;
-	writeIndex %= size;
+	++writeIndex %= size;
 }
 
 template <typename ValueType, typename ContainerType>
 ValueType RingBuffer<ValueType, ContainerType>::readValue()
 {
-	readIndex %= size;
 	const ValueType returnValue = valueArray[readIndex];
-	readIndex++;
+	++readIndex %= size;
 	return returnValue;
 }
 
@@ -117,11 +115,12 @@ template <typename ValueType>
 void RingBufferVector<ValueType>::readPreviousValues(std::vector<ValueType>& values)
 {
 	const size_t size = values.size();
+	const size_t writeIndexLocal = writeIndex; // take local value in case class member is changed in separate thread.
 
 	for (size_t i = 0; i < size; i++)
 	{
 		// vile one liner takes care of wraparound of index when copying
-		const size_t copyIndex = (((writeIndex - (i +1) % size) + size) % size);
+		const size_t copyIndex = (((writeIndexLocal - (i + 1) % size) + size) % size);
 		values[i] = valueArray[copyIndex];
 	}
 }

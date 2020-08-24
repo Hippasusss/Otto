@@ -57,13 +57,13 @@ void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& contex
 	//if(onValueCalculated) onValueCalculated(getValue());
 
 	// IIR Filter
-    const dsp::AudioBlock<const float>& block = context.getInputBlock();
-    dsp::AudioBlock<float> copyBlock(copyBuffer);
-    Helpers::copyAudioBlockIntoBuffer(block, copyBuffer, copyBuffer.getNumSamples());
-    const dsp::ProcessContextReplacing<float> copyContext(copyBlock);
-    filter.process(copyContext);
-    auto max = copyContext.getOutputBlock().findMinAndMax().getEnd();
-    onValueCalculated(max);
+    // const dsp::AudioBlock<const float>& block = context.getInputBlock();
+    // dsp::AudioBlock<float> copyBlock(copyBuffer);
+    // Helpers::copyAudioBlockIntoBuffer(block, copyBuffer, copyBuffer.getNumSamples());
+    // const dsp::ProcessContextReplacing<float> copyContext(copyBlock);
+    // filter.process(copyContext);
+    // auto max = copyContext.getOutputBlock().findMinAndMax().getEnd();
+    // onValueCalculated(max);
 
 }
 

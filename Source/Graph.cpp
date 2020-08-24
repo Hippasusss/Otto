@@ -11,13 +11,17 @@
 #include "Graph.h"
 
 
-void Graph::prepare(const dsp::ProcessSpec& spec)
+Graph::Graph() : displayData(400), sumBuffer()
+{
+}
+
+void Graph::prepare(const dsp::ProcessSpec& spec) 
 {
 	numChannels = spec.numChannels;
 	sampleRate = spec.sampleRate;
-	numSamplesToAverage = sampleRate / 300;
+	numSamplesToAverage = sampleRate / displayData.getSize() -100;
 	sumBuffer.setSize(numChannels, numSamplesToAverage);
-	displayData.resize(400);
+	sumBuffer.clear();
 }
 
 void Graph::process(const dsp::ProcessContextReplacing<float>& context)
@@ -28,15 +32,15 @@ void Graph::process(const dsp::ProcessContextReplacing<float>& context)
 	const size_t inputSize = sourceBlock.getNumSamples();
 	size_t remainingSpace = numSamplesToAverage - sumIndex;
 
-	for (size_t i = 0; i < sourceBlock.getNumChannels(); ++i)
+	for (size_t channel = 0; channel < sourceBlock.getNumChannels(); ++channel)
 	{
-		const auto* channelPointer = sourceBlock.getChannelPointer(i);
+		const auto* channelPointer = sourceBlock.getChannelPointer(channel);
 		size_t inputIndex = 0;
 		while (inputIndex < inputSize)
 		{
 			while (sumIndex < numSamplesToAverage)
 			{
-				sumBuffer.addSample(0, sumIndex, channelPointer[inputIndex]);
+				sumBuffer.setSample(channel, sumIndex, channelPointer[inputIndex]);
 				inputIndex++;
 				sumIndex++;
 				if(inputIndex < inputSize) break;
