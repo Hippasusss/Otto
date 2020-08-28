@@ -1,38 +1,60 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2019
-
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Auto - VST3", "Auto_VST3.vcxproj", "{6C127FF2-3EAB-8629-E680-51F4FDA590B2}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30406.217
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Auto_VST3", "Auto_VST3.vcxproj", "{6C127FF2-3EAB-8629-E680-51F4FDA590B2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D985DF2C-5A62-1B83-6100-9A91B8EE3C24} = {D985DF2C-5A62-1B83-6100-9A91B8EE3C24}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Auto - AAX", "Auto_AAX.vcxproj", "{50A0096C-14EC-23A7-CCAB-ED69426572C9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Auto_AAX", "Auto_AAX.vcxproj", "{50A0096C-14EC-23A7-CCAB-ED69426572C9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D985DF2C-5A62-1B83-6100-9A91B8EE3C24} = {D985DF2C-5A62-1B83-6100-9A91B8EE3C24}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Auto - Shared Code", "Auto_SharedCode.vcxproj", "{D985DF2C-5A62-1B83-6100-9A91B8EE3C24}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Auto_SharedCode", "Auto_SharedCode.vcxproj", "{D985DF2C-5A62-1B83-6100-9A91B8EE3C24}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest1", "UnitTest1\UnitTest1.vcxproj", "{39DB98C9-853B-40BE-84CC-26C5E4AF45D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6C127FF2-3EAB-8629-E680-51F4FDA590B2}.Debug|x64.ActiveCfg = Debug|x64
 		{6C127FF2-3EAB-8629-E680-51F4FDA590B2}.Debug|x64.Build.0 = Debug|x64
+		{6C127FF2-3EAB-8629-E680-51F4FDA590B2}.Debug|x86.ActiveCfg = Debug|x64
 		{6C127FF2-3EAB-8629-E680-51F4FDA590B2}.Release|x64.ActiveCfg = Release|x64
 		{6C127FF2-3EAB-8629-E680-51F4FDA590B2}.Release|x64.Build.0 = Release|x64
+		{6C127FF2-3EAB-8629-E680-51F4FDA590B2}.Release|x86.ActiveCfg = Release|x64
 		{50A0096C-14EC-23A7-CCAB-ED69426572C9}.Debug|x64.ActiveCfg = Debug|x64
 		{50A0096C-14EC-23A7-CCAB-ED69426572C9}.Debug|x64.Build.0 = Debug|x64
+		{50A0096C-14EC-23A7-CCAB-ED69426572C9}.Debug|x86.ActiveCfg = Debug|x64
 		{50A0096C-14EC-23A7-CCAB-ED69426572C9}.Release|x64.ActiveCfg = Release|x64
 		{50A0096C-14EC-23A7-CCAB-ED69426572C9}.Release|x64.Build.0 = Release|x64
+		{50A0096C-14EC-23A7-CCAB-ED69426572C9}.Release|x86.ActiveCfg = Release|x64
 		{D985DF2C-5A62-1B83-6100-9A91B8EE3C24}.Debug|x64.ActiveCfg = Debug|x64
 		{D985DF2C-5A62-1B83-6100-9A91B8EE3C24}.Debug|x64.Build.0 = Debug|x64
+		{D985DF2C-5A62-1B83-6100-9A91B8EE3C24}.Debug|x86.ActiveCfg = Debug|x64
 		{D985DF2C-5A62-1B83-6100-9A91B8EE3C24}.Release|x64.ActiveCfg = Release|x64
 		{D985DF2C-5A62-1B83-6100-9A91B8EE3C24}.Release|x64.Build.0 = Release|x64
+		{D985DF2C-5A62-1B83-6100-9A91B8EE3C24}.Release|x86.ActiveCfg = Release|x64
+		{39DB98C9-853B-40BE-84CC-26C5E4AF45D9}.Debug|x64.ActiveCfg = Debug|x64
+		{39DB98C9-853B-40BE-84CC-26C5E4AF45D9}.Debug|x64.Build.0 = Debug|x64
+		{39DB98C9-853B-40BE-84CC-26C5E4AF45D9}.Debug|x86.ActiveCfg = Debug|Win32
+		{39DB98C9-853B-40BE-84CC-26C5E4AF45D9}.Debug|x86.Build.0 = Debug|Win32
+		{39DB98C9-853B-40BE-84CC-26C5E4AF45D9}.Release|x64.ActiveCfg = Release|x64
+		{39DB98C9-853B-40BE-84CC-26C5E4AF45D9}.Release|x64.Build.0 = Release|x64
+		{39DB98C9-853B-40BE-84CC-26C5E4AF45D9}.Release|x86.ActiveCfg = Release|Win32
+		{39DB98C9-853B-40BE-84CC-26C5E4AF45D9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0F2E9CC2-A7E3-46DD-8660-B5CAEFD2D0C4}
 	EndGlobalSection
 EndGlobal

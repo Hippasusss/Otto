@@ -51,7 +51,6 @@ void Graph::process(const dsp::ProcessContextReplacing<float>& context)
 				displayData.writeValue(average);
 				sumIndex = 0;
 			}
-
 		}
 	}
 

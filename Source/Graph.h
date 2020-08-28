@@ -7,10 +7,10 @@
 
   ==============================================================================
 */
+#pragma once
 #include "JuceHeader.h"
 #include "RingBuffer.h"
 
-#pragma once
 class Graph : dsp::ProcessorBase
 {
 public:

@@ -11,9 +11,9 @@ Author:  Danny Herbert
 #pragma once
 
 #include <JuceHeader.h>
-
 #include "CustomLookAndFeel.h"
 #include "Graph.h"
+
 class GraphDisplay : public Component,
 	public Timer
 {
