@@ -21,7 +21,7 @@ public:
 	virtual ~RingBuffer() = default;
 	virtual void writeValue(ValueType);
 	virtual ValueType readValue();
-	virtual void readPreviousValues(ContainerType& values) = 0;
+	virtual void readPreviousValues(ContainerType& values);
 
 	virtual size_t getSize() const;
 	virtual ValueType operator[](size_t i);
@@ -75,6 +75,19 @@ ValueType RingBuffer<ValueType, ContainerType>::operator[](size_t i)
 	return valueArray[i];
 }
 
+template <typename ValueType, typename ContainerType>
+void RingBuffer<ValueType, ContainerType>::readPreviousValues(ContainerType& values)
+{
+	const size_t size = values.size();
+	const size_t writeIndexLocal = writeIndex; // take local value in case class member is changed in separate thread.
+
+	for (size_t i = 0; i < size; i++)
+	{
+		// vile one liner takes care of wraparound of index when copying
+		const size_t copyIndex = (((writeIndexLocal - (i + 1) % size) + size) % size);
+		values[size - 1 - i] = valueArray[copyIndex];
+	}
+}
 
 //===============================================================================
 // Vector
@@ -109,20 +122,6 @@ void RingBufferVector<ValueType>::resize(size_t newSize)
 {
 	this->size = newSize;
 	this->valueArray.resize(newSize);
-}
-
-template <typename ValueType>
-void RingBufferVector<ValueType>::readPreviousValues(std::vector<ValueType>& values)
-{
-	const size_t size = values.size();
-	const size_t writeIndexLocal = writeIndex; // take local value in case class member is changed in separate thread.
-
-	for (size_t i = 0; i < size; i++)
-	{
-		// vile one liner takes care of wraparound of index when copying
-		const size_t copyIndex = (((writeIndexLocal - (i + 1) % size) + size) % size);
-		values[size - 1 - i] = valueArray[copyIndex];
-	}
 }
 
 //===============================================================================
