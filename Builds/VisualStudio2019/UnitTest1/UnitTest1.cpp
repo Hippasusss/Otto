@@ -32,7 +32,7 @@ namespace Test
 		TEST_METHOD(VectorPrevious)
 		{
 			const int VECSIZE = 5;
-			const size_t DATASIZE = 12;
+			const size_t DATASIZE = 10;
 			auto vec = RingBufferVector<int>(VECSIZE);
 
 			for (int i = 0; i < DATASIZE; ++i)

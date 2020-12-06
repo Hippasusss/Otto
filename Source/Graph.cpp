@@ -11,15 +11,19 @@
 #include "Graph.h"
 
 
-Graph::Graph() : displayData(400), sumBuffer()
+Graph::Graph() : displayData(4410), sumBuffer()
 {
 }
 
 void Graph::prepare(const dsp::ProcessSpec& spec) 
 {
+
 	numChannels = spec.numChannels;
 	sampleRate = spec.sampleRate;
-	numSamplesToAverage = sampleRate / displayData.getSize() -100;
+
+	displayData.resize(sampleRate);
+
+	numSamplesToAverage = 300;
 	sumBuffer.setSize(numChannels, numSamplesToAverage);
 	sumBuffer.clear();
 }
@@ -32,20 +36,27 @@ void Graph::process(const dsp::ProcessContextReplacing<float>& context)
 	const size_t inputSize = sourceBlock.getNumSamples();
 	size_t remainingSpace = numSamplesToAverage - sumIndex;
 
+	// for all channels
 	for (size_t channel = 0; channel < sourceBlock.getNumChannels(); ++channel)
 	{
 		const auto* channelPointer = sourceBlock.getChannelPointer(channel);
 		size_t inputIndex = 0;
+
+		// do while there are still samples in the context buffer passed to this process 
 		while (inputIndex < inputSize)
 		{
-			while (sumIndex < numSamplesToAverage)
+
+			// sum a batch of input samples.		 : stop if run out of input samples
+			while (sumIndex < numSamplesToAverage && inputIndex < inputSize)
 			{
 				sumBuffer.setSample(channel, sumIndex, channelPointer[inputIndex]);
 				inputIndex++;
 				sumIndex++;
 				if(inputIndex < inputSize) break;
 			}
-			if(sumIndex >= numSamplesToAverage)
+
+			// average the sum and add it to the display data if the sum buffer is full
+			if( sumIndex >= numSamplesToAverage)
 			{
 				const float average = Helpers::getAverageMagnitude(sumBuffer);
 				displayData.writeValue(average);

@@ -42,7 +42,7 @@ RingBuffer<ValueType, ContainerType>::RingBuffer() : writeIndex(0), readIndex(0)
 }
 
 template <typename ValueType, typename ContainerType>
-RingBuffer<ValueType, ContainerType>::RingBuffer(size_t size) : writeIndex(0), readIndex(0), size(size), valueArray(size, 0)
+RingBuffer<ValueType, ContainerType>::RingBuffer(size_t size) : valueArray(size, 0), writeIndex(0), readIndex(0), size(size)
 {
 }
 
@@ -100,7 +100,6 @@ public:
 	RingBufferVector();
 	RingBufferVector(size_t newSize);
 	void resize(size_t newSize);
-	void readPreviousValues(std::vector<ValueType>&) override;
 
 };
 
