@@ -121,7 +121,7 @@ void RingBufferVector<ValueType>::readPreviousValues(std::vector<ValueType>& val
 	{
 		// vile one liner takes care of wraparound of index when copying
 		const size_t copyIndex = (((writeIndexLocal - (i + 1) % size) + size) % size);
-		values[i] = valueArray[copyIndex];
+		values[size - 1 - i] = valueArray[copyIndex];
 	}
 }
 

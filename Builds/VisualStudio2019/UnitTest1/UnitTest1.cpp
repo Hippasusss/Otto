@@ -13,8 +13,8 @@ namespace Test
 		
 		TEST_METHOD(VectorIO)
 		{
-			const int VECSIZE = 50;
-			const size_t DATASIZE = 120;
+			const size_t VECSIZE = 5;
+			const size_t DATASIZE = 10;
 			auto vec = RingBufferVector<int>(VECSIZE);
 
 			for (int i = 0; i < DATASIZE; ++i)
@@ -31,8 +31,8 @@ namespace Test
 
 		TEST_METHOD(VectorPrevious)
 		{
-			const int VECSIZE = 50;
-			const size_t DATASIZE = 100;
+			const int VECSIZE = 5;
+			const size_t DATASIZE = 12;
 			auto vec = RingBufferVector<int>(VECSIZE);
 
 			for (int i = 0; i < DATASIZE; ++i)
@@ -40,18 +40,14 @@ namespace Test
 				vec.writeValue(i);
 			}
 
-			auto vector = std::vector<int>(DATASIZE);
+			auto vector = std::vector<int>(VECSIZE);
 			vec.readPreviousValues(vector);
 
-			for (int i = 0; i < DATASIZE; ++i)
+			for (int i = 0; i < VECSIZE; ++i)
 			{
-				Assert::IsTrue(vec[i % VECSIZE] == vector[i]);
+				Assert::IsTrue(vec[i]  == vector[i]);
 			}
 		}
 
-		TEST_METHOD(DUMMY)
-		{
-			Assert::IsTrue(true);
-		}
 	};
 }
