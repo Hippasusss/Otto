@@ -8,7 +8,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     processor (processor), 
     inputMeter(processor.getInputMeter()),
     outputMeter(processor.getOutputMeter()),
-	graphDisplay(processor.getGraph()),
+    graphDisplay(processor.getGraph()),
     inputGain("In"),
     outputGain("Out"),
     frequency("Freq"),

@@ -70,13 +70,13 @@ private:
 
     dsp::ProcessorChain <dsp::Gain<float>,
                          BufferStore,
-						 Meter, 
-						 Graph,
+                         Meter, 
+                         Graph,
                          EnvelopeFollower,
                          dsp::LadderFilter<float>,
                          Mixer,
                          dsp::Gain<float>,
-						 Meter> chain;
+                         Meter> chain;
    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Auto_AudioProcessor)
 };

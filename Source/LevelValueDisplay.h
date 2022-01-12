@@ -1,11 +1,11 @@
 /*
-  ==============================================================================
+   ==============================================================================
 
-    LevelValue.h
-    Created: 9 Mar 2020 8:49:15pm
-    Author:  Danny Herbert
+   LevelValue.h
+Created: 9 Mar 2020 8:49:15pm
+Author:  Danny Herbert
 
-  ==============================================================================
+==============================================================================
 */
 
 
@@ -18,30 +18,30 @@
 template<typename ValueType>
 class LevelValueDisplay 
 {
-public:
-	LevelValueDisplay();
-	LevelValueDisplay(ValueType value);
-	~LevelValueDisplay();
+    public:
+        LevelValueDisplay();
+        LevelValueDisplay(ValueType value);
+        ~LevelValueDisplay();
 
-    LevelValueDisplay& operator=(const LevelValueDisplay& other);
-    LevelValueDisplay& operator=(ValueType);
-    operator ValueType&();
+        LevelValueDisplay& operator=(const LevelValueDisplay& other);
+        LevelValueDisplay& operator=(ValueType);
+        operator ValueType&();
 
-    ValueType getValue() const;
-    ValueType getValueNormalisedDB() const;
-    ValueType getValueDBFS() const;
-    ValueType getSmoothedValue() const;
-    ValueType getSmoothedValueNormalisedDB() const;
-    ValueType getSmoothedValueDBFS() const;
-    void setValue(ValueType newValue);
-    void setRate(float value);
+        ValueType getValue() const;
+        ValueType getValueNormalisedDB() const;
+        ValueType getValueDBFS() const;
+        ValueType getSmoothedValue() const;
+        ValueType getSmoothedValueNormalisedDB() const;
+        ValueType getSmoothedValueDBFS() const;
+        void setValue(ValueType newValue);
+        void setRate(float value);
 
-private:
-    ValueType value;
-    RampSmoother<ValueType> smoother;
-    const float dbMinusInfinity = -60;
-    const float AttackRelease = 0.2;
-	
+    private:
+        ValueType value;
+        RampSmoother<ValueType> smoother;
+        const float dbMinusInfinity = -60;
+        const float AttackRelease = 0.2;
+
 };
 
 template <typename ValueType>
@@ -86,7 +86,7 @@ ValueType LevelValueDisplay<ValueType>::getValue() const
 template <typename ValueType>
 ValueType LevelValueDisplay<ValueType>::getValueNormalisedDB() const
 {
-	return Helpers::getNormalisedDB(value, dbMinusInfinity);
+    return Helpers::getNormalisedDB(value, dbMinusInfinity);
 }
 
 template <typename ValueType>
@@ -104,7 +104,7 @@ ValueType LevelValueDisplay<ValueType>::getSmoothedValue() const
 template <typename ValueType>
 ValueType LevelValueDisplay<ValueType>::getSmoothedValueNormalisedDB() const
 {
-	return Helpers::getNormalisedDB(smoother.getValue(), dbMinusInfinity);
+    return Helpers::getNormalisedDB(smoother.getValue(), dbMinusInfinity);
 }
 
 template <typename ValueType>
