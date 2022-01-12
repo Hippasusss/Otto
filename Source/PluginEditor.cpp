@@ -24,7 +24,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     mixA(processor.apvts, parameter_constants::MIX_ID, mix),
     envA(processor.apvts, parameter_constants::ENV_AMOUNT_ID, envAmount),
     twoA(processor.apvts, parameter_constants::TWO_FOUR_POLE_ID, twoFourPole),
-    envspA(processor.apvts, parameter_constants::ENV_AMOUNT_ID, envSpeed)
+    envspA(processor.apvts, parameter_constants::ENV_SPEED_ID, envSpeed)
 {
     setLookAndFeel(&lookAndFeel);
     setSize (800, 400);

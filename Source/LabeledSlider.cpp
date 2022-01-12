@@ -89,7 +89,6 @@ void LabeledSlider::init(const String& name)
     sliderNameLabel.setJustificationType(Justification::centredTop);
     sliderNameLabel.attachToComponent(this, true);
     addAndMakeVisible(sliderNameLabel);
-    DBG("hello label");
 
     sliderValueLabel.setJustificationType(Justification::centred);
     sliderValueLabel.attachToComponent(this, true);

@@ -103,19 +103,21 @@ void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& 
 {
     ScopedNoDenormals noDenormals;
     auto block = dsp::AudioBlock<float>(buffer);
+    const auto context = dsp::ProcessContextReplacing<float>(block);
+    chain.process(context);
 
     // Split the audio block into multiple sub buffers. Seems like a daft/naive way of doing this.
     // need to find a proper way to be able to set the cutoff frequency at smaller increments of the buffer size.
     // without this a buffer size of 2048 would limit the frequency to be set every 42ms (at 48k). that's shite.
     // must be a smarty pants way to do this. 
-    const int subBlockSize = 32;
-    const int numSubBlocks = buffer.getNumSamples() / 32;
-    for(int i = 0; i < numSubBlocks; ++i)
-    {
-        dsp::AudioBlock<float> subBlock = block.getSubBlock(subBlockSize * i, subBlockSize);
-        const auto context = dsp::ProcessContextReplacing<float>(subBlock);
-        chain.process(context);
-    }
+    //const int subBlockSize = 32;
+    //const int numSubBlocks = buffer.getNumSamples() / 32;
+    //for(int i = 0; i < numSubBlocks; ++i)
+    //{
+    //    dsp::AudioBlock<float> subBlock = block.getSubBlock(subBlockSize * i, subBlockSize);
+    //    const auto context = dsp::ProcessContextReplacing<float>(subBlock);
+    //    chain.process(context);
+    //}
 
 }
 
@@ -164,7 +166,6 @@ AudioProcessorValueTreeState::ParameterLayout Auto_AudioProcessor::getParameterL
     layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::ENV_AMOUNT_ID, "Env %",        NormalisableRange(0.f, 100.f, 1.f), 100.f));
     layout.add(std::make_unique<AudioParameterBool>(parameter_constants::ENV_SPEED_ID, "Env Speed", false));
     layout.add(std::make_unique<AudioParameterBool>(parameter_constants::TWO_FOUR_POLE_ID, "12/24", false));
-    DBG("hello");
 
     return layout;
 }
