@@ -1,11 +1,11 @@
 /*
-  ==============================================================================
+   ==============================================================================
 
-    Meter.cpp
-    Created: 8 Mar 2020 7:51:43pm
-    Author:  Danny Herbert
+   Meter.cpp
+Created: 8 Mar 2020 7:51:43pm
+Author:  Danny Herbert
 
-  ==============================================================================
+==============================================================================
 */
 
 #include "Meter.h"
@@ -20,7 +20,7 @@ void Meter::prepare(const dsp::ProcessSpec& spec)
     numChannels = spec.numChannels;
     channelRMSValues.resize(numChannels);
     channelPeakValues.resize(numChannels);
-	RMSAudioBuffer.resize(numChannels, RMSTime * spec.sampleRate);
+    RMSAudioBuffer.resize(numChannels, RMSTime * spec.sampleRate);
     if(onPrepareCallback) onPrepareCallback();
 }
 
@@ -49,13 +49,13 @@ void Meter::calculateRMS(const dsp::AudioBlock<float>& block)
     const int blockSize = RMSBlock.getNumSamples();
     for(auto i = 0; i < numChannels; ++i)
     {
-		float sum = 0.0f;
+        float sum = 0.0f;
         const auto chan = RMSBlock.getChannelPointer(i);
-		for (auto j = 0; j < blockSize; ++j)
-		{
-			const auto sample = chan[j];
-			sum += sample * sample;
-		}
+        for (auto j = 0; j < blockSize; ++j)
+        {
+            const auto sample = chan[j];
+            sum += sample * sample;
+        }
         channelRMSValues[i] = (std::sqrt (sum / blockSize));
     }
 }
@@ -64,14 +64,14 @@ void Meter::calculatePeak(const dsp::AudioBlock<float>& block)
     const int numSamples = block.getNumSamples();
     for(int i = 0; i < numChannels; ++i)
     {
-		float max = 0.0f;
+        float max = 0.0f;
         const auto data = block.getChannelPointer(i);
-		for (int j = 0; j < numSamples; ++j)
-		{
-			const auto sample = abs(data[j]);
-			max = sample > max ? sample : max;
-		}
-		channelPeakValues[i] = max;
+        for (int j = 0; j < numSamples; ++j)
+        {
+            const auto sample = abs(data[j]);
+            max = sample > max ? sample : max;
+        }
+        channelPeakValues[i] = max;
         clip = max >= 1.0f ? true : false;
     }
 }
