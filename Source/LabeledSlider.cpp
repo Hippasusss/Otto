@@ -5,20 +5,9 @@
 
 LabeledSlider::LabeledSlider() = default;
 
-LabeledSlider::LabeledSlider(const String& name, const String& ID): sliderNameLabel(name, name) , defaultValue(0)
+LabeledSlider::LabeledSlider(const String& name): sliderNameLabel(name, name) , defaultValue(0)
 {
-    setComponentID(ID);
-    sliderNameLabel.setJustificationType(Justification::centredTop);
-    sliderNameLabel.attachToComponent(this, true);
-    addAndMakeVisible(sliderNameLabel);
-
-    sliderValueLabel.setJustificationType(Justification::centred);
-    sliderValueLabel.attachToComponent(this, true);
-    sliderValueLabel.setInterceptsMouseClicks(false,false);
-    sliderValueLabel.setLookAndFeel(&lookAndFeel2);
-    sliderValueLabel.setText(String(getValue()), dontSendNotification);
-    addAndMakeVisible(sliderValueLabel);
-    sliderValueLabel.setVisible(false);
+    init(name);
 }
 
 LabeledSlider::~LabeledSlider() = default;
@@ -91,6 +80,24 @@ void LabeledSlider::setDefault(float newDefault, bool setValueToo)
 void LabeledSlider::returnToDefault()
 {
     setValue(defaultValue);
+}
+
+void LabeledSlider::init(const String& name)
+{
+    sliderNameLabel.setName(name);
+    sliderNameLabel.setText(name, NotificationType::dontSendNotification);
+    sliderNameLabel.setJustificationType(Justification::centredTop);
+    sliderNameLabel.attachToComponent(this, true);
+    addAndMakeVisible(sliderNameLabel);
+    DBG("hello label");
+
+    sliderValueLabel.setJustificationType(Justification::centred);
+    sliderValueLabel.attachToComponent(this, true);
+    sliderValueLabel.setInterceptsMouseClicks(false,false);
+    sliderValueLabel.setLookAndFeel(&lookAndFeel2);
+    sliderValueLabel.setText(String(getValue()), dontSendNotification);
+    addAndMakeVisible(sliderValueLabel);
+    sliderValueLabel.setVisible(false);
 }
 
 

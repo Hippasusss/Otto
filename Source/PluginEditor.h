@@ -19,19 +19,11 @@ public:
 private:
     Auto_AudioProcessor& processor;
 
-    LabeledSlider inputGain;
-    LabeledSlider drive;
-    LabeledSlider envAmount;
-    LabeledSlider frequency;
-    LabeledSlider resonance;
-    LabeledSlider mix;
-    LabeledSlider outputGain;
-    ToggleButton envSpeed;
-    ToggleButton twoFourPole;
+    LabeledSlider inputGain, drive, envAmount, frequency, resonance, mix, outputGain;
+    ToggleButton envSpeed, twoFourPole;
     GroupComponent parameterGroup;
     GraphDisplay graphDisplay;
-    MeterDisplay inputMeter;
-    MeterDisplay outputMeter;
+    MeterDisplay inputMeter, outputMeter;
     CustomLookAndFeel lookAndFeel;
     
     std::array<Component*, 13> components {&inputGain, &drive, &envAmount, &frequency, 
@@ -40,6 +32,9 @@ private:
     std::array<LabeledSlider*, 7> sliders {&inputGain, &drive, &envAmount, &frequency, 
         &resonance, &mix, &outputGain};
     std::array<ToggleButton*, 2> buttons{&envSpeed, &twoFourPole};
+
+    AudioProcessorValueTreeState::SliderAttachment inA, driveA, envA, freqA, resoA, mixA, outA;
+    AudioProcessorValueTreeState::ButtonAttachment envspA, twoA;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Auto_AudioProcessorEditor)
 };

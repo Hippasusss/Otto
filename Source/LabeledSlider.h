@@ -7,7 +7,7 @@ class LabeledSlider    : public Slider
 {
 public:
 	LabeledSlider();
-    explicit LabeledSlider(const String& name, const String& ID);
+    explicit LabeledSlider(const String& name);
     ~LabeledSlider();
 
     Label& getSliderNameLabel();
@@ -22,10 +22,10 @@ public:
     void resized() override;
     void setDefault(float newDefault, bool setDefaultToo = true);
     void returnToDefault();
+    void init(const String& name);
 
 private:
     CustomLookAndFeel2 lookAndFeel2;
-private:
     Label sliderNameLabel;
     Label sliderValueLabel;
     float defaultValue;

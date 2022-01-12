@@ -6,9 +6,7 @@
 #include "Meter.h"
 #include "Mixer.h"
 
-class Auto_AudioProcessor: public AudioProcessor,
-                           public Slider::Listener,
-                           public Button::Listener
+class Auto_AudioProcessor: public AudioProcessor
 {
 public:
     Auto_AudioProcessor();
@@ -42,23 +40,19 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    void sliderValueChanged(Slider* slider) override;
-    void buttonClicked(Button*) override;
     const EnvelopeFollower& getEnvelopeFollower() const;
     const dsp::LadderFilter<float>& getLadderFilter() const;
     Meter* getInputMeter();
     Meter* getOutputMeter();
     Graph* getGraph();
 
-
+    static AudioProcessorValueTreeState::ParameterLayout getParameterLayout();
+    AudioProcessorValueTreeState apvts { *this, nullptr, "Parameters", getParameterLayout()};
 
 private:
 
     const float slow = 1.0;
     const float fast = 0.3;
-
-    void setParameter(const String& parameterID);
-    void initaliseParameters();
 
     enum processors
     {
@@ -73,19 +67,6 @@ private:
         outputMeterIndex
     };
 
-    AudioParameterFloat inputGain;
-    AudioParameterFloat outputGain;
-    AudioParameterFloat resonance;
-    AudioParameterFloat frequency;
-    AudioParameterFloat drive;
-    AudioParameterFloat envAmount;
-    AudioParameterFloat mix;
-    AudioParameterBool envSpeed;
-    AudioParameterBool twoFourPole;
-
-    std::array<AudioParameterFloat*, 7> floatParameter {&inputGain, &outputGain, &resonance, 
-                                                        &frequency, &drive, &envAmount, &mix};
-    std::array<AudioParameterBool*, 2> boolParameter {&envSpeed, &twoFourPole};
 
     dsp::ProcessorChain <dsp::Gain<float>,
                          BufferStore,

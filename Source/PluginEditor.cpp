@@ -6,53 +6,41 @@
 Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& processor)
     : AudioProcessorEditor (&processor), 
     processor (processor), 
-    inputGain("In", parameter_constants::INPUT_GAIN_ID), 
-    drive("Drive", parameter_constants::DRIVE_ID),
-    envAmount("Env Am", parameter_constants::ENV_AMOUNT_ID),
-    frequency("Freq", parameter_constants::FREQUENCY_ID),
-    resonance("Res", parameter_constants::RESONANCE_ID),
-    mix("Mix", parameter_constants::MIX_ID),
-    outputGain("Out", parameter_constants::OUTPUT_GAIN_ID),
-    envSpeed("Fast/Slow", parameter_constants::ENV_SPEED_ID),
-    twoFourPole("2/4", parameter_constants::TWO_FOUR_POLE_ID),
-    parameterGroup("parameterGroup"),
     inputMeter(processor.getInputMeter()),
     outputMeter(processor.getOutputMeter()),
-	graphDisplay(processor.getGraph())
-
+	graphDisplay(processor.getGraph()),
+    inputGain("In"),
+    outputGain("Out"),
+    frequency("Freq"),
+    resonance("Reso"),
+    drive("Drive"),
+    mix("Mix"),
+    envAmount("Env"),
+    inA(processor.apvts, parameter_constants::INPUT_GAIN_ID, inputGain), 
+    outA(processor.apvts, parameter_constants::OUTPUT_GAIN_ID, outputGain),
+    freqA(processor.apvts, parameter_constants::FREQUENCY_ID, frequency),
+    resoA(processor.apvts, parameter_constants::RESONANCE_ID, resonance),
+    driveA(processor.apvts, parameter_constants::DRIVE_ID, drive),
+    mixA(processor.apvts, parameter_constants::MIX_ID, mix),
+    envA(processor.apvts, parameter_constants::ENV_AMOUNT_ID, envAmount),
+    twoA(processor.apvts, parameter_constants::TWO_FOUR_POLE_ID, twoFourPole),
+    envspA(processor.apvts, parameter_constants::ENV_AMOUNT_ID, envSpeed)
 {
     setLookAndFeel(&lookAndFeel);
     setSize (800, 400);
+
 
     // Default setup for sliders
     for(auto& slider : sliders)
     {
         slider->setSliderStyle (Slider::RotaryVerticalDrag);
-        slider->setRange(0, 1.0, 0.01);
-        slider->setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true,0,0);
-        slider->setDefault(0.0);
-        slider->addListener(&processor);
+        slider->setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
     }
-
-    // Specific setup for sliders
-    inputGain. setRange(-30, 30,    0.1);
-    outputGain.setRange(-30, 30,    0.1);
-    drive.     setRange(1,   10,    0.1);
-    resonance. setRange(0.0, 1.0,   0.001);
-    frequency. setRange(20,  20000, 0.001);
-    mix.       setRange(0,   100,   0.001);
-    envAmount. setRange(0,   100,   0.1);
-
-    frequency.setSkewFactor(0.5);
-    frequency.setDefault(1000.0f);
-
-    mix.setDefault(100.0f);
 
     // Default setup for buttons
     for(auto& button : buttons)
     {
         button->setButtonText(button->getName());
-        button->addListener(&processor);
     }
 
     // Make all components visible
@@ -71,15 +59,6 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
 Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
 {
     setLookAndFeel(nullptr);
-    for(auto& slider : sliders)
-    {
-        slider->removeListener(&processor);
-    }
-
-    for(auto& button : buttons)
-    {
-        button->removeListener(&processor);
-    }
 }
 
 void Auto_AudioProcessorEditor::resized()

@@ -13,12 +13,11 @@
 class Helpers
 {
 public:
-	// Returns the absolute average value of samples 
-    template<typename SampleType>
+	// Returns the absolute average value of samples from an AudioBlock or AudioBuffer
+    template<typename SampleType> 
 	static SampleType getAverageMagnitude(const dsp::AudioBlock<SampleType>& block)
     {
-	    
-		float sum {0};
+		SampleType sum {0};
 	    const auto numChannels = block.getNumChannels();
 	    const auto blockSize = block.getNumSamples();
 
@@ -34,17 +33,17 @@ public:
 		return sum / (blockSize * numChannels);
     }
 
-    template<typename SampleType>
-	static SampleType getAverageMagnitude(const AudioBuffer<SampleType> buffer)
+	// ew
+    template<typename SampleType> 
+	static SampleType getAverageMagnitude(const AudioBuffer<SampleType>& block)
     {
-	    
-		float sum {0};
-	    const auto numChannels = buffer.getNumChannels();
-	    const auto blockSize = buffer.getNumSamples();
+		SampleType sum {0};
+	    const auto numChannels = block.getNumChannels();
+	    const auto blockSize = block.getNumSamples();
 
 	    for(auto i = 0; i < numChannels; ++i)
 	    {
-		    const auto chan = buffer.getReadPointer(i);
+		    const auto chan = block.getReadPointer(i);
 	        for(auto j = 0; j < blockSize; ++j)
 	        {
 		        sum += abs(chan[j]);
@@ -53,7 +52,8 @@ public:
 
 		return sum / (blockSize * numChannels);
     }
-	// Returns the average magnitude of all channels
+
+	// Returns the highest sample magnitude of all channels
     template<typename SampleType>
 	static SampleType getMagnitude(const dsp::AudioBlock<SampleType>& block)
     {

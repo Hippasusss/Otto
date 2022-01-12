@@ -79,7 +79,7 @@ template <typename ValueType, typename ContainerType>
 void RingBuffer<ValueType, ContainerType>::readPreviousValues(ContainerType& values)
 {
 	const size_t size = values.size();
-	const size_t writeIndexLocal = writeIndex; // take local value in case class member is changed in separate thread.
+	const  size_t writeIndexLocal = writeIndex; // take local value in case class member is changed in separate thread.
 
 	for (size_t i = 0; i < size; i++)
 	{
@@ -111,7 +111,7 @@ RingBufferVector<ValueType>::RingBufferVector()
 }
 
 template <typename ValueType>
-RingBufferVector<ValueType>::RingBufferVector(size_t newSize) : RingBuffer(newSize)
+RingBufferVector<ValueType>::RingBufferVector(size_t newSize) : RingBuffer<ValueType, std::vector<ValueType>>(newSize)
 {
 	this->valueArray.resize(newSize);
 }

@@ -11,23 +11,11 @@ Auto_AudioProcessor::Auto_AudioProcessor()
 #endif
             .withOutput("Output", AudioChannelSet::stereo(), true)
 #endif
-            ),
-    inputGain(parameter_constants::INPUT_GAIN_ID, "In", -30, 30, 0),
-    outputGain(parameter_constants::OUTPUT_GAIN_ID, "Out", -30,30, 0),
-    resonance(parameter_constants::RESONANCE_ID, "Res", 0, 1, 0),
-    frequency(parameter_constants::FREQUENCY_ID, "Freq", 20, 20000, 0.1),
-    drive(parameter_constants::DRIVE_ID, "Drive", 1,10, 1),
-    envAmount(parameter_constants::ENV_AMOUNT_ID, "Env Am", 0, 100, 0),
-    mix(parameter_constants::MIX_ID, "Mix", 0, 100, 0),
-    envSpeed(parameter_constants::ENV_SPEED_ID, "Env Speed", false),
-    twoFourPole(parameter_constants::TWO_FOUR_POLE_ID, "2/4 Pole", false)
+            )
 #endif
 {
 }
-
 Auto_AudioProcessor::~Auto_AudioProcessor() = default;
-
-
 
 const String Auto_AudioProcessor::getName() const
 {
@@ -36,29 +24,17 @@ const String Auto_AudioProcessor::getName() const
 
 bool Auto_AudioProcessor::acceptsMidi() const
 {
-#if JucePlugin_WantsMidiInput
-    return true;
-#else
     return false;
-#endif
 }
 
 bool Auto_AudioProcessor::producesMidi() const
 {
-#if JucePlugin_ProducesMidiOutput
-    return true;
-#else
     return false;
-#endif
 }
 
 bool Auto_AudioProcessor::isMidiEffect() const
 {
-#if JucePlugin_IsMidiEffect
-    return true;
-#else
     return false;
-#endif
 }
 
 double Auto_AudioProcessor::getTailLengthSeconds() const
@@ -109,19 +85,18 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     chain.get<followerIndex>().onValueCalculated = [&](const float value) 
     {
         // Highest user settable frequency
-        const float maxFrequency = frequency.range.end;
+        const float maxFrequency = apvts.getParameterRange("frequency").end;
         // current user set frequency
-        const float frequencySet = frequency;
+        const float frequencySet = apvts.getRawParameterValue("frequency")->load();
         // frequencies above the user set frequency
         const float frequencyRemainder = maxFrequency - frequencySet;
 
-        const auto modulatedFrequency = jlimit<float>(20, 20000, (this->frequency + value * frequencyRemainder));
+        const auto modulatedFrequency = jlimit<float>(20, 20000, (frequencySet + value * frequencyRemainder));
         filter.setCutoffFrequencyHz(modulatedFrequency);
     };
 
     // initalise
     chain.prepare(spec);
-    initaliseParameters();
 }
 
 void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
@@ -151,38 +126,6 @@ void Auto_AudioProcessor::releaseResources()
     chain.reset();
 }
 
-void Auto_AudioProcessor::sliderValueChanged(Slider* slider)
-{
-    const String& ID = slider->getComponentID();
-    const auto value = static_cast<float>(slider->getValue());
-
-    for(auto* floatParam : floatParameter)
-    {
-        if(floatParam->paramID == ID)
-        {
-            *floatParam = value; 
-            setParameter(ID);
-            break;
-        }
-    }
-}
-
-void Auto_AudioProcessor::buttonClicked(Button* button)
-{
-    const String& ID = button->getComponentID();
-    const bool value = button->getToggleState();
-
-    for(auto* boolParam : boolParameter)
-    {
-        if(boolParam->paramID == ID)
-        {
-            *boolParam = value;
-            setParameter(ID);
-            break;
-        }
-    }
-}
-
 const EnvelopeFollower& Auto_AudioProcessor::getEnvelopeFollower() const
 {
     return chain.get<followerIndex>();
@@ -208,72 +151,23 @@ Graph* Auto_AudioProcessor::getGraph()
     return &chain.get<graphIndex>();
 }
 
-
-void Auto_AudioProcessor::setParameter(const String& parameterID) 
+AudioProcessorValueTreeState::ParameterLayout Auto_AudioProcessor::getParameterLayout()
 {
-    // Input Gain
-    if(parameterID == parameter_constants::INPUT_GAIN_ID)
-    {
-        chain.get<inputGainIndex>().setGainDecibels(inputGain);
-    }
+    AudioProcessorValueTreeState::ParameterLayout layout;
 
-    // Filter
-    else if(parameterID == parameter_constants::TWO_FOUR_POLE_ID)
-    {
-        const auto mode = twoFourPole ? dsp::LadderFilter<float>::Mode::LPF24 :
-            dsp::LadderFilter<float>::Mode::LPF12;
-        chain.get<filterIndex>().setMode(mode);
-    }
-    else if(parameterID == parameter_constants::DRIVE_ID)
-    {
-        chain.get<filterIndex>().setDrive(drive);
-    }
-    else if(parameterID ==  parameter_constants::FREQUENCY_ID)
-    {
-        chain.get<filterIndex>().setCutoffFrequencyHz(frequency);
-    }
-    else if(parameterID == parameter_constants::RESONANCE_ID)
-    {
-        chain.get<filterIndex>().setResonance(resonance);
-    }
+    layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::INPUT_GAIN_ID, "Input Gain",   NormalisableRange(-24.f, 24.f, 0.1f), 0.f));
+    layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::OUTPUT_GAIN_ID, "Output Gain", NormalisableRange(-24.f, 24.f, 0.1f), 0.f));
+    layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::DRIVE_ID, "Drive",            NormalisableRange(1.f, 10.f, 0.1f), 1.f));
+    layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::RESONANCE_ID, "Resonance",    NormalisableRange(0.f, 1.f, 0.01f), 0.f));
+    layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::FREQUENCY_ID, "Frequency",    NormalisableRange(20.0f, 20000.0f, 1.f, 0.5f), 1000.f));
+    layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::MIX_ID, "Mix",                NormalisableRange(0.f, 100.f, 1.f), 100.f));
+    layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::ENV_AMOUNT_ID, "Env %",        NormalisableRange(0.f, 100.f, 1.f), 100.f));
+    layout.add(std::make_unique<AudioParameterBool>(parameter_constants::ENV_SPEED_ID, "Env Speed", false));
+    layout.add(std::make_unique<AudioParameterBool>(parameter_constants::TWO_FOUR_POLE_ID, "12/24", false));
+    DBG("hello");
 
-    // Follower
-    else if(parameterID == parameter_constants::ENV_SPEED_ID)
-    {
-        const auto rate = envSpeed ? fast : slow;
-        chain.get<followerIndex>().setAttack(rate);
-        chain.get<followerIndex>().setRelease(rate);
-    }
-    else if(parameterID == parameter_constants::ENV_AMOUNT_ID)
-    {
-        chain.get<followerIndex>().setAmount(envAmount.getNormalisableRange().convertTo0to1(mix.get()));
-    }
-
-    // Mixer
-    else if(parameterID == parameter_constants::MIX_ID)
-    {
-        chain.get<mixerIndex>().setMix(mix.getNormalisableRange().convertTo0to1(mix.get()));
-    }
-
-    // Output Gain
-    else if(parameterID == parameter_constants::OUTPUT_GAIN_ID)
-    {
-        chain.get<outputGainIndex>().setGainDecibels(outputGain);
-    }
+    return layout;
 }
-
-void Auto_AudioProcessor::initaliseParameters()
-{
-    for(auto& floatParam : floatParameter)
-    {
-        setParameter(floatParam->paramID);
-    }
-    for(auto& boolParam : boolParameter)
-    {
-        setParameter(boolParam->paramID);
-    }
-}
-
 
 #ifndef JucePlugin_PreferredChannelConfigurations
 bool Auto_AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
@@ -309,10 +203,17 @@ AudioProcessorEditor* Auto_AudioProcessor::createEditor()
 
 void Auto_AudioProcessor::getStateInformation (MemoryBlock& destData)
 {
+    MemoryOutputStream mos(destData, true);
+    apvts.state.writeToStream(mos);
 }
 
 void Auto_AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
+    auto tree = ValueTree::readFromData(data, sizeInBytes);
+    if (tree.isValid())
+    {
+        apvts.replaceState(tree);
+    }
 }
 
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
