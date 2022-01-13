@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="YSGQTv" name="Auto" projectType="audioplug" pluginFormats="buildAAX,buildAU,buildVST3"
+<JUCERPROJECT id="YSGQTv" name="Otto" projectType="audioplug" pluginFormats="buildAAX,buildAU,buildVST3"
               pluginVST3Category="Filter" pluginRTASCategory="1" pluginAAXCategory="1"
-              cppLanguageStandard="latest" companyName="Hippasus" displaySplashScreen="1"
-              jucerFormatVersion="1">
-  <MAINGROUP id="vPwknA" name="Auto">
+              cppLanguageStandard="latest" companyName="Hippasus" jucerFormatVersion="1"
+              version="1.0.1" addUsingNamespaceToJuceHeader="1" displaySplashScreen="1">
+  <MAINGROUP id="vPwknA" name="Otto">
     <GROUP id="{62755887-84A8-E3C6-EC3D-D7338C224042}" name="Source">
       <GROUP id="{AA83E59E-A34E-D4E2-1326-C1725F24E20A}" name="Utils">
         <FILE id="xEIyCb" name="LevelValueDisplay.h" compile="0" resource="0"
@@ -31,6 +31,8 @@
         <FILE id="Din5QH" name="Mixer.h" compile="0" resource="0" file="Source/Mixer.h"/>
       </GROUP>
       <GROUP id="{5C837F25-B0D1-9AE4-9897-114DE1C33272}" name="Components">
+        <FILE id="qkxB0k" name="TitleBar.h" compile="0" resource="0" file="Source/TitleBar.h"/>
+        <FILE id="kbkoTG" name="TitleBar.cpp" compile="1" resource="0" file="Source/TitleBar.cpp"/>
         <FILE id="kX1FSF" name="MeterDisplay.cpp" compile="1" resource="0"
               file="Source/MeterDisplay.cpp"/>
         <FILE id="P0p0nX" name="MeterDisplay.h" compile="0" resource="0" file="Source/MeterDisplay.h"/>

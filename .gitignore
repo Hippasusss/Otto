@@ -15,6 +15,9 @@
 *.userprefs
 
 JuceLibraryCode/
+Builds/
+Builds/*
+Builds
 
 # Build results
 [Dd]ebug/
