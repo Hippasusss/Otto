@@ -109,7 +109,7 @@ class CustomLookAndFeel2: public LookAndFeel_V4
         CustomLookAndFeel2()
         {
             setColour(Slider::ColourIds::rotarySliderOutlineColourId, mainColour);
-            setColour(Slider::ColourIds::backgroundColourId, lightMainColour);
+            setColour(ToggleButton::ColourIds::tickColourId, mainColour);
         }
 
         void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override

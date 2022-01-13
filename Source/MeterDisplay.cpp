@@ -39,9 +39,10 @@ void MeterDisplay::paint (Graphics& graphics)
     const int separation = 1;
     const int height = getHeight();
     const int width = getWidth();
+    LookAndFeel& lookandfeel = getLookAndFeel();
 
-    auto maincolour = getLookAndFeel().findColour(Slider::ColourIds::rotarySliderOutlineColourId);
-    auto lightmaincolour = getLookAndFeel().findColour(Slider::ColourIds::backgroundColourId);
+    auto maincolour = lookandfeel.findColour(Slider::ColourIds::rotarySliderOutlineColourId);
+    auto lightmaincolour = lookandfeel.findColour(ToggleButton::ColourIds::tickColourId);
 
     for(int i = 0; i < channelCount; ++i)
     {
@@ -68,7 +69,7 @@ void MeterDisplay::paint (Graphics& graphics)
         if(vertical)
         {
             // Draw Peak 
-            graphics.setColour(Colours::aliceblue);
+            graphics.setColour(lightmaincolour);
             graphics.fillRect((i * channelWidth) + leftSeparation , height - scalarPeak, channelWidth - leftSeparation- rightSeparation, scalarPeak);
             // Draw RMS
             graphics.setColour(maincolour);
