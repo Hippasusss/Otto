@@ -84,6 +84,9 @@ void LabeledSlider::returnToDefault()
 
 void LabeledSlider::init(const String& name)
 {
+    setSliderStyle (Slider::RotaryVerticalDrag);
+    setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+
     sliderNameLabel.setName(name);
     sliderNameLabel.setText(name, NotificationType::dontSendNotification);
     sliderNameLabel.setJustificationType(Justification::centredTop);

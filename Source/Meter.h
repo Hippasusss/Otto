@@ -1,5 +1,4 @@
-/*
-   ==============================================================================
+/*==============================================================================
 
    Meter.h
 Created: 8 Mar 2020 7:51:43pm
@@ -7,7 +6,6 @@ Author:  Danny Herbert
 
 ==============================================================================
 */
-#pragma once
 #pragma once
 #include "JuceHeader.h"
 #include "RingBuffer.h"
@@ -35,7 +33,8 @@ class Meter: dsp::ProcessorBase
         void calculateRMS(const dsp::AudioBlock<float>&);
         void calculatePeak(const dsp::AudioBlock<float>&);
 
-        //TODO: Not currently atomic: make thread safe.
+        //TODO: Not currently atomic: make thread safe using ringbuffer
+        //std::vector<RingBufferFloat> channelRMSValuess { RingBufferFloat(1024), RingBufferFloat(1024)}
         std::vector<float> channelRMSValues {0, 0};
         std::vector<float> channelPeakValues {0, 0};
 

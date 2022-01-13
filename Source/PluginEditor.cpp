@@ -27,32 +27,12 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     envspA(processor.apvts, parameter_constants::ENV_SPEED_ID, envSpeed)
 {
     setLookAndFeel(&lookAndFeel);
-    setSize (800, 400);
-
-
-    // Default setup for sliders
-    for(auto& slider : sliders)
-    {
-        slider->setSliderStyle (Slider::RotaryVerticalDrag);
-        slider->setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-    }
-
-    // Default setup for buttons
-    for(auto& button : buttons)
-    {
-        button->setButtonText(button->getName());
-    }
+    setSize (800, 428);
 
     // Make all components visible
     for(auto& comp : components)
     {
         addAndMakeVisible(comp);
-    }
-
-    // Hide the slider readouts (enabled by mouse over instead)
-    for(auto& slider : sliders)
-    {
-        slider->getSliderValueLabel().setVisible(false);
     }
 }
 
@@ -64,6 +44,9 @@ Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
 void Auto_AudioProcessorEditor::resized()
 {
     auto rect = getLocalBounds();
+    // Title Bar --------------------
+    auto titleBounds = rect.removeFromTop(28);
+    titleBar.setBounds(titleBounds);
 
     // Parameter Section -------------
     auto parameterBounds = rect.removeFromTop(100);
@@ -108,4 +91,5 @@ void Auto_AudioProcessorEditor::paint (Graphics& graphics)
     graphics.drawRect(getBounds(), 4);
 
 }
+
 

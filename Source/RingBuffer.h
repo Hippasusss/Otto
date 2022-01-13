@@ -75,6 +75,11 @@ ValueType RingBuffer<ValueType, ContainerType>::operator[](size_t i)
 	return valueArray[i];
 }
 
+// copies into provided array/container. copies as many as can into given size
+// --------------------|---------------------------|-|----------
+//                     ^ size             < ---- 1 ^ ^ write pointer
+//                     |------This is copied-------|
+//
 template <typename ValueType, typename ContainerType>
 void RingBuffer<ValueType, ContainerType>::readPreviousValues(ContainerType& values)
 {
