@@ -29,10 +29,16 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     setLookAndFeel(&lookAndFeel);
     setSize (800, 428);
 
+
     // Make all components visible
     for(auto& comp : components)
     {
         addAndMakeVisible(comp);
+    }
+
+    for (auto& slide : sliders)
+    {
+        slide->init();
     }
 }
 

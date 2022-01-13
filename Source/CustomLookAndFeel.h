@@ -109,6 +109,7 @@ class CustomLookAndFeel2: public LookAndFeel_V4
         CustomLookAndFeel2()
         {
             setColour(Slider::ColourIds::rotarySliderOutlineColourId, mainColour);
+            setColour(Slider::ColourIds::rotarySliderFillColourId, lightMainColour);
         }
 
         void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
@@ -135,7 +136,6 @@ class CustomLookAndFeel2: public LookAndFeel_V4
         }
         void drawLabel(Graphics& graphics, Label& label) override
         {
-
             label.setInterceptsMouseClicks(false,false);
             const Font font {"Futara", 15, Font::plain};
             const String text = label.getText();
@@ -156,6 +156,7 @@ class CustomLookAndFeel2: public LookAndFeel_V4
     private:
         const int lineThickness = 4;
         const Colour mainColour {Colours::lightblue};
+        const Colour lightMainColour {Colours::lightcyan};
         const Colour backgroundColour {Colours::white};
 
         template<typename T>

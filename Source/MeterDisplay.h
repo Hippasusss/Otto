@@ -10,7 +10,6 @@ Author:  Danny Herbert
 
 #pragma once
 #include <JuceHeader.h>
-
 #include "CustomLookAndFeel.h"
 #include "LevelValueDisplay.h"
 #include "Meter.h"
@@ -48,7 +47,5 @@ class MeterDisplay    : public Component,
         LevelValueDisplay<float> peak;
         LevelValueDisplay<float> peakHold;
         LevelValueDisplay<float> RMS;
-
-
-            JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MeterDisplay)
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MeterDisplay)
 };

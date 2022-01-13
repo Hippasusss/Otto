@@ -7,7 +7,20 @@ LabeledSlider::LabeledSlider() = default;
 
 LabeledSlider::LabeledSlider(const String& name): sliderNameLabel(name, name) , defaultValue(0)
 {
-    init(name);
+    setSliderStyle (Slider::RotaryVerticalDrag);
+    setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+
+    sliderNameLabel.setName(name);
+    sliderNameLabel.setText(name, NotificationType::sendNotification);
+    sliderNameLabel.setJustificationType(Justification::centredTop);
+    sliderNameLabel.attachToComponent(this, true);
+
+    sliderValueLabel.setJustificationType(Justification::right);
+    sliderValueLabel.attachToComponent(this, true);
+    sliderValueLabel.setInterceptsMouseClicks(false, false);
+    sliderValueLabel.setLookAndFeel(&lookAndFeel2);
+    sliderValueLabel.setText(String(getValue()), sendNotification);
+    sliderValueLabel.setVisible(false);
 }
 
 LabeledSlider::~LabeledSlider() = default;
@@ -59,8 +72,7 @@ void LabeledSlider::valueChanged()
 {
     Slider::valueChanged();
     sliderValueLabel.setText(String(getValue()), dontSendNotification);
-    const auto bounds = getBounds().reduced(10, getBounds().getHeight()/2 -7);
-    sliderValueLabel.setBounds(bounds);
+    resized();
 }
 
 void LabeledSlider::resized()
@@ -68,7 +80,6 @@ void LabeledSlider::resized()
     Slider::resized();
     const auto bounds = getBounds().reduced(10, getBounds().getHeight()/2 -7);
     sliderValueLabel.setBounds(bounds);
-    sliderValueLabel.setVisible(false);
 }
 
 void LabeledSlider::setDefault(float newDefault, bool setValueToo)
@@ -82,23 +93,9 @@ void LabeledSlider::returnToDefault()
     setValue(defaultValue);
 }
 
-void LabeledSlider::init(const String& name)
+void LabeledSlider::init()
 {
-    setSliderStyle (Slider::RotaryVerticalDrag);
-    setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-
-    sliderNameLabel.setName(name);
-    sliderNameLabel.setText(name, NotificationType::dontSendNotification);
-    sliderNameLabel.setJustificationType(Justification::centredTop);
-    sliderNameLabel.attachToComponent(this, true);
-    addAndMakeVisible(sliderNameLabel);
-
-    sliderValueLabel.setJustificationType(Justification::centred);
-    sliderValueLabel.attachToComponent(this, true);
-    sliderValueLabel.setInterceptsMouseClicks(false,false);
-    sliderValueLabel.setLookAndFeel(&lookAndFeel2);
-    sliderValueLabel.setText(String(getValue()), dontSendNotification);
-    addAndMakeVisible(sliderValueLabel);
+    resized();
     sliderValueLabel.setVisible(false);
 }
 

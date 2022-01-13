@@ -66,6 +66,7 @@ void Auto_AudioProcessor::changeProgramName (int index, const String& newName)
 }
 
 
+
 void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     const auto spec = dsp::ProcessSpec {sampleRate,
@@ -76,6 +77,7 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     // Avoid clicks during gain parameter change
     chain.get<outputGainIndex>().setRampDurationSeconds(0.1);
     chain.get<inputGainIndex>().setRampDurationSeconds(0.1);
+    chain.get<filterIndex>().setMode(dsp::LadderFilterMode::LPF12);
 
     // Set source for dry buffer of mix control
     chain.get<mixerIndex>().setOtherBlock(chain.get<bufferStoreIndex>().getAudioBlockPointer());
@@ -96,6 +98,7 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     };
 
     // initalise
+    updateAllParameters();
     chain.prepare(spec);
 }
 
@@ -104,6 +107,7 @@ void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& 
     ScopedNoDenormals noDenormals;
     auto block = dsp::AudioBlock<float>(buffer);
     const auto context = dsp::ProcessContextReplacing<float>(block);
+    updateAllParameters();
     chain.process(context);
 
     // Split the audio block into multiple sub buffers. Seems like a daft/naive way of doing this.
@@ -168,6 +172,22 @@ AudioProcessorValueTreeState::ParameterLayout Auto_AudioProcessor::getParameterL
     layout.add(std::make_unique<AudioParameterBool>(parameter_constants::TWO_FOUR_POLE_ID, "12/24", false));
 
     return layout;
+}
+
+float Auto_AudioProcessor::getAPVTSValue(const String& ID)
+{
+    return apvts.getRawParameterValue(ID)->load();
+}
+
+void Auto_AudioProcessor::updateAllParameters()
+{
+    chain.get<inputGainIndex>().setGainDecibels(getAPVTSValue(parameter_constants::INPUT_GAIN_ID));
+    chain.get<outputGainIndex>().setGainDecibels(getAPVTSValue(parameter_constants::OUTPUT_GAIN_ID));
+    chain.get<filterIndex>().setCutoffFrequencyHz(getAPVTSValue(parameter_constants::FREQUENCY_ID));
+    chain.get<filterIndex>().setResonance(getAPVTSValue(parameter_constants::RESONANCE_ID));
+    chain.get<filterIndex>().setDrive(getAPVTSValue(parameter_constants::DRIVE_ID));
+    chain.get<followerIndex>().setAmount(getAPVTSValue(parameter_constants::ENV_AMOUNT_ID));
+    chain.get<mixerIndex>().setMix(getAPVTSValue(parameter_constants::MIX_ID));
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations

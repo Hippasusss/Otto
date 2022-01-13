@@ -22,7 +22,7 @@ public:
     void resized() override;
     void setDefault(float newDefault, bool setDefaultToo = true);
     void returnToDefault();
-    void init(const String& name);
+    void init();
 
 private:
     CustomLookAndFeel2 lookAndFeel2;

@@ -48,6 +48,8 @@ public:
 
     static AudioProcessorValueTreeState::ParameterLayout getParameterLayout();
     AudioProcessorValueTreeState apvts { *this, nullptr, "Parameters", getParameterLayout()};
+    float getAPVTSValue(const String& vlaue);
+    void updateAllParameters();
 
 private:
 

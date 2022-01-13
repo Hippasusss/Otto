@@ -40,7 +40,10 @@ void MeterDisplay::paint (Graphics& graphics)
     const int height = getHeight();
     const int width = getWidth();
 
-    graphics.setColour(getLookAndFeel().findColour(Slider::ColourIds::rotarySliderOutlineColourId));
+    auto maincolour = getLookAndFeel().findColour(Slider::ColourIds::rotarySliderOutlineColourId);
+    auto lightmaincolour = getLookAndFeel().findColour(Slider::ColourIds::rotarySliderFillColourId);
+
+    graphics.setColour(maincolour);
     for(int i = 0; i < channelCount; ++i)
     {
         // Get values of various levels
