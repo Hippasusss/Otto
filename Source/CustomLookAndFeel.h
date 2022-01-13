@@ -109,7 +109,7 @@ class CustomLookAndFeel2: public LookAndFeel_V4
         CustomLookAndFeel2()
         {
             setColour(Slider::ColourIds::rotarySliderOutlineColourId, mainColour);
-            setColour(Slider::ColourIds::rotarySliderFillColourId, lightMainColour);
+            setColour(Slider::ColourIds::backgroundColourId, lightMainColour);
         }
 
         void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
@@ -156,7 +156,7 @@ class CustomLookAndFeel2: public LookAndFeel_V4
     private:
         const int lineThickness = 4;
         const Colour mainColour {Colours::lightblue};
-        const Colour lightMainColour {Colours::lightcyan};
+        const Colour lightMainColour {Colours::aliceblue};
         const Colour backgroundColour {Colours::white};
 
         template<typename T>

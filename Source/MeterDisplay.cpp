@@ -41,9 +41,8 @@ void MeterDisplay::paint (Graphics& graphics)
     const int width = getWidth();
 
     auto maincolour = getLookAndFeel().findColour(Slider::ColourIds::rotarySliderOutlineColourId);
-    auto lightmaincolour = getLookAndFeel().findColour(Slider::ColourIds::rotarySliderFillColourId);
+    auto lightmaincolour = getLookAndFeel().findColour(Slider::ColourIds::backgroundColourId);
 
-    graphics.setColour(maincolour);
     for(int i = 0; i < channelCount; ++i)
     {
         // Get values of various levels
@@ -68,10 +67,12 @@ void MeterDisplay::paint (Graphics& graphics)
         // Vertical
         if(vertical)
         {
-            // Draw RMS
-            graphics.fillRect((i * channelWidth) + leftSeparation , height - scalarRMS, channelWidth - leftSeparation - rightSeparation, scalarRMS);
             // Draw Peak 
-            graphics.drawRect((i * channelWidth) + leftSeparation , height - scalarPeak, channelWidth - leftSeparation- rightSeparation, scalarPeak);
+            graphics.setColour(Colours::aliceblue);
+            graphics.fillRect((i * channelWidth) + leftSeparation , height - scalarPeak, channelWidth - leftSeparation- rightSeparation, scalarPeak);
+            // Draw RMS
+            graphics.setColour(maincolour);
+            graphics.fillRect((i * channelWidth) + leftSeparation , height - scalarRMS, channelWidth - leftSeparation - rightSeparation, scalarRMS);
             // Draw Peak Hold
             graphics.drawRect((i * channelWidth) + leftSeparation , height - scalarPeakHold, channelWidth - leftSeparation- rightSeparation, 1);
         }
@@ -79,10 +80,12 @@ void MeterDisplay::paint (Graphics& graphics)
         // Horizontal
         else if(!vertical)
         {
-            // Draw RMS
-            graphics.fillRect(0, i * channelWidth + leftSeparation, scalarRMS, channelWidth - rightSeparation - leftSeparation);
             // Draw Peak 
-            graphics.drawRect(0, i * channelWidth + leftSeparation, scalarPeak, channelWidth - rightSeparation - leftSeparation);
+            graphics.setColour(lightmaincolour);
+            graphics.fillRect(0, i * channelWidth + leftSeparation, scalarPeak, channelWidth - rightSeparation - leftSeparation);
+            // Draw RMS
+            graphics.setColour(maincolour);
+            graphics.fillRect(0, i * channelWidth + leftSeparation, scalarRMS, channelWidth - rightSeparation - leftSeparation);
             // Draw Peak Hold
             graphics.drawRect(scalarPeakHold, i * channelWidth + leftSeparation, 2 , channelWidth - rightSeparation - leftSeparation);
         }
