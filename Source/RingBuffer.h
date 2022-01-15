@@ -83,14 +83,14 @@ ValueType RingBuffer<ValueType, ContainerType>::operator[](size_t i)
 template <typename ValueType, typename ContainerType>
 void RingBuffer<ValueType, ContainerType>::readPreviousValues(ContainerType& values)
 {
-	const size_t size = values.size();
-	const  size_t writeIndexLocal = writeIndex; // take local value in case class member is changed in separate thread.
+	const size_t inputSize = values.size();
+	const size_t writeIndexLocal = writeIndex; // take local value in case class member is changed in separate thread.
 
-	for (size_t i = 0; i < size; i++)
+	for (size_t i = 0; i < inputSize; i++)
 	{
 		// vile one liner takes care of wraparound of index when copying
-		const size_t copyIndex = (((writeIndexLocal - (i + 1) % size) + size) % size);
-		values[size - 1 - i] = valueArray[copyIndex];
+		const size_t copyIndex = ((((writeIndexLocal - (i + 1)) % size) + size) % size);
+		values[inputSize - 1 - i] = valueArray[copyIndex];
 	}
 }
 

@@ -20,40 +20,36 @@ void Graph::prepare(const dsp::ProcessSpec& spec)
 	numChannels = spec.numChannels;
 	sampleRate = spec.sampleRate;
 
-	numSamplesToAverage = 300; // highest common factor of most common sample rates
+	sumBufferSize = sampleRate / 150; // divides samplerates nicely 
 	displayData.resize(sampleRate);
-	sumBuffer.setSize(numChannels, numSamplesToAverage);
+	sumBuffer.setSize(numChannels, sumBufferSize);
 	sumBuffer.clear();
 }
 
 void Graph::process(const dsp::ProcessContextReplacing<float>& context)
 {
 	static size_t sumIndex = 0;
-
 	const dsp::AudioBlock<const float>sourceBlock = context.getInputBlock();
-	const size_t inputSize = sourceBlock.getNumSamples();
+	const size_t numSamplesInput = sourceBlock.getNumSamples();
+	size_t samplesRemaining = numSamplesInput;
 
-	// for all channels
-	for (size_t channel = 0; channel < sourceBlock.getNumChannels(); ++channel)
+	while (samplesRemaining > 0)
 	{
-		const auto* channelPointer = sourceBlock.getChannelPointer(channel);
-		size_t inputIndex = 0;
-
-		// do while there are still samples in the context buffer passed to this process 
-		// sum a batch of input samples. stop if run out of input samples
-		while (sumIndex < numSamplesToAverage && inputIndex < inputSize)
+		const size_t numWriteSamples = (samplesRemaining > sumBufferSize ? sumBufferSize : samplesRemaining) - sumIndex;
+		// for all channels
+		for (size_t channelIndex = 0; channelIndex < sourceBlock.getNumChannels(); ++channelIndex)
 		{
-			sumBuffer.setSample(channel, sumIndex, channelPointer[inputIndex]);
-			inputIndex++;
-			sumIndex++;
+			const auto* channelPointer = sourceBlock.getChannelPointer(channelIndex);
+			sumBuffer.addFrom(channelIndex, sumIndex, channelPointer, numWriteSamples);
 		}
-		inputIndex = 0;
-		sumIndex = 0;
+		sumIndex += numWriteSamples;
+		sumIndex %= sumBufferSize;
+		samplesRemaining -= numWriteSamples;
+		if (sumIndex == 0) displayData.writeValue(Helpers::getAverageMagnitude(sumBuffer));
 	}
 
-	// average the sum and add it to the display data if the sum buffer is full
-	const float average = Helpers::getAverageMagnitude(sumBuffer);
-	displayData.writeValue(average);
+
+
 
 }
 

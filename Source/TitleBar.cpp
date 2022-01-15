@@ -38,7 +38,7 @@ void TitleBar::paint (juce::Graphics& g)
     g.drawText ("OTTO ", bounds.removeFromLeft(70),
                 juce::Justification::bottomLeft, true);   // draw some placeholder text
 
-    g.fillRect(bounds.removeFromLeft(2));
+    g.fillRect(bounds.removeFromLeft(3));
     bounds.removeFromLeft(10);
 
     g.setFont (smallfont);
