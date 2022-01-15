@@ -47,7 +47,7 @@ void Graph::process(const dsp::ProcessContextReplacing<float>& context)
 		samplesRemaining -= numWriteSamples;
 		if (sumIndex == 0)
 		{
-			auto value = Helpers::getAverageMagnitude(sumBuffer);
+			auto value = Helpers::getNormalisedDB(Helpers::getAverageMagnitude(sumBuffer), -60.0f);
 			displayData.writeValue(value);
 		}
 	}
