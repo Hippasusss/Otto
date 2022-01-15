@@ -26,6 +26,7 @@ MeterDisplay::MeterDisplay(Meter* newMeter) :
     peak.setRate(0.5);
     RMS.setRate(0.5);
     peakHold.setRate(0.5);
+    clipMeter.setLookAndFeel(&lookAndFeel2);
 }
 
 MeterDisplay::~MeterDisplay()
@@ -39,10 +40,9 @@ void MeterDisplay::paint (Graphics& graphics)
     const int separation = 1;
     const int height = getHeight();
     const int width = getWidth();
-    LookAndFeel& lookandfeel = getLookAndFeel();
 
-    auto maincolour = lookandfeel.findColour(Slider::ColourIds::rotarySliderOutlineColourId);
-    auto lightmaincolour = lookandfeel.findColour(ToggleButton::ColourIds::tickColourId);
+    auto maincolour = colour_constants::main;
+    auto lightmaincolour = colour_constants::lightMain;
 
     for(int i = 0; i < channelCount; ++i)
     {
@@ -119,7 +119,7 @@ void MeterDisplay::resized()
     clipMeter.setLookAndFeel(&lookAndFeel2);
     levelText.setLookAndFeel(&lookAndFeel2);
     vertical = getHeight() > getWidth();
-    const int clipSize = 5;
+    const int clipSize = 10;
     if(vertical)
     {
         clipMeter.setBounds(0,0, getWidth(), clipSize);

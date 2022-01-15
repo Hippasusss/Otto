@@ -79,7 +79,8 @@ void Auto_AudioProcessorEditor::resized()
     // Visual Section -------------------
 
     // Meters
-    rect = rect.reduced(6);
+    // TODO:: get the pixels back that are missing at the top of the meter >:|
+    rect.reduce(7,6);
     inputMeter.setBounds(rect.removeFromLeft(20));
     outputMeter.setBounds(rect.removeFromRight(20));
 

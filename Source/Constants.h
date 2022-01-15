@@ -27,3 +27,11 @@ namespace timer_constants
 {
 	const int REFRESH_RATE = 60;
 }
+
+namespace colour_constants
+{
+	const Colour main = Colours::lightblue;
+	const Colour lightMain = juce::Colour(0xffe0f4ff);
+	const Colour backGround = Colours::white;
+	const Colour red = Colours::salmon;
+}

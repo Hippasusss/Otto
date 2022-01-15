@@ -77,7 +77,7 @@ ValueType RingBuffer<ValueType, ContainerType>::operator[](size_t i)
 
 // copies into provided array/container. copies as many as can into given size
 // --------------------|---------------------------|-|----------
-//                     ^ size             < ---- 1 ^ ^ write pointer
+//                     ^ size             <i--- -1 ^ ^ write pointer
 //                     |------This is copied-------|
 //
 template <typename ValueType, typename ContainerType>

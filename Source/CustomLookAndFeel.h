@@ -9,6 +9,7 @@ Author:  Danny Herbert
 */
 #pragma once
 #include <JuceHeader.h>
+#include "Constants.h"
 
 class CustomLookAndFeel: public LookAndFeel_V4 
 {
@@ -16,10 +17,10 @@ class CustomLookAndFeel: public LookAndFeel_V4
         const Font font {"Futara", 15, Font::bold};
         CustomLookAndFeel()
         {
-            setColour(Slider::ColourIds::rotarySliderOutlineColourId, mainColour);
-            setColour(ToggleButton::ColourIds::textColourId, mainColour);
-            setColour(Label::ColourIds::textColourId, textColour);
-            setColour(ResizableWindow::backgroundColourId, backgroundColour);
+            setColour(Slider::ColourIds::rotarySliderOutlineColourId, colour_constants::main);
+            setColour(ToggleButton::ColourIds::textColourId, colour_constants::main);
+            setColour(Label::ColourIds::textColourId, colour_constants::backGround);
+            setColour(ResizableWindow::backgroundColourId, colour_constants::backGround);
         }
 
         void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
@@ -37,11 +38,11 @@ class CustomLookAndFeel: public LookAndFeel_V4
 
             const Rectangle<int> area {0, 0 , width, height};
             const Rectangle<int> fillArea {fillOffset, 0 , width/2, height};
-            graphics.setColour(mainColour);
+            graphics.setColour(colour_constants::main);
             graphics.drawRect(area, lineThickness);
             graphics.fillRect(fillArea);
 
-            graphics.setColour(backgroundColour);
+            graphics.setColour(colour_constants::backGround);
             graphics.setFont(font);
             graphics.drawText(text, fillArea, Justification::centred);
         }
@@ -61,7 +62,7 @@ class CustomLookAndFeel: public LookAndFeel_V4
             path.addRectangle (-lineThickness * 0.5f, -radius, lineThickness, pointerLength);
             path.applyTransform (AffineTransform::rotation(angle).translated(centre.x, centre.y));
 
-            graphics.setColour(mainColour);
+            graphics.setColour(colour_constants::main);
             graphics.drawEllipse(dialArea, lineThickness);
             graphics.fillPath(path);
         }
@@ -71,25 +72,22 @@ class CustomLookAndFeel: public LookAndFeel_V4
             const Justification justification = Justification::centredTop;
             const Rectangle<int> area = getLocalComponentArea<int>(label);
             const auto text = label.getText();
-            graphics.setColour(mainColour);
+            graphics.setColour(colour_constants::main);
             graphics.fillRect(area.reduced(8, 0).removeFromTop(15));
             graphics.setFont(font);
-            graphics.setColour(backgroundColour);
+            graphics.setColour(colour_constants::backGround);
             graphics.drawText(text.toUpperCase(), area, justification);
         }
 
         void drawGroupComponentOutline(Graphics& graphics, int w, int h, const String& text, const Justification&, GroupComponent& group) override
         {
             const Rectangle<int> area = getLocalComponentArea<int>(group);
-            graphics.setColour(mainColour);
+            graphics.setColour(colour_constants::main);
             graphics.drawRect(area, lineThickness);
         }
 
     private:
         const int lineThickness = 3;
-        const Colour mainColour {Colours::lightblue};
-        const Colour textColour {Colours::black};
-        const Colour backgroundColour {Colours::white};
 
         template<typename T>
             Rectangle<T> getLocalComponentArea(const Component& component)
@@ -108,8 +106,9 @@ class CustomLookAndFeel2: public LookAndFeel_V4
     public:
         CustomLookAndFeel2()
         {
-            setColour(Slider::ColourIds::rotarySliderOutlineColourId, mainColour);
-            setColour(ToggleButton::ColourIds::tickColourId, mainColour);
+            setColour(Slider::ColourIds::rotarySliderOutlineColourId, colour_constants::main);
+            setColour(ToggleButton::ColourIds::tickColourId, colour_constants::lightMain);
+            setColour(Slider::ColourIds::trackColourId, colour_constants::lightMain);
         }
 
         void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
@@ -118,7 +117,7 @@ class CustomLookAndFeel2: public LookAndFeel_V4
             const int height = button.getBounds().getHeight();
 
             const Rectangle<int> fillArea {0, 0 , width, height};
-            graphics.setColour(mainColour);
+            graphics.setColour(colour_constants::red);
             if(shouldDrawButtonAsHighlighted)
             {
                 graphics.drawRect(fillArea);
@@ -127,11 +126,11 @@ class CustomLookAndFeel2: public LookAndFeel_V4
             if(button.getToggleState())
             {
                 graphics.fillRect(fillArea);
-                graphics.setColour(backgroundColour);
+                graphics.setColour(colour_constants::backGround);
             }
             else
             {
-                graphics.setColour(mainColour);
+                graphics.setColour(colour_constants::red);
             }
         }
         void drawLabel(Graphics& graphics, Label& label) override
@@ -141,23 +140,20 @@ class CustomLookAndFeel2: public LookAndFeel_V4
             const String text = label.getText();
             const Rectangle<int> fillArea = getLocalComponentArea<int>(label);
             graphics.setFont(font);
-            graphics.setColour(mainColour);
+            graphics.setColour(colour_constants::main);
             graphics.drawText(text, fillArea, Justification::centredTop, false);
         }
 
         void drawGroupComponentOutline(Graphics& graphics, int w, int h, const String& text, const Justification&, GroupComponent& group) override
         {
             const Rectangle<int> area = getLocalComponentArea<int>(group);
-            graphics.setColour(mainColour);
+            graphics.setColour(colour_constants::main);
             graphics.fillRect(area);
         }
 
 
     private:
         const int lineThickness = 4;
-        const Colour mainColour {Colours::lightblue};
-        const Colour lightMainColour {Colours::aliceblue};
-        const Colour backgroundColour {Colours::white};
 
         template<typename T>
             Rectangle<T> getLocalComponentArea(const Component& component)

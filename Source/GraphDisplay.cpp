@@ -22,7 +22,7 @@ GraphDisplay::~GraphDisplay() = default;
 
 void GraphDisplay::paint(Graphics& graphics)
 {
-	graphics.setColour(getLookAndFeel().findColour(Slider::ColourIds::rotarySliderOutlineColourId));
+	graphics.setColour(colour_constants::lightMain);
 
 	const int width = getBounds().getWidth();
 	const int height = getBounds().getHeight(); 
