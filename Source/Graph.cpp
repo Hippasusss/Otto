@@ -40,12 +40,16 @@ void Graph::process(const dsp::ProcessContextReplacing<float>& context)
 		for (size_t channelIndex = 0; channelIndex < sourceBlock.getNumChannels(); ++channelIndex)
 		{
 			const auto* channelPointer = sourceBlock.getChannelPointer(channelIndex);
-			sumBuffer.addFrom(channelIndex, sumIndex, channelPointer, numWriteSamples);
+			sumBuffer.copyFrom(channelIndex, sumIndex, channelPointer, numWriteSamples);
 		}
 		sumIndex += numWriteSamples;
 		sumIndex %= sumBufferSize;
 		samplesRemaining -= numWriteSamples;
-		if (sumIndex == 0) displayData.writeValue(Helpers::getAverageMagnitude(sumBuffer));
+		if (sumIndex == 0)
+		{
+			auto value = Helpers::getAverageMagnitude(sumBuffer);
+			displayData.writeValue(value);
+		}
 	}
 
 
