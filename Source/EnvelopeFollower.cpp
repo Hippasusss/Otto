@@ -42,7 +42,12 @@ void EnvelopeFollower::prepare(const dsp::ProcessSpec& spec)
 
 void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& context) 
 {
-	 //IIR Filter
+	 // IIR Filter
+     // get audio block copy
+     // turn it into normal vector (sum channels)
+     // filter it
+     // put it in ring buffer
+
      const dsp::AudioBlock<const float>& block = context.getInputBlock();
      dsp::AudioBlock<float> copyBlock(copyBuffer);
      Helpers::copyAudioBlockIntoBuffer(block, copyBuffer, copyBuffer.getNumSamples());
