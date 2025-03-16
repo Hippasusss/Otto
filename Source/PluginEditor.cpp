@@ -6,25 +6,25 @@
 Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& processor)
     : AudioProcessorEditor (&processor), 
     processor (processor), 
-    inputMeter(processor.getInputMeter()),
-    outputMeter(processor.getOutputMeter()),
-    graphDisplay(processor.getGraph()),
     inputGain("In"),
-    outputGain("Out"),
+    drive("Drive"),
+    envAmount("Env"),
     frequency("Freq"),
     resonance("Reso"),
-    drive("Drive"),
     mix("Mix"),
-    envAmount("Env"),
+    outputGain("Out"),
+    graphDisplay(processor.getGraph()),
+    inputMeter(processor.getInputMeter()),
+    outputMeter(processor.getOutputMeter()),
     inA(processor.apvts, parameter_constants::INPUT_GAIN_ID, inputGain), 
-    outA(processor.apvts, parameter_constants::OUTPUT_GAIN_ID, outputGain),
+    driveA(processor.apvts, parameter_constants::DRIVE_ID, drive),
+    envA(processor.apvts, parameter_constants::ENV_AMOUNT_ID, envAmount),
     freqA(processor.apvts, parameter_constants::FREQUENCY_ID, frequency),
     resoA(processor.apvts, parameter_constants::RESONANCE_ID, resonance),
-    driveA(processor.apvts, parameter_constants::DRIVE_ID, drive),
     mixA(processor.apvts, parameter_constants::MIX_ID, mix),
-    envA(processor.apvts, parameter_constants::ENV_AMOUNT_ID, envAmount),
-    twoA(processor.apvts, parameter_constants::TWO_FOUR_POLE_ID, twoFourPole),
-    envspA(processor.apvts, parameter_constants::ENV_SPEED_ID, envSpeed)
+    outA(processor.apvts, parameter_constants::OUTPUT_GAIN_ID, outputGain),
+    envspA(processor.apvts, parameter_constants::ENV_SPEED_ID, envSpeed),
+    twoA(processor.apvts, parameter_constants::TWO_FOUR_POLE_ID, twoFourPole)
 {
     setLookAndFeel(&lookAndFeel);
     setSize (800, 428);

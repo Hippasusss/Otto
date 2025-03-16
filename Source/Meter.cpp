@@ -9,7 +9,6 @@ Author:  Danny Herbert
 */
 
 #include "Meter.h"
-
 #include "Helpers.h"
 
 Meter::Meter(): RMSAudioBuffer() {}
