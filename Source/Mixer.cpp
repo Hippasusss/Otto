@@ -44,7 +44,7 @@ void Mixer::reset()
 {
 }
 
-void Mixer::setOtherBlock(dsp::AudioBlock<float>* other)
+void Mixer::setOtherBlock(const dsp::AudioBlock<float>* other)
 {
     otherBlock = other;
 }

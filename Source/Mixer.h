@@ -17,11 +17,11 @@ public:
     void prepare(const dsp::ProcessSpec&) override;
     void process(const dsp::ProcessContextReplacing<float>&) override;
     void reset() override;
-    void setOtherBlock(dsp::AudioBlock<float>* other);
+    void setOtherBlock(const dsp::AudioBlock<float>* other);
     void setMix(float value);
 
 private:
-    dsp::AudioBlock<float>* otherBlock;
+    const dsp::AudioBlock<float>* otherBlock;
     int numChannels; 
     int maxBlockSize;
     float mix;

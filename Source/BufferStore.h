@@ -21,7 +21,7 @@
 	 void process(const dsp::ProcessContextReplacing<float>&) override;
 	 void reset() override;
 
- 	 dsp::AudioBlock<float>* getAudioBlockPointer();
+ 	 const dsp::AudioBlock<float>* getAudioBlockPointer();
 
  private:
     dsp::AudioBlock<float> block;

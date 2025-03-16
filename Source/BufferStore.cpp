@@ -32,7 +32,7 @@ void BufferStore::reset()
     block.clear();
 }
 
-dsp::AudioBlock<float>* BufferStore::getAudioBlockPointer()
+const dsp::AudioBlock<float>* BufferStore::getAudioBlockPointer()
 {
     return &block;
 }
