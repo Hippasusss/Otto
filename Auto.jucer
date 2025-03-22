@@ -23,6 +23,10 @@
               file="Source/EnvelopeFollower.cpp"/>
         <FILE id="rRMgJd" name="EnvelopeFollower.h" compile="0" resource="0"
               file="Source/EnvelopeFollower.h"/>
+        <FILE id="dGZHWc" name="FilterFollower.cpp" compile="1" resource="0"
+              file="Source/FilterFollower.cpp"/>
+        <FILE id="MHUaC0" name="FilterFollower.h" compile="0" resource="0"
+              file="Source/FilterFollower.h"/>
         <FILE id="pmjeuo" name="Graph.cpp" compile="1" resource="0" file="Source/Graph.cpp"/>
         <FILE id="eQm6pW" name="Graph.h" compile="0" resource="0" file="Source/Graph.h"/>
         <FILE id="ok6rso" name="Meter.cpp" compile="1" resource="0" file="Source/Meter.cpp"/>
