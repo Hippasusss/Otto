@@ -26,7 +26,7 @@ class EnvelopeFollower: dsp::ProcessorBase
         void setAttack(float milliseconds);
         void setRelease(float milliseconds);
         void setAmount(float newAmount);
-        float getValue() const;
+        const std::vector<float>& getEnvelope();
         std::function<void(float)> onValueCalculated;
 
     private:
@@ -36,6 +36,8 @@ class EnvelopeFollower: dsp::ProcessorBase
 
         float amount;
         float attackTime, releaseTime;
+        float attackAlpha, releaseAlpha;
 
+        std::vector<float> envelopeOutput;
 };
 
