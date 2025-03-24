@@ -41,31 +41,17 @@ void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& contex
 
     float env= 0;
 
-    for(auto i = 0; i < numChannels; ++i)
+    for(auto channelIndex = 0; channelIndex < numChannels; ++channelIndex)
     {
-        auto channel = inputBlock.getSingleChannelBlock(i);
-        for(auto j = 0; j < numSamples; ++j)
+        for(auto sampleIndex = 0; sampleIndex < numSamples; ++sampleIndex)
         {
-            const float sample = abs(channel.getSample(0,j));
-            if (sample > env) 
-            {
-                env = attackAlpha * env + (1 - attackAlpha) * sample;
-            } 
-            else 
-            {
-                env = releaseAlpha * env + (1 - releaseAlpha) * sample;
-            }
+            const float sample = abs(inputBlock.getSample(channelIndex,sampleIndex));
+            if (sample > env) env = attackAlpha * env + (1 - attackAlpha) * sample;
+            else	      env = releaseAlpha * env + (1 - releaseAlpha) * sample;
 
-            //TODO: not really average of channels for i>2
-            envelopeOutput[j] += env;
+	    if(channelIndex < 1) envelopeOutput[sampleIndex] = env;
+	    else		 envelopeOutput[sampleIndex] = (env + envelopeOutput[sampleIndex])/2;
         }
-	if (numChannels > 1)
-	{
-	    for(auto& sample : envelopeOutput)
-	    {
-		sample/=numChannels;
-	    }
-	}
     }
 }
 
