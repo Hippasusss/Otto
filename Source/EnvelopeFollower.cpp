@@ -22,6 +22,8 @@ EnvelopeFollower::EnvelopeFollower():
     releaseTime(1.0f),
     envelopeOutput(0)
 {
+    setAttack(attackTime);
+    setRelease(releaseTime);
 }
 
 EnvelopeFollower::~EnvelopeFollower() = default;
@@ -32,6 +34,8 @@ void EnvelopeFollower::prepare(const dsp::ProcessSpec& spec)
     sampleRate = spec.sampleRate;
     maxBlockSize = spec.maximumBlockSize;
     envelopeOutput.resize(maxBlockSize);
+    setAttack(attackTime);
+    setRelease(releaseTime);
 }
 
 void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& context) 
