@@ -13,7 +13,7 @@ Author:  danny
 
 //==============================================================================
 template <typename SampleType>
-FilterFollower<SampleType>::FilterFollower()  : state (2)
+FilterFollower<SampleType>::FilterFollower(EnvelopeFollower& setFollower)   : state (2), follower(setFollower)
 {
     setSampleRate (SampleType (1000));  // intentionally setting unrealistic default
                                         // sample rate to catch missing initialisation bugs
@@ -69,9 +69,11 @@ void FilterFollower<SampleType>::reset() noexcept
 
     cutoffTransformSmoother.setCurrentAndTargetValue (cutoffTransformSmoother.getTargetValue());
     scaledResonanceSmoother.setCurrentAndTargetValue (scaledResonanceSmoother.getTargetValue());
+    envTransformSmoother.setCurrentAndTargetValue (envTransformSmoother.getTargetValue());
 }
 
 //==============================================================================
+
 template <typename SampleType>
 void FilterFollower<SampleType>::setCutoffFrequencyHz (SampleType newCutoff) noexcept
 {
@@ -99,6 +101,17 @@ void FilterFollower<SampleType>::setDrive (SampleType newDrive) noexcept
     gain = std::pow (drive, SampleType (-2.642))   * SampleType (0.6103) + SampleType (0.3903);
     drive2 = drive                                 * SampleType (0.04)   + SampleType (0.96);
     gain2 = std::pow (drive2, SampleType (-2.642)) * SampleType (0.6103) + SampleType (0.3903);
+}
+
+
+//==============================================================================
+template <typename SampleType>
+void FilterFollower<SampleType>::setEnvAmountHz(SampleType newAmount) noexcept
+{
+    jassert (newAmount >= SampleType(0));
+
+    envAmountHz = newAmount;
+    updateEnvAmount();
 }
 
 //==============================================================================
@@ -135,6 +148,7 @@ void FilterFollower<SampleType>::updateSmoothers() noexcept
 {
     cutoffTransformValue = cutoffTransformSmoother.getNextValue();
     scaledResonanceValue = scaledResonanceSmoother.getNextValue();
+    envTransformValue = envTransformSmoother.getNextValue();
 }
 
 //==============================================================================
@@ -147,6 +161,7 @@ void FilterFollower<SampleType>::setSampleRate (SampleType newValue) noexcept
     static constexpr SampleType smootherRampTimeSec = SampleType (0.05);
     cutoffTransformSmoother.reset (newValue, smootherRampTimeSec);
     scaledResonanceSmoother.reset (newValue, smootherRampTimeSec);
+    envTransformSmoother.reset (newValue, smootherRampTimeSec);
 
     updateCutoffFreq();
 }

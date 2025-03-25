@@ -9,6 +9,7 @@
 */
 
 #pragma once
+#include "EnvelopeFollower.h"
 #include "JuceHeader.h"
 #include "RingBuffer.h"
 
@@ -37,7 +38,7 @@ public:
 
     //==============================================================================
     /** Creates an uninitialised filter. Call prepare() before first use. */
-    FilterFollower();
+    FilterFollower(EnvelopeFollower& follower);
 
     /** Enables or disables the filter. If disabled it will simply pass through the input signal. */
     void setEnabled (bool isEnabled) noexcept    { enabled = isEnabled; }
@@ -54,7 +55,8 @@ public:
     /** Resets the internal state variables of the filter. */
     void reset() noexcept;
 
-    /** Sets the cutoff frequency of the filter.
+    /** Sets the cutoff frequency of the filter. this is the User set frequency before the application
+     * of the envelope.
 
         @param newCutoff cutoff frequency in Hz
     */
@@ -71,10 +73,12 @@ public:
         @param newDrive saturation amount; it can be any number greater than or equal to one. Higher values result in more distortion.
     */
     void setDrive (SampleType newDrive) noexcept;
+    /** Sets how much the envelope will effect the final frequency of the filter
+    */
+    void setEnvAmountHz(SampleType newAmount) noexcept;
 
     //==============================================================================
-    template <typename ProcessContext>
-    void process (const ProcessContext& context) noexcept
+    void process (const dsp::ProcessContextReplacing<SampleType>& context) noexcept
     {
         const auto& inputBlock = context.getInputBlock();
         auto& outputBlock      = context.getOutputBlock();
@@ -85,16 +89,31 @@ public:
         jassert (inputBlock.getNumChannels() == numChannels);
         jassert (inputBlock.getNumSamples()  == numSamples);
 
+
         if (! enabled || context.isBypassed)
         {
             outputBlock.copyFrom (inputBlock);
             return;
         }
 
+	const auto& envelope = follower.getEnvelope();
+	/*const size_t blockDivisor = 16;*/
+	/*float envSum = 0;*/
         for (size_t n = 0; n < numSamples; ++n)
         {
             updateSmoothers();
 
+		/*   envSum += envelope[n];*/
+		/*   if (n % blockDivisor == 0)*/
+		/*   {*/
+		/*const float envValue = envSum / blockDivisor;*/
+		/*cuttoffFreqModifierHz = envTransformValue * envValue;*/
+		/*updateCutoffFreq();*/
+		/*   }*/
+
+
+	    cuttoffFreqModifierHz = envTransformValue * envelope[n];
+	    updateCutoffFreq();
             for (size_t ch = 0; ch < numChannels; ++ch)
                 outputBlock.getChannelPointer (ch)[n] = processSample (inputBlock.getChannelPointer (ch)[n], ch);
         }
@@ -109,8 +128,9 @@ private:
     //==============================================================================
     void setSampleRate (SampleType newValue) noexcept;
     void setNumChannels (size_t newValue)   { state.resize (newValue); }
-    void updateCutoffFreq() noexcept        { cutoffTransformSmoother.setTargetValue (std::exp (cutoffFreqHz * cutoffFreqScaler)); }
+    void updateCutoffFreq() noexcept        { cutoffTransformSmoother.setTargetValue (std::exp ((cutoffFreqHz + cuttoffFreqModifierHz) * cutoffFreqScaler)); }
     void updateResonance() noexcept         { scaledResonanceSmoother.setTargetValue (jmap (resonance, SampleType (0.1), SampleType (1.0))); }
+    void updateEnvAmount() noexcept         { envTransformSmoother.setTargetValue (envAmountHz); }
 
     //==============================================================================
     SampleType drive, drive2, gain, gain2, comp;
@@ -119,18 +139,22 @@ private:
     std::vector<std::array<SampleType, numStates>> state;
     std::array<SampleType, numStates> A;
 
-    SmoothedValue<SampleType> cutoffTransformSmoother, scaledResonanceSmoother;
-    SampleType cutoffTransformValue, scaledResonanceValue;
+    SmoothedValue<SampleType> cutoffTransformSmoother, scaledResonanceSmoother, envTransformSmoother;
+    SampleType cutoffTransformValue, scaledResonanceValue, envTransformValue;
 
     dsp::LookupTableTransform<SampleType> saturationLUT { [] (SampleType x) { return std::tanh (x); },
                                                      SampleType (-5), SampleType (5), 128 };
 
     SampleType cutoffFreqHz { SampleType (200) };
+    SampleType cuttoffFreqModifierHz;
+    SampleType envAmountHz;
     SampleType resonance;
 
     SampleType cutoffFreqScaler;
 
     Mode mode;
     bool enabled = true;
+
+    EnvelopeFollower& follower;
 };
 
