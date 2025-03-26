@@ -27,7 +27,7 @@ class EnvelopeFollower: dsp::ProcessorBase
         void setRelease(float milliseconds);
         void setAmount(float newAmount);
         float getAmount();
-        const std::vector<float>& getEnvelope();
+        const std::vector<float>& getEnvelope() const;
         std::function<void(float)> onValueCalculated;
 
     private:

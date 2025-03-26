@@ -89,7 +89,7 @@ float EnvelopeFollower::getAmount()
 }
 
 
-const std::vector<float>& EnvelopeFollower::getEnvelope()
+const std::vector<float>& EnvelopeFollower::getEnvelope() const
 {
     return envelopeOutput;
 }

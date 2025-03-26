@@ -99,23 +99,11 @@ public:
         }
 
 	const auto& envelope = follower->getEnvelope();
-	/*const size_t blockDivisor = 16;*/
-	/*float envSum = 0;*/
         for (size_t n = 0; n < numSamples; ++n)
         {
-            updateSmoothers();
-
-		/*   envSum += envelope[n];*/
-		/*   if (n % blockDivisor == 0)*/
-		/*   {*/
-		/*const float envValue = envSum / blockDivisor;*/
-		/*cuttoffFreqModifierHz = envTransformValue * envValue;*/
-		/*updateCutoffFreq();*/
-		/*   }*/
-
-
 	    cuttoffFreqModifierHz = envTransformValue * envelope[n];
 	    updateCutoffFreq();
+            updateSmoothers();
             for (size_t ch = 0; ch < numChannels; ++ch)
                 outputBlock.getChannelPointer (ch)[n] = processSample (inputBlock.getChannelPointer (ch)[n], ch);
         }
@@ -159,6 +147,6 @@ private:
     Mode mode;
     bool enabled = true;
 
-    EnvelopeFollower* follower;
+    EnvelopeFollower const * follower;
 };
 
