@@ -75,7 +75,9 @@ public:
     void setDrive (SampleType newDrive) noexcept;
     /** Sets how much the envelope will effect the final frequency of the filter
     */
-    void setEnvAmountHz(SampleType newAmount) noexcept;
+    void setEnvAmountPercent(SampleType newAmount) noexcept;
+
+    void setEnvFollowerPtr(EnvelopeFollower* ptr);
 
     //==============================================================================
     void process (const dsp::ProcessContextReplacing<SampleType>& context) noexcept
@@ -146,11 +148,13 @@ private:
                                                      SampleType (-5), SampleType (5), 128 };
 
     SampleType cutoffFreqHz { SampleType (200) };
-    SampleType cuttoffFreqModifierHz;
-    SampleType envAmountHz;
+    SampleType cuttoffFreqModifierHz { SampleType (0)};
+    SampleType envAmountHz { SampleType (0)};
     SampleType resonance;
 
     SampleType cutoffFreqScaler;
+
+    const SampleType cutoffFreqMaxHz { SampleType {20000.0f}};
 
     Mode mode;
     bool enabled = true;

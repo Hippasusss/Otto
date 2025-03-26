@@ -111,12 +111,13 @@ void FilterFollower<SampleType>::setDrive (SampleType newDrive) noexcept
 
 
 //==============================================================================
+//takes a new amount between 0 and 1 for the remaining range
 template <typename SampleType>
-void FilterFollower<SampleType>::setEnvAmountHz(SampleType newAmount) noexcept
+void FilterFollower<SampleType>::setEnvAmountPercent(SampleType newAmount) noexcept
 {
     jassert (newAmount >= SampleType(0));
-
-    envAmountHz = newAmount;
+    SampleType remainingHz = cutoffFreqMaxHz - cutoffFreqHz;
+    envAmountHz = remainingHz * newAmount;
     updateEnvAmount();
 }
 

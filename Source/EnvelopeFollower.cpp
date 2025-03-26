@@ -18,8 +18,8 @@ EnvelopeFollower::EnvelopeFollower():
     numChannels(2),
     maxBlockSize(0),
     amount(0),
-    attackTime(0.5f),
-    releaseTime(1.0f),
+    attackTime(100.0f),
+    releaseTime(100.0f),
     envelopeOutput(0)
 {
     setAttack(attackTime);
@@ -34,6 +34,7 @@ void EnvelopeFollower::prepare(const dsp::ProcessSpec& spec)
     sampleRate = spec.sampleRate;
     maxBlockSize = spec.maximumBlockSize;
     envelopeOutput.resize(maxBlockSize);
+    envelopeState.resize(numChannels);
     setAttack(attackTime);
     setRelease(releaseTime);
 }
@@ -80,6 +81,11 @@ void EnvelopeFollower::setRelease(const float milliseconds)
 void EnvelopeFollower::setAmount(float newAmount)
 {
     amount = newAmount;
+}
+
+float EnvelopeFollower::getAmount()
+{
+    return amount;
 }
 
 
