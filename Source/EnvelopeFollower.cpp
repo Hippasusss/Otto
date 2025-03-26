@@ -43,18 +43,19 @@ void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& contex
     const auto& inputBlock = context.getInputBlock();
     const size_t numSamples = inputBlock.getNumSamples();
 
-    float env= 0;
-
     for(auto channelIndex = 0; channelIndex < numChannels; ++channelIndex)
     {
         for(auto sampleIndex = 0; sampleIndex < numSamples; ++sampleIndex)
         {
-            const float sample = abs(inputBlock.getSample(channelIndex,sampleIndex));
-            if (sample > env) env = attackAlpha * env + (1 - attackAlpha) * sample;
-            else	      env = releaseAlpha * env + (1 - releaseAlpha) * sample;
+            const float sample = std::fabs(inputBlock.getSample(channelIndex, sampleIndex));
+            if (sample > envelopeState[channelIndex]) 
+                envelopeState[channelIndex] = attackAlpha * envelopeState[channelIndex] + (1 - attackAlpha) * sample;
+            else
+                envelopeState[channelIndex] = releaseAlpha * envelopeState[channelIndex] + (1 - releaseAlpha) * sample;
 
-	    if(channelIndex < 1) envelopeOutput[sampleIndex] = env;
-	    else		 envelopeOutput[sampleIndex] = (env + envelopeOutput[sampleIndex])/2;
+            envelopeOutput[sampleIndex] = (channelIndex == 0) ? 
+                envelopeState[channelIndex] : 
+                std::max(envelopeOutput[sampleIndex], envelopeState[channelIndex]);
         }
     }
 }

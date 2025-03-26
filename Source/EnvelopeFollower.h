@@ -39,5 +39,6 @@ class EnvelopeFollower: dsp::ProcessorBase
         float attackAlpha, releaseAlpha;
 
         std::vector<float> envelopeOutput;
+        std::vector<float> envelopeState;
 };
 
