@@ -38,7 +38,7 @@ public:
 
     //==============================================================================
     /** Creates an uninitialised filter. Call prepare() before first use. */
-    FilterFollower(EnvelopeFollower& follower);
+    FilterFollower();
 
     /** Enables or disables the filter. If disabled it will simply pass through the input signal. */
     void setEnabled (bool isEnabled) noexcept    { enabled = isEnabled; }
@@ -96,7 +96,7 @@ public:
             return;
         }
 
-	const auto& envelope = follower.getEnvelope();
+	const auto& envelope = follower->getEnvelope();
 	/*const size_t blockDivisor = 16;*/
 	/*float envSum = 0;*/
         for (size_t n = 0; n < numSamples; ++n)
@@ -155,6 +155,6 @@ private:
     Mode mode;
     bool enabled = true;
 
-    EnvelopeFollower& follower;
+    EnvelopeFollower* follower;
 };
 

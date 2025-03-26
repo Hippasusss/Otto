@@ -13,7 +13,7 @@ Author:  danny
 
 //==============================================================================
 template <typename SampleType>
-FilterFollower<SampleType>::FilterFollower(EnvelopeFollower& setFollower)   : state (2), follower(setFollower)
+FilterFollower<SampleType>::FilterFollower()   : state (2)
 {
     setSampleRate (SampleType (1000));  // intentionally setting unrealistic default
                                         // sample rate to catch missing initialisation bugs
@@ -22,6 +22,12 @@ FilterFollower<SampleType>::FilterFollower(EnvelopeFollower& setFollower)   : st
 
     mode = Mode::LPF24;
     setMode (Mode::LPF12);
+}
+
+template <typename SampleType>
+void FilterFollower<SampleType>::setEnvFollowerPtr(EnvelopeFollower* ptr)
+{
+    follower = ptr;
 }
 
 //==============================================================================
