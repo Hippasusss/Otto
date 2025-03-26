@@ -2,6 +2,7 @@
 #include <JuceHeader.h>
 #include "EnvelopeFollower.h"
 #include "BufferStore.h"
+#include "FilterFollower.h"
 #include "Graph.h"
 #include "Meter.h"
 #include "Mixer.h"
@@ -41,14 +42,14 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     const EnvelopeFollower& getEnvelopeFollower() const;
-    const dsp::LadderFilter<float>& getLadderFilter() const;
+    const FilterFollower<float>& getLadderFilter() const;
+    /*const dsp::LadderFilter<float>& getLadderFilter() const;*/
     Meter* getInputMeter();
     Meter* getOutputMeter();
     Graph* getGraph();
 
     static AudioProcessorValueTreeState::ParameterLayout getParameterLayout();
     AudioProcessorValueTreeState apvts { *this, nullptr, "Parameters", getParameterLayout()};
-    float getAPVTSValue(const String& vlaue);
     void updateAllParameters();
 
 private:
@@ -75,7 +76,7 @@ private:
                          Meter, 
                          Graph,
                          EnvelopeFollower,
-                         dsp::LadderFilter<float>,
+                         FilterFollower<float>,
                          Mixer,
                          dsp::Gain<float>,
                          Meter> chain;

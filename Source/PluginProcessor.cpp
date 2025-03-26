@@ -14,6 +14,7 @@ Auto_AudioProcessor::Auto_AudioProcessor()
             )
 #endif
 {
+    chain.get<filterIndex>().setEnvFollowerPtr(&chain.get<followerIndex>());
 }
 Auto_AudioProcessor::~Auto_AudioProcessor() = default;
 
@@ -77,27 +78,11 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     // Avoid clicks during gain parameter change
     chain.get<outputGainIndex>().setRampDurationSeconds(0.1);
     chain.get<inputGainIndex>().setRampDurationSeconds(0.1);
-    chain.get<filterIndex>().setMode(dsp::LadderFilterMode::LPF12);
+    chain.get<filterIndex>().setMode(LadderFilterMode::LPF12);
 
     // Set source for dry buffer of mix control
     chain.get<mixerIndex>().setOtherBlock(chain.get<bufferStoreIndex>().getAudioBlockPointer());
 
-    // Register envelope follower callback to set frequency parameter at runtime
-    dsp::LadderFilter<float>& filter = chain.get<filterIndex>();
-    chain.get<followerIndex>().onValueCalculated = [&](const float value) 
-    {
-        // Highest user settable frequency
-        const float maxFrequency = apvts.getParameterRange("frequency").end;
-        // current user set frequency
-        const float frequencySet = apvts.getRawParameterValue("frequency")->load();
-        // frequencies above the user set frequency
-        const float frequencyRemainder = maxFrequency - frequencySet;
-
-        const auto modulatedFrequency = jlimit<float>(20, 20000, (frequencySet + value * frequencyRemainder));
-        filter.setCutoffFrequencyHz(modulatedFrequency);
-    };
-
-    // initalise
     updateAllParameters();
     chain.prepare(spec);
 }
@@ -123,7 +108,7 @@ const EnvelopeFollower& Auto_AudioProcessor::getEnvelopeFollower() const
     return chain.get<followerIndex>();
 }
 
-const dsp::LadderFilter<float>& Auto_AudioProcessor::getLadderFilter() const
+const FilterFollower<float>& Auto_AudioProcessor::getLadderFilter() const
 {
     return chain.get<filterIndex>();
 }
@@ -160,20 +145,16 @@ AudioProcessorValueTreeState::ParameterLayout Auto_AudioProcessor::getParameterL
     return layout;
 }
 
-float Auto_AudioProcessor::getAPVTSValue(const String& ID)
-{
-    return apvts.getRawParameterValue(ID)->load();
-}
-
 void Auto_AudioProcessor::updateAllParameters()
 {
-    chain.get<inputGainIndex>().setGainDecibels(getAPVTSValue(parameter_constants::INPUT_GAIN_ID));
-    chain.get<outputGainIndex>().setGainDecibels(getAPVTSValue(parameter_constants::OUTPUT_GAIN_ID));
-    chain.get<filterIndex>().setCutoffFrequencyHz(getAPVTSValue(parameter_constants::FREQUENCY_ID));
-    chain.get<filterIndex>().setResonance(getAPVTSValue(parameter_constants::RESONANCE_ID));
-    chain.get<filterIndex>().setDrive(getAPVTSValue(parameter_constants::DRIVE_ID));
-    chain.get<followerIndex>().setAmount(getAPVTSValue(parameter_constants::ENV_AMOUNT_ID));
-    chain.get<mixerIndex>().setMix(getAPVTSValue(parameter_constants::MIX_ID));
+    chain.get<inputGainIndex>().setGainDecibels(apvts.getRawParameterValue(parameter_constants::INPUT_GAIN_ID)->load());
+    chain.get<outputGainIndex>().setGainDecibels(apvts.getRawParameterValue(parameter_constants::OUTPUT_GAIN_ID)->load());
+    chain.get<filterIndex>().setCutoffFrequencyHz(apvts.getRawParameterValue(parameter_constants::FREQUENCY_ID)->load());
+    chain.get<filterIndex>().setResonance(apvts.getRawParameterValue(parameter_constants::RESONANCE_ID)->load());
+    chain.get<filterIndex>().setDrive(apvts.getRawParameterValue(parameter_constants::DRIVE_ID)->load());
+    chain.get<filterIndex>().setEnvAmountPercent(apvts.getRawParameterValue(parameter_constants::ENV_AMOUNT_ID)->load());
+    chain.get<followerIndex>().setAmount(apvts.getRawParameterValue(parameter_constants::ENV_AMOUNT_ID)->load());
+    chain.get<mixerIndex>().setMix(apvts.getRawParameterValue(parameter_constants::MIX_ID)->load());
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
