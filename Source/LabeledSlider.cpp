@@ -26,6 +26,7 @@ LabeledSlider::LabeledSlider(const String& name, bool hideLabel)
     sliderValueLabel.setVisible(false);
     sliderValueLabel.attachToComponent(&slider, true);
     addChildComponent(sliderValueLabel);
+    slider.addMouseListener(this, false);
 
     slider.onValueChange = [this] { valueChanged(); };
     resized();
@@ -70,13 +71,17 @@ void LabeledSlider::valueChanged() {
     resized();
 }
 
-void LabeledSlider::resized() {
-    slider.setBounds(getLocalBounds().reduced(10));
-    const auto bounds = slider.getBounds().reduced(10, slider.getBounds().getHeight()/2 -7);
-    sliderValueLabel.setBounds(bounds);
-    sliderNameLabel.setBounds(bounds.translated(0, slider.getBounds().getHeight()/2 + sliderNameLabel.getHeight()));
-}
 
+void LabeledSlider::resized() {
+    constexpr float SLIDER_PERCENT_OF_HEIGHT = 0.75;
+    constexpr size_t SPACING_BETWEEN_LABEL_AND_SLIDER = 5;
+    auto bounds = getLocalBounds();
+    const auto valueBounds = getLocalBounds().reduced(10, slider.getBounds().getHeight()/2 -7);
+    slider.setBounds(bounds.removeFromTop(bounds.getHeight() * SLIDER_PERCENT_OF_HEIGHT));
+    sliderValueLabel.setBounds(valueBounds);
+    bounds.removeFromTop(SPACING_BETWEEN_LABEL_AND_SLIDER);
+    sliderNameLabel.setBounds(bounds);
+}
 void LabeledSlider::setDefault(float newDefault, bool setValueToo) {
     defaultValue = newDefault;
     if(setValueToo) slider.setValue(defaultValue);
