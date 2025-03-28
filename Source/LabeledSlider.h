@@ -1,35 +1,38 @@
 #pragma once
 #include <JuceHeader.h>
-
 #include "CustomLookAndFeel.h"
 
-class LabeledSlider    : public Slider 
+class LabeledSlider : public Component
 {
 public:
-	LabeledSlider();
-    explicit LabeledSlider(const String& name);
-    ~LabeledSlider();
+    explicit LabeledSlider(const String& name, bool hideLabel = false);
+    ~LabeledSlider() = default;
 
     Label& getSliderNameLabel();
     Label& getSliderValueLabel();
-    void setName(const String& newName) override;
+    Slider& getSlider();
 
-	void mouseExit(const MouseEvent&) override;
-	void mouseEnter(const MouseEvent&) override;
-	void mouseDown(const MouseEvent&) override;
-	void mouseDoubleClick(const MouseEvent&) override;
-	void valueChanged() override;
-    void resized() override;
-    void setDefault(float newDefault, bool setDefaultToo = true);
+    void setName(const String& newName) override;
+    void setDefault(float newDefault, bool setValueToo = true);
     void returnToDefault();
     void init();
 
 private:
+    void mouseExit(const MouseEvent&) override;
+    void mouseEnter(const MouseEvent&) override;
+    void mouseDown(const MouseEvent&) override;
+    void mouseUp(const MouseEvent&) override;
+    void mouseDoubleClick(const MouseEvent&) override;
+    void valueChanged();
+    void resized() override;
+
     CustomLookAndFeel2 lookAndFeel2;
+    Slider slider;
     Label sliderNameLabel;
     Label sliderValueLabel;
     float defaultValue;
     const String name;
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LabeledSlider)
+    const bool hiddenLabel;
 
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LabeledSlider)
 };

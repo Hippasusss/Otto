@@ -1,103 +1,92 @@
-#include <JuceHeader.h>
 #include "LabeledSlider.h"
 
-
-
-LabeledSlider::LabeledSlider() = default;
-
-LabeledSlider::LabeledSlider(const String& name): sliderNameLabel(name, name) , defaultValue(0)
+LabeledSlider::LabeledSlider(const String& name, bool hideLabel)
+    : sliderNameLabel(name, name),
+      defaultValue(0),
+      name(name),
+      hiddenLabel(hideLabel)
 {
-    setSliderStyle (Slider::RotaryVerticalDrag);
-    setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    addAndMakeVisible(slider);
+    slider.setSliderStyle(Slider::RotaryVerticalDrag);
+    slider.setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
 
-    sliderNameLabel.setName(name);
-    sliderNameLabel.setText(name, NotificationType::sendNotification);
-    sliderNameLabel.setJustificationType(Justification::centredTop);
-    sliderNameLabel.attachToComponent(this, true);
+    if(!hideLabel) {
+        sliderNameLabel.setName(name);
+        sliderNameLabel.setText(name, NotificationType::sendNotification);
+        sliderNameLabel.setJustificationType(Justification::centredTop);
+        sliderNameLabel.attachToComponent(&slider, true);
+        sliderNameLabel.setInterceptsMouseClicks(false, false);
+        addAndMakeVisible(sliderNameLabel);
+    }
 
     sliderValueLabel.setJustificationType(Justification::right);
-    sliderValueLabel.attachToComponent(this, true);
     sliderValueLabel.setInterceptsMouseClicks(false, false);
     sliderValueLabel.setLookAndFeel(&lookAndFeel2);
-    sliderValueLabel.setText(String(getValue()), sendNotification);
+    sliderValueLabel.setText(String(slider.getValue()), sendNotification);
     sliderValueLabel.setVisible(false);
+    sliderValueLabel.attachToComponent(&slider, true);
+    addChildComponent(sliderValueLabel);
+
+    slider.onValueChange = [this] { valueChanged(); };
+    resized();
 }
 
-LabeledSlider::~LabeledSlider() = default;
+Label& LabeledSlider::getSliderNameLabel() { return sliderNameLabel; }
+Label& LabeledSlider::getSliderValueLabel() { return sliderValueLabel; }
+Slider& LabeledSlider::getSlider() { return slider; }
 
-Label& LabeledSlider::getSliderNameLabel()
-{
-    return sliderNameLabel;
-}
-
-Label& LabeledSlider::getSliderValueLabel()
-{
-    return sliderValueLabel;
-}
-
-void LabeledSlider::setName(const String& newName)
-{
-    Slider::setName(newName);
+void LabeledSlider::setName(const String& newName) {
+    slider.setName(newName);
     sliderNameLabel.setName(newName);
     sliderNameLabel.setText(newName, dontSendNotification);
 }
 
-void LabeledSlider::mouseExit(const MouseEvent& mouseEvent)
-{
+void LabeledSlider::mouseExit(const MouseEvent&) {
     sliderValueLabel.setVisible(false);
 }
 
-void LabeledSlider::mouseEnter(const MouseEvent& mouseEvent)
-{
+void LabeledSlider::mouseEnter(const MouseEvent&) {
     sliderValueLabel.setVisible(true);
+    if(hiddenLabel) sliderValueLabel.setText(name, NotificationType::sendNotification);
 }
 
-void LabeledSlider::mouseDown(const MouseEvent& mouseEvent)
-{
-    Slider::mouseDown(mouseEvent);
-    if(mouseEvent.mods.isAltDown())
-    {
-		returnToDefault();
+void LabeledSlider::mouseDown(const MouseEvent& e) {
+    if(hiddenLabel) sliderValueLabel.setText(String(slider.getValue()), sendNotification);
+    if(e.mods.isAltDown()) {
+        returnToDefault();
     }
 }
 
-void LabeledSlider::mouseDoubleClick(const MouseEvent& mouseEvent)
-{
-    Slider::mouseDoubleClick(mouseEvent);
+void LabeledSlider::mouseUp(const MouseEvent&) {
+    if(hiddenLabel) sliderValueLabel.setText(name, NotificationType::sendNotification);
+}
+
+void LabeledSlider::mouseDoubleClick(const MouseEvent&) {
     returnToDefault();
 }
 
-// TODO: Work out why this resets the child components bounds.
-void LabeledSlider::valueChanged()
-{
-    Slider::valueChanged();
-    sliderValueLabel.setText(String(getValue()), dontSendNotification);
+void LabeledSlider::valueChanged() {
+    sliderValueLabel.setText(String(slider.getValue()), dontSendNotification);
     resized();
 }
 
-void LabeledSlider::resized()
-{
-    Slider::resized();
-    const auto bounds = getBounds().reduced(10, getBounds().getHeight()/2 -7);
+void LabeledSlider::resized() {
+    slider.setBounds(getLocalBounds().reduced(10));
+    const auto bounds = slider.getBounds().reduced(10, slider.getBounds().getHeight()/2 -7);
     sliderValueLabel.setBounds(bounds);
+    sliderNameLabel.setBounds(bounds.translated(0, slider.getBounds().getHeight()/2 + sliderNameLabel.getHeight()));
 }
 
-void LabeledSlider::setDefault(float newDefault, bool setValueToo)
-{
+void LabeledSlider::setDefault(float newDefault, bool setValueToo) {
     defaultValue = newDefault;
-    if(setValueToo) setValue(defaultValue);
+    if(setValueToo) slider.setValue(defaultValue);
 }
 
-void LabeledSlider::returnToDefault()
-{
-    setValue(defaultValue);
+void LabeledSlider::returnToDefault() {
+    slider.setValue(defaultValue);
 }
 
-void LabeledSlider::init()
-{
+void LabeledSlider::init() {
     resized();
     sliderValueLabel.setVisible(false);
 }
-
-
-
