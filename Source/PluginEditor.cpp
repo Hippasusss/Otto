@@ -15,9 +15,9 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     outputGain("Out"),
     attack("Attack"),
     release("Release"),
-    envSpeed("Speed"),
-    twoFourPole("Mode"),
-    envAdvanced("Advanced"),
+    envSpeed("Slo/Fst"),
+    twoFourPole("12/24"),
+    envAdvanced(""),
     graphDisplay(processor.getGraph()),
     inputMeter(processor.getInputMeter()),
     outputMeter(processor.getOutputMeter()),
@@ -49,10 +49,12 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
         slide->init();
     }
 
-    for (auto& slide : timeSliders)
-    {
-        slide->init();
-    }
+    envAdvanced.setToggleable(true);
+    envAdvanced.setClickingTogglesState(true);
+    envAdvanced.onClick = [this]() {
+        resized(); 
+        repaint();
+    };
 }
 
 Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
@@ -62,62 +64,77 @@ Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
 
 void Auto_AudioProcessorEditor::resized()
 {
-    //TODO: replace magic numbers with consts or somethign more flexy
+    // Layout constants
+    const int TITLE_BAR_HEIGHT = 28;
+    const int ENV_ADVANCED_WIDTH = 50;
+    const int ENV_ADVANCED_PADDING = 5;
+    const int PARAMETER_SECTION_HEIGHT = 100;
+    const int SLIDER_WIDTH = 100;
+    const int SLIDER_HEIGHT = 80;
+    const int SLIDER_PADDING = 11;
+    const int LABEL_Y_OFFSET = -3;
+    const int BUTTON_PADDING = 10;
+    const int BUTTON_VERTICAL_PADDING = 5;
+    const int BUTTON_HEIGHT_RATIO = 2; // 0.5 of height
+    const int METER_PADDING_X = 7;
+    const int METER_PADDING_Y = 6;
+    const int METER_WIDTH = 20;
+    const int GRAPH_PADDING = 2;
+
     auto rect = getLocalBounds();
+    
     // Title Bar --------------------
-    auto titleBounds = rect.removeFromTop(28);
+    auto titleBounds = rect.removeFromTop(TITLE_BAR_HEIGHT);
+    envAdvanced.setBounds(titleBounds.removeFromRight(ENV_ADVANCED_WIDTH).reduced(ENV_ADVANCED_PADDING));
     titleBar.setBounds(titleBounds);
 
     // Parameter Section -------------
-    auto parameterBounds = rect.removeFromTop(100);
+    auto parameterBounds = rect.removeFromTop(PARAMETER_SECTION_HEIGHT);
     parameterGroup.setBounds(parameterBounds);
 
     // Sliders
     for(auto* slider: mainSliders)
     {
         parameterGroup.addChildComponent(slider);
-        auto bounds = parameterBounds.removeFromLeft(100);
-        slider->setBounds(bounds.removeFromTop(80).reduced(11));
-        slider->getSliderNameLabel().setBounds(bounds.translated(0,-3));
+        auto bounds = parameterBounds.removeFromLeft(SLIDER_WIDTH);
+        slider->setBounds(bounds.removeFromTop(SLIDER_HEIGHT).reduced(SLIDER_PADDING));
+        slider->getSliderNameLabel().setBounds(bounds.translated(0, LABEL_Y_OFFSET));
     }
 
     // Buttons 
-    parameterBounds = parameterBounds.removeFromLeft(100);
-    for(auto* button: buttons)
+    parameterBounds = parameterBounds.removeFromLeft(SLIDER_WIDTH);
+    parameterBounds.reduce(0, BUTTON_VERTICAL_PADDING);
+    auto topButtonArea = parameterBounds.removeFromTop(parameterBounds.getHeight() / BUTTON_HEIGHT_RATIO);
+    
+    if(envAdvanced.getToggleState())
     {
-        if(button->getComponentID() == envSpeed.getComponentID())
+        envSpeed.setVisible(false);
+        for(auto& slider : timeSliders) 
         {
-            if(envAdvanced.getToggleState())
-            {
-                button->setBounds(parameterBounds.removeFromTop(50).reduced(10,13));
-            }
-            else
-            {
-                auto ARrect = parameterBounds.removeFromTop(50).reduced(5,5);
-                for(auto* slider : timeSliders)
-                {
-                    slider->setBounds(ARrect.removeFromLeft(50).reduced(5,5));
-                }
-            }
+            slider->setBounds(topButtonArea.removeFromLeft(parameterBounds.getWidth() / BUTTON_HEIGHT_RATIO).reduced(0, BUTTON_VERTICAL_PADDING));
+            slider->setVisible(true);
         }
-        button->setBounds(parameterBounds.removeFromTop(50).reduced(10,13));
     }
-
-	//----------------------------------
+    else
+    {
+        for(auto& slider : timeSliders) 
+        {
+            slider->setVisible(false);
+        }
+        envSpeed.setVisible(true);
+        envSpeed.setBounds(topButtonArea.reduced(BUTTON_PADDING, BUTTON_PADDING * 0.6f));
+    }
+    twoFourPole.setBounds(parameterBounds.reduced(BUTTON_PADDING, BUTTON_PADDING * 0.6f));
 
     // Visual Section -------------------
-
     // Meters
-    // TODO:: get the pixels back that are missing at the top of the meter >:|
-    rect.reduce(7,6);
-    inputMeter.setBounds(rect.removeFromLeft(20));
-    outputMeter.setBounds(rect.removeFromRight(20));
+    rect.reduce(METER_PADDING_X, METER_PADDING_Y);
+    inputMeter.setBounds(rect.removeFromLeft(METER_WIDTH));
+    outputMeter.setBounds(rect.removeFromRight(METER_WIDTH));
 
-	// Waveform Display
-    const auto graphRect = rect.reduced(2, 0);
+    // Waveform Display
+    const auto graphRect = rect.reduced(GRAPH_PADDING, 0);
     graphDisplay.setBounds(graphRect);
-
-	//----------------------------------
 }
 
 void Auto_AudioProcessorEditor::paint (Graphics& graphics)
