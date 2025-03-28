@@ -20,6 +20,9 @@ namespace parameter_constants
 	const String RESONANCE_ID = "resonance";
 	const String MIX_ID = "mix";
 	const String ENV_SPEED_ID = "envSpeed";
+	const String ENV_ATTACK_ID = "envAttack";
+	const String ENV_RELEASE_ID = "envRelease";
+	const String ENV_ADVANCED_ID= "envAdvanced";
 	const String TWO_FOUR_POLE_ID = "twoFourPole";
 	const String ENV_AMOUNT_ID = "envAmount";
 }

@@ -20,23 +20,38 @@ public:
 private:
     Auto_AudioProcessor& processor;
 
-    LabeledSlider inputGain, drive, envAmount, frequency, resonance, mix, outputGain;
-    ToggleButton envSpeed, twoFourPole;
+    LabeledSlider inputGain, drive, envAmount, frequency, resonance, mix, outputGain, attack, release;
+    ToggleButton envSpeed, twoFourPole, envAdvanced;
     GroupComponent parameterGroup;
     TitleBar titleBar;
     GraphDisplay graphDisplay;
     MeterDisplay inputMeter, outputMeter;
     CustomLookAndFeel lookAndFeel;
     
-    std::array<Component*, 14> components {&inputGain, &drive, &envAmount, &frequency, 
-        &resonance, &mix, &outputGain, &envSpeed, &twoFourPole, &parameterGroup, &graphDisplay,
-    	&inputMeter, &outputMeter, &titleBar};
-    std::array<LabeledSlider*, 7> sliders {&inputGain, &drive, &envAmount, &frequency, 
-        &resonance, &mix, &outputGain};
-    std::array<ToggleButton*, 2> buttons{&envSpeed, &twoFourPole};
+    std::array<Component*, 17> components 
+       {&inputGain, 
+        &drive, 
+        &envAmount, 
+        &frequency, 
+        &resonance, 
+        &mix, 
+        &outputGain, 
+        &attack, 
+        &release, 
+        &envSpeed, 
+        &twoFourPole, 
+        &parameterGroup, 
+        &graphDisplay,
+        &inputMeter, 
+        &outputMeter, 
+        &titleBar, 
+        &envAdvanced};
+    std::array<LabeledSlider*, 7> mainSliders {&inputGain, &drive, &envAmount, &frequency, &resonance, &mix, &outputGain};
+    std::array<LabeledSlider*, 2> timeSliders{&attack, &release};
+    std::array<ToggleButton*, 3> buttons{&envSpeed, &twoFourPole, &envAdvanced};
 
-    AudioProcessorValueTreeState::SliderAttachment inA, driveA, envA, freqA, resoA, mixA, outA;
-    AudioProcessorValueTreeState::ButtonAttachment envspA, twoA;
+    AudioProcessorValueTreeState::SliderAttachment inA, driveA, envA, freqA, resoA, mixA, outA, envatA, envrelA;
+    AudioProcessorValueTreeState::ButtonAttachment envspA, twoA, envadvA;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Auto_AudioProcessorEditor)
 };

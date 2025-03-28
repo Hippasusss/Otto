@@ -79,6 +79,7 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     chain.get<outputGainIndex>().setRampDurationSeconds(0.1);
     chain.get<inputGainIndex>().setRampDurationSeconds(0.1);
     chain.get<filterIndex>().setMode(LadderFilterMode::LPF12);
+    chain.get<filterIndex>().setEnvFollowerPtr(&chain.get<followerIndex>());
 
     // Set source for dry buffer of mix control
     chain.get<mixerIndex>().setOtherBlock(chain.get<bufferStoreIndex>().getAudioBlockPointer());
@@ -139,6 +140,9 @@ AudioProcessorValueTreeState::ParameterLayout Auto_AudioProcessor::getParameterL
     layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::FREQUENCY_ID, "Frequency",    NormalisableRange(20.0f, 20000.0f, 1.f, 0.5f), 1000.f));
     layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::MIX_ID, "Mix",                NormalisableRange(0.f, 100.f, 1.f), 100.f));
     layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::ENV_AMOUNT_ID, "Env %",        NormalisableRange(0.f, 100.f, 1.f), 100.f));
+    layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::ENV_ATTACK_ID, "Attack Speed",        NormalisableRange(0.f, 1000.f, 1.f), 100.f));
+    layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::ENV_RELEASE_ID, "Release Speed",        NormalisableRange(0.f, 1000.f, 1.f), 100.f));
+    layout.add(std::make_unique<AudioParameterBool>(parameter_constants::ENV_ADVANCED_ID, "Advanced", false));
     layout.add(std::make_unique<AudioParameterBool>(parameter_constants::ENV_SPEED_ID, "Env Speed", false));
     layout.add(std::make_unique<AudioParameterBool>(parameter_constants::TWO_FOUR_POLE_ID, "12/24", false));
 
@@ -153,7 +157,9 @@ void Auto_AudioProcessor::updateAllParameters()
     chain.get<filterIndex>().setResonance(apvts.getRawParameterValue(parameter_constants::RESONANCE_ID)->load());
     chain.get<filterIndex>().setDrive(apvts.getRawParameterValue(parameter_constants::DRIVE_ID)->load());
     chain.get<filterIndex>().setEnvAmountPercent(apvts.getRawParameterValue(parameter_constants::ENV_AMOUNT_ID)->load());
-    chain.get<followerIndex>().setAmount(apvts.getRawParameterValue(parameter_constants::ENV_AMOUNT_ID)->load());
+    chain.get<followerIndex>().setAttack(apvts.getRawParameterValue(parameter_constants::ENV_ATTACK_ID)->load());
+    chain.get<followerIndex>().setRelease(apvts.getRawParameterValue(parameter_constants::ENV_RELEASE_ID)->load());
+    //chain.get<followerIndex>().setAmount(apvts.getRawParameterValue(parameter_constants::ENV_AMOUNT_ID)->load()); //TODO: remove? or use?
     chain.get<mixerIndex>().setMix(apvts.getRawParameterValue(parameter_constants::MIX_ID)->load());
 }
 

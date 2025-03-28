@@ -13,6 +13,11 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     resonance("Reso"),
     mix("Mix"),
     outputGain("Out"),
+    attack("Attack"),
+    release("Release"),
+    envSpeed("Speed"),
+    twoFourPole("Mode"),
+    envAdvanced("Advanced"),
     graphDisplay(processor.getGraph()),
     inputMeter(processor.getInputMeter()),
     outputMeter(processor.getOutputMeter()),
@@ -23,8 +28,11 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     resoA(processor.apvts, parameter_constants::RESONANCE_ID, resonance),
     mixA(processor.apvts, parameter_constants::MIX_ID, mix),
     outA(processor.apvts, parameter_constants::OUTPUT_GAIN_ID, outputGain),
+    envatA(processor.apvts, parameter_constants::ENV_ATTACK_ID, attack),
+    envrelA(processor.apvts, parameter_constants::ENV_RELEASE_ID, release),
     envspA(processor.apvts, parameter_constants::ENV_SPEED_ID, envSpeed),
-    twoA(processor.apvts, parameter_constants::TWO_FOUR_POLE_ID, twoFourPole)
+    twoA(processor.apvts, parameter_constants::TWO_FOUR_POLE_ID, twoFourPole),
+    envadvA(processor.apvts, parameter_constants::ENV_ADVANCED_ID, envAdvanced)
 {
     setLookAndFeel(&lookAndFeel);
     setSize (800, 428);
@@ -36,7 +44,12 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
         addAndMakeVisible(comp);
     }
 
-    for (auto& slide : sliders)
+    for (auto& slide : mainSliders)
+    {
+        slide->init();
+    }
+
+    for (auto& slide : timeSliders)
     {
         slide->init();
     }
@@ -49,6 +62,7 @@ Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
 
 void Auto_AudioProcessorEditor::resized()
 {
+    //TODO: replace magic numbers with consts or somethign more flexy
     auto rect = getLocalBounds();
     // Title Bar --------------------
     auto titleBounds = rect.removeFromTop(28);
@@ -59,7 +73,7 @@ void Auto_AudioProcessorEditor::resized()
     parameterGroup.setBounds(parameterBounds);
 
     // Sliders
-    for(auto* slider: sliders)
+    for(auto* slider: mainSliders)
     {
         parameterGroup.addChildComponent(slider);
         auto bounds = parameterBounds.removeFromLeft(100);
@@ -71,6 +85,21 @@ void Auto_AudioProcessorEditor::resized()
     parameterBounds = parameterBounds.removeFromLeft(100);
     for(auto* button: buttons)
     {
+        if(button->getComponentID() == envSpeed.getComponentID())
+        {
+            if(envAdvanced.getToggleState())
+            {
+                button->setBounds(parameterBounds.removeFromTop(50).reduced(10,13));
+            }
+            else
+            {
+                auto ARrect = parameterBounds.removeFromTop(50).reduced(5,5);
+                for(auto* slider : timeSliders)
+                {
+                    slider->setBounds(ARrect.removeFromLeft(50).reduced(5,5));
+                }
+            }
+        }
         button->setBounds(parameterBounds.removeFromTop(50).reduced(10,13));
     }
 
