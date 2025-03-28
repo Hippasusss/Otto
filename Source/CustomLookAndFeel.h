@@ -14,7 +14,7 @@ Author:  Danny Herbert
 class CustomLookAndFeel: public LookAndFeel_V4 
 {
     public:
-        const Font font {"Futara", 15, Font::bold};
+        const Font font {FontOptions{"Futara", 15, Font::bold}};
         CustomLookAndFeel()
         {
             setColour(Slider::ColourIds::rotarySliderOutlineColourId, colour_constants::main);
@@ -136,7 +136,7 @@ class CustomLookAndFeel2: public LookAndFeel_V4
         void drawLabel(Graphics& graphics, Label& label) override
         {
             label.setInterceptsMouseClicks(false,false);
-            const Font font {"Futara", 15, Font::plain};
+            const Font font {FontOptions{"Futara", 15, Font::plain}};
             const String text = label.getText();
             const Rectangle<int> fillArea = getLocalComponentArea<int>(label);
             graphics.setFont(font);
