@@ -21,9 +21,9 @@ private:
     Auto_AudioProcessor& processor;
 
     LabeledSlider inputGain, drive, envAmount, frequency, resonance, mix, outputGain;
-    Slider attack, release;
+    LabeledSlider attack, release;
     ToggleButton envSpeed, twoFourPole, envAdvanced;
-    GroupComponent parameterGroup;
+    GroupComponent mainParameterGroup, buttonParameterGroup;
     TitleBar titleBar;
     GraphDisplay graphDisplay;
     MeterDisplay inputMeter, outputMeter;
@@ -41,14 +41,15 @@ private:
         &release, 
         &envSpeed, 
         &twoFourPole, 
-        &parameterGroup, 
+        &mainParameterGroup, 
+        &buttonParameterGroup, 
         &graphDisplay,
         &inputMeter, 
         &outputMeter, 
         &titleBar, 
         &envAdvanced};
     std::array<LabeledSlider*, 7> mainSliders {&inputGain, &drive, &envAmount, &frequency, &resonance, &mix, &outputGain};
-    std::array<Slider*, 2> timeSliders{&attack, &release};
+    std::array<LabeledSlider*, 2> timeSliders{&attack, &release};
     std::array<ToggleButton*, 3> buttons{&envSpeed, &twoFourPole, &envAdvanced};
 
     AudioProcessorValueTreeState::SliderAttachment inA, driveA, envA, freqA, resoA, mixA, outA, envatA, envrelA;
