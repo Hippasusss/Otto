@@ -77,10 +77,18 @@ void LabeledSlider::resized() {
     constexpr size_t SPACING_BETWEEN_LABEL_AND_SLIDER = 5;
     auto bounds = getLocalBounds();
     const auto valueBounds = getLocalBounds().reduced(10, slider.getBounds().getHeight()/2 -7);
-    slider.setBounds(bounds.removeFromTop(bounds.getHeight() * SLIDER_PERCENT_OF_HEIGHT));
     sliderValueLabel.setBounds(valueBounds);
-    bounds.removeFromTop(SPACING_BETWEEN_LABEL_AND_SLIDER);
-    sliderNameLabel.setBounds(bounds);
+    if(!hiddenLabel)
+    {
+        slider.setBounds(bounds.removeFromTop(bounds.getHeight() * SLIDER_PERCENT_OF_HEIGHT));
+        bounds.removeFromTop(SPACING_BETWEEN_LABEL_AND_SLIDER);
+        sliderNameLabel.setBounds(bounds);
+    }
+    else
+    {
+        slider.setBounds(bounds);
+        sliderNameLabel.setVisible(false);
+    }
 }
 void LabeledSlider::setDefault(float newDefault, bool setValueToo) {
     defaultValue = newDefault;
