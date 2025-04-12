@@ -117,7 +117,7 @@ void FilterFollower<SampleType>::setEnvAmountPercent(SampleType newAmount) noexc
 {
     jassert (newAmount >= SampleType(0));
     SampleType remainingHz = cutoffFreqMaxHz - cutoffFreqHz;
-    envAmountHz = remainingHz * newAmount;
+    envAmountHz = remainingHz * newAmount / 100.0f;
     updateEnvAmount();
 }
 

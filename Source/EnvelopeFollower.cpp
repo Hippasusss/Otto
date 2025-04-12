@@ -18,9 +18,10 @@ EnvelopeFollower::EnvelopeFollower():
     numChannels(2),
     maxBlockSize(0),
     amount(0),
-    attackTime(100.0f),
-    releaseTime(100.0f),
-    envelopeOutput(0)
+    attackTime(10.0f),
+    releaseTime(10.0f),
+    envelopeOutput{},
+    envelopeState{}
 {
     setAttack(attackTime);
     setRelease(releaseTime);
@@ -50,9 +51,9 @@ void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& contex
         {
             const float sample = std::fabs(inputBlock.getSample(channelIndex, sampleIndex));
             if (sample > envelopeState[channelIndex]) 
-                envelopeState[channelIndex] = attackAlpha * envelopeState[channelIndex] + (1 - attackAlpha) * sample;
+                envelopeState[channelIndex] = attackAlpha * envelopeState[channelIndex] + (1 - attackAlpha) * sample * 10;
             else
-                envelopeState[channelIndex] = releaseAlpha * envelopeState[channelIndex] + (1 - releaseAlpha) * sample;
+                envelopeState[channelIndex] = releaseAlpha * envelopeState[channelIndex] + (1 - releaseAlpha) * sample * 10;
 
             envelopeOutput[sampleIndex] = (channelIndex == 0) ? 
                 envelopeState[channelIndex] : 
@@ -68,14 +69,14 @@ void EnvelopeFollower::reset()
 void EnvelopeFollower::setAttack(const float milliseconds)
 {
     attackTime = milliseconds;
-    attackAlpha = exp(-1.0f / (sampleRate * attackTime));
+    attackAlpha = exp(-1000.0f / (sampleRate * attackTime));
 
 }
 
 void EnvelopeFollower::setRelease(const float milliseconds)
 {
     releaseTime = milliseconds;
-    releaseAlpha = exp(-1.0f / (sampleRate * releaseTime));
+    releaseAlpha = exp(-1000.0f / (sampleRate * releaseTime));
 }
 
 void EnvelopeFollower::setAmount(float newAmount)

@@ -91,18 +91,16 @@ public:
         jassert (inputBlock.getNumChannels() == numChannels);
         jassert (inputBlock.getNumSamples()  == numSamples);
 
-
         if (! enabled || context.isBypassed)
         {
             outputBlock.copyFrom (inputBlock);
             return;
         }
-
-	const auto& envelope = follower->getEnvelope();
+        const auto& envelope = follower->getEnvelope();
         for (size_t n = 0; n < numSamples; ++n)
         {
-	    cuttoffFreqModifierHz = envTransformValue * envelope[n];
-	    updateCutoffFreq();
+            cuttoffFreqModifierHz = envTransformSmoother.getNextValue() * envelope[n]; 
+            updateCutoffFreq();
             updateSmoothers();
             for (size_t ch = 0; ch < numChannels; ++ch)
                 outputBlock.getChannelPointer (ch)[n] = processSample (inputBlock.getChannelPointer (ch)[n], ch);
