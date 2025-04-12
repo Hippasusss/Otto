@@ -13,8 +13,8 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     resonance("Reso"),
     mix("Mix"),
     outputGain("Out"),
-    attack("Attack", true),
-    release("Release", true),
+    attack("Atk"),
+    release("Rel"),
     envSpeed("Slo/Fst"),
     twoFourPole("12/24"),
     envAdvanced(""),
@@ -84,6 +84,9 @@ void Auto_AudioProcessorEditor::resized()
     constexpr int BUTTON_PADDING = 10;
     constexpr int BUTTON_VERTICAL_PADDING = 5;
     constexpr int BUTTON_HEIGHT_RATIO = 2;
+    constexpr int BUTTON_AREA_PAD_TOP_AND_BOTTOM = 4;
+
+    constexpr int SMALL_SLIDER_PADDING = 4;
     constexpr int METER_PADDING_X = 7;
     constexpr int METER_PADDING_Y = 6;
     constexpr int METER_WIDTH = 20;
@@ -109,6 +112,8 @@ void Auto_AudioProcessorEditor::resized()
     auto localButtonArea = buttonParameterGroup.getLocalBounds();
     auto topButtonArea = localButtonArea.removeFromTop(buttonArea.getHeight() / BUTTON_HEIGHT_RATIO);
     auto bottomButtonArea = localButtonArea.removeFromTop(buttonArea.getHeight() / BUTTON_HEIGHT_RATIO);
+    topButtonArea.removeFromTop(BUTTON_AREA_PAD_TOP_AND_BOTTOM);
+    bottomButtonArea.removeFromBottom(BUTTON_AREA_PAD_TOP_AND_BOTTOM);
 
     if(envAdvanced.getToggleState())
     {
@@ -117,7 +122,7 @@ void Auto_AudioProcessorEditor::resized()
         {
             slider->setVisible(true);
         }
-        Helpers::distibuteComponentsEvenlyInRectHorizontally(timeSliders, topButtonArea, 4);
+        Helpers::distibuteComponentsEvenlyInRectHorizontally(timeSliders, topButtonArea, SMALL_SLIDER_PADDING);
         twoFourPole.setBounds(bottomButtonArea.reduced(BUTTON_PADDING));
     }
     else
