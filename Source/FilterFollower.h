@@ -79,6 +79,8 @@ public:
 
     void setEnvFollowerPtr(EnvelopeFollower* ptr);
 
+    float getFilterFequencyDelta();
+
     //==============================================================================
     void process (const dsp::ProcessContextReplacing<SampleType>& context) noexcept
     {
@@ -134,7 +136,7 @@ private:
                                                      SampleType (-5), SampleType (5), 128 };
 
     SampleType cutoffFreqHz { SampleType (200) };
-    SampleType cuttoffFreqModifierHz { SampleType (0)};
+    std::atomic<SampleType> cuttoffFreqModifierHz { SampleType (0)};
     SampleType envAmountHz { SampleType (0)};
     SampleType resonance;
 

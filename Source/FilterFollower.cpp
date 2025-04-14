@@ -121,6 +121,11 @@ void FilterFollower<SampleType>::setEnvAmountPercent(SampleType newAmount) noexc
     updateEnvAmount();
 }
 
+template <typename SampleType>
+float FilterFollower<SampleType>::getFilterFequencyDelta()
+{
+    return cuttoffFreqModifierHz;
+}
 //==============================================================================
 template <typename SampleType>
 SampleType FilterFollower<SampleType>::processSample (SampleType inputValue, size_t channelToUse) noexcept

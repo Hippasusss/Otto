@@ -11,7 +11,7 @@
 #include "Graph.h"
 
 
-Graph::Graph() : displayData(44100), sumBuffer()
+Graph::Graph() : sumBuffer(), audioDisplayData(44100)
 {
 }
 
@@ -21,7 +21,7 @@ void Graph::prepare(const dsp::ProcessSpec& spec)
 	sampleRate = spec.sampleRate;
 
 	sumBufferSize = sampleRate / 150; // divides samplerates nicely 
-	displayData.resize(sampleRate);
+	audioDisplayData.resize(sampleRate);
 	sumBuffer.setSize(numChannels, sumBufferSize);
 	sumBuffer.clear();
 }
@@ -48,20 +48,21 @@ void Graph::process(const dsp::ProcessContextReplacing<float>& context)
 		if (sumIndex == 0)
 		{
 			auto value = Helpers::getNormalisedDB(Helpers::getAverageMagnitude(sumBuffer), -60.0f);
-			displayData.writeValue(value);
+			audioDisplayData.writeValue(value);
 		}
 	}
-
-
-
-
 }
 
 void Graph::reset()
 {
 }
 
-void Graph::fillVectorWithDisplayData(std::vector<float>& data)
+void Graph::fillVectorWithAudioDisplayData(std::vector<float>& data)
 {
-	displayData.readPreviousValues(data);
+	audioDisplayData.readPreviousValues(data);
+}
+
+void Graph::fillVectorWithEnvelopeDisplayData(std::vector<float>& data)
+{
+	audioDisplayData.readPreviousValues(data);
 }

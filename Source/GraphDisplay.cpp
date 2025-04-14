@@ -51,7 +51,7 @@ void GraphDisplay::resized()
 
 void GraphDisplay::timerCallback()
 {
-	graph->fillVectorWithDisplayData(displayVector);
+	graph->fillVectorWithAudioDisplayData(displayVector);
 	repaint();
 }
 
