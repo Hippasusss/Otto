@@ -21,7 +21,8 @@ EnvelopeFollower::EnvelopeFollower():
     attackTime(10.0f),
     releaseTime(10.0f),
     envelopeOutput{},
-    envelopeState{}
+    envelopeState{},
+    envelopeDisplayData{44100}
 {
     setAttack(attackTime);
     setRelease(releaseTime);
@@ -38,6 +39,7 @@ void EnvelopeFollower::prepare(const dsp::ProcessSpec& spec)
     envelopeState.resize(numChannels);
     setAttack(attackTime);
     setRelease(releaseTime);
+    envelopeDisplayData.resize(sampleRate);
 }
 
 void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& context) 
@@ -60,6 +62,7 @@ void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& contex
                 std::max(envelopeOutput[sampleIndex], envelopeState[channelIndex]);
         }
     }
+    envelopeDisplayData.writeValues(envelopeOutput);
 }
 
 void EnvelopeFollower::reset()
