@@ -20,6 +20,7 @@ class RingBuffer
 public:
 	virtual ~RingBuffer() = default;
 	virtual void writeValue(ValueType);
+	virtual void writeValues(ContainerType&);
 	virtual ValueType readValue();
 	virtual void readPreviousValues(ContainerType& values);
 
@@ -52,7 +53,14 @@ void RingBuffer<ValueType, ContainerType>::writeValue(ValueType value)
 	valueArray[writeIndex] = value;
 	++writeIndex %= size;
 }
-
+template <typename ValueType, typename ContainerType>
+void RingBuffer<ValueType, ContainerType>::writeValues(ContainerType& values)
+{
+    for (const auto& value : values) {
+        valueArray[writeIndex] = value;
+	    ++writeIndex %= size;
+    }
+}
 template <typename ValueType, typename ContainerType>
 ValueType RingBuffer<ValueType, ContainerType>::readValue()
 {
