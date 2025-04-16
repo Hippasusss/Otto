@@ -12,6 +12,7 @@ Author:  Danny Herbert
 
 #include <JuceHeader.h>
 #include "CustomLookAndFeel.h"
+#include "EnvelopeFollower.h"
 #include "Graph.h"
 
 class GraphDisplay : public Component,
@@ -29,7 +30,9 @@ public:
 
 private:
 	Graph* graph;
-	std::vector<float> displayVector;
+	EnvelopeFollower* envelopeFollower;
+	std::vector<float> displayAudioVector;
+	std::vector<float> displayEnvelopeVector;
 	CustomLookAndFeel2 lookAndFeel2;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GraphDisplay)
