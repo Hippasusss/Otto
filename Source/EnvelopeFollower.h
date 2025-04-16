@@ -15,31 +15,33 @@ Author:  Danny Herbert
 class EnvelopeFollower: dsp::ProcessorBase
 {
 
-    public:
-        EnvelopeFollower();
-        ~EnvelopeFollower();
+public:
+    EnvelopeFollower();
+    ~EnvelopeFollower();
 
-        void process(const dsp::ProcessContextReplacing<float>&) override;
-        void prepare(const dsp::ProcessSpec&) override;
-        void reset() override;
+    void process(const dsp::ProcessContextReplacing<float>&) override;
+    void prepare(const dsp::ProcessSpec&) override;
+    void reset() override;
 
-        void setAttack(float milliseconds);
-        void setRelease(float milliseconds);
-        void setAmount(float newAmount);
-        float getAmount();
-        const std::vector<float>& getEnvelope() const;
-        std::function<void(float)> onValueCalculated;
+    void setAttack(float milliseconds);
+    void setRelease(float milliseconds);
+    void setAmount(float newAmount);
+    float getAmount();
+    const std::vector<float>& getEnvelope() const;
+    std::function<void(float)> onValueCalculated;
 
-    private:
-        double sampleRate;
-        unsigned int numChannels;
-        unsigned int maxBlockSize;
+private:
+    double sampleRate;
+    unsigned int numChannels;
+    unsigned int maxBlockSize;
 
-        float amount;
-        float attackTime, releaseTime;
-        float attackAlpha, releaseAlpha;
+    float amount;
+    float attackTime, releaseTime;
+    float attackAlpha, releaseAlpha;
 
-        std::vector<float> envelopeOutput;
-        std::vector<float> envelopeState;
+    std::vector<float> envelopeOutput;
+    std::vector<float> envelopeState;
+    RingBufferVector<float> envelopeDisplayData;
+
 };
 
