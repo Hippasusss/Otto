@@ -21,7 +21,7 @@ class GraphDisplay : public Component,
 public:
 	static const int RING_BUFFER_SIZE = 300; // 300 is highest common factor of all sample rates. 
 
-	GraphDisplay(Graph* newGraph);
+	GraphDisplay(Graph* newGraph, EnvelopeFollower* newEnvelopeFollower);
 	~GraphDisplay();
 
 	void paint(Graphics&) override;

@@ -29,6 +29,7 @@ public:
     float getAmount();
     const std::vector<float>& getEnvelope() const;
     std::function<void(float)> onValueCalculated;
+    void fillVectorWithEnvelopeDisplayData(std::vector<float>& data);
 
 private:
     double sampleRate;

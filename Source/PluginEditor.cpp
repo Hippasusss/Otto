@@ -18,7 +18,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     envSpeed("Slo/Fst"),
     twoFourPole("12/24"),
     envAdvanced(""),
-    graphDisplay(processor.getGraph()),
+    graphDisplay(processor.getGraph(), processor.getEnvelopeFollower()),
     inputMeter(processor.getInputMeter()),
     outputMeter(processor.getOutputMeter()),
     inA(processor.apvts, parameter_constants::INPUT_GAIN_ID, inputGain.getSlider()), 

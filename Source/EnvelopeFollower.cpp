@@ -98,3 +98,7 @@ const std::vector<float>& EnvelopeFollower::getEnvelope() const
     return envelopeOutput;
 }
 
+void EnvelopeFollower::fillVectorWithEnvelopeDisplayData(std::vector<float>& data)
+{
+	envelopeDisplayData.readPreviousValues(data);
+}
