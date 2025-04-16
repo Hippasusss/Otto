@@ -21,12 +21,10 @@ public:
 	void reset() override;
 
     void fillVectorWithAudioDisplayData(std::vector<float>& data);
-    void fillVectorWithEnvelopeDisplayData(std::vector<float>& data);
 
 private:
     AudioBuffer<float> sumBuffer;
     RingBufferVector<float> audioDisplayData;
-    RingBufferVector<float> envelopeDisplayData;
     size_t numChannels;
     size_t sampleRate;
     size_t sumBufferSize;
