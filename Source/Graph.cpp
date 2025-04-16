@@ -64,5 +64,5 @@ void Graph::fillVectorWithAudioDisplayData(std::vector<float>& data)
 
 void Graph::fillVectorWithEnvelopeDisplayData(std::vector<float>& data)
 {
-	audioDisplayData.readPreviousValues(data);
+	envelopeDisplayData.readPreviousValues(data);
 }

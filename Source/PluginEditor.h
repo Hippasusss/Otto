@@ -28,6 +28,7 @@ private:
     GraphDisplay graphDisplay;
     MeterDisplay inputMeter, outputMeter;
     CustomLookAndFeel lookAndFeel;
+    CustomLookAndFeel2 lookAndFeel2;
     
     std::array<Component*, 18> components 
        {&inputGain, 
