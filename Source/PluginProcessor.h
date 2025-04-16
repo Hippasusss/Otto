@@ -41,9 +41,8 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    const EnvelopeFollower& getEnvelopeFollower() const;
-    const FilterFollower<float>& getLadderFilter() const;
-    /*const dsp::LadderFilter<float>& getLadderFilter() const;*/
+    EnvelopeFollower* getEnvelopeFollower();
+    FilterFollower<float>* getLadderFilter();
     Meter* getInputMeter();
     Meter* getOutputMeter();
     Graph* getGraph();

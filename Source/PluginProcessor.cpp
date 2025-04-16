@@ -104,14 +104,14 @@ void Auto_AudioProcessor::releaseResources()
     chain.reset();
 }
 
-const EnvelopeFollower& Auto_AudioProcessor::getEnvelopeFollower() const
+EnvelopeFollower* Auto_AudioProcessor::getEnvelopeFollower() 
 {
-    return chain.get<followerIndex>();
+    return &chain.get<followerIndex>();
 }
 
-const FilterFollower<float>& Auto_AudioProcessor::getLadderFilter() const
+FilterFollower<float>* Auto_AudioProcessor::getLadderFilter() 
 {
-    return chain.get<filterIndex>();
+    return &chain.get<filterIndex>();
 }
 
 Meter* Auto_AudioProcessor::getInputMeter() 
