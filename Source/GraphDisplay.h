@@ -19,7 +19,7 @@ class GraphDisplay : public Component,
 	public Timer
 {
 public:
-	static const int RING_BUFFER_SIZE = 300; // 300 is highest common factor of all sample rates. 
+	static const int RING_BUFFER_SIZE = 10000;
 
 	GraphDisplay(Graph* newGraph, EnvelopeFollower* newEnvelopeFollower);
 	~GraphDisplay();
@@ -33,6 +33,8 @@ private:
 	EnvelopeFollower* envelopeFollower;
 	std::vector<float> displayAudioVector;
 	std::vector<float> displayEnvelopeVector;
+    RingBufferVector<float> displayAudioRB;
+    RingBufferVector<float> displayEnvelopeRB;
 	CustomLookAndFeel2 lookAndFeel2;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GraphDisplay)

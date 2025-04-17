@@ -45,14 +45,14 @@ void GraphDisplay::paint(Graphics& graphics)
     graphics.fillPath(pathAudio);
 
     // Draw Envelope
-    graphics.setColour(colour_constants::main);
+    graphics.setColour(colour_constants::red);
 
     const int numPointsInPathEnvelope = displayEnvelopeVector.size();
     const float segmentWidthEnvelope = static_cast<float>(width)/ numPointsInPathEnvelope;
 
     Path pathEnvelope = Path();
     pathEnvelope.preallocateSpace(numPointsInPathEnvelope * 3);
-    pathEnvelope.startNewSubPath(0, height - (0));
+    pathEnvelope.startNewSubPath(0, height - (displayEnvelopeVector[0] * height));
     for (int i = 1; i < numPointsInPathEnvelope; i++)
     {
         pathEnvelope.lineTo(i * segmentWidthEnvelope, height - (displayEnvelopeVector[i] * height) );
@@ -60,6 +60,7 @@ void GraphDisplay::paint(Graphics& graphics)
 
     PathStrokeType stroke(1.0f); 
     stroke.setEndStyle(PathStrokeType::rounded); 
+    stroke.setStrokeThickness(3);
     graphics.strokePath(pathEnvelope, stroke);
 
 }
