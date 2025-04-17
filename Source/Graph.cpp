@@ -11,7 +11,7 @@
 #include "Graph.h"
 
 
-Graph::Graph() : sumBuffer(), audioDisplayData(44100)
+Graph::Graph() :  audioDisplayData(44100)
 {
 }
 
@@ -20,37 +20,25 @@ void Graph::prepare(const dsp::ProcessSpec& spec)
 	numChannels = spec.numChannels;
 	sampleRate = spec.sampleRate;
 
-	sumBufferSize = sampleRate / 150; // divides samplerates nicely 
 	audioDisplayData.resize(sampleRate);
-	sumBuffer.setSize(numChannels, sumBufferSize);
-	sumBuffer.clear();
 }
 
 void Graph::process(const dsp::ProcessContextReplacing<float>& context)
 {
-	static size_t sumIndex = 0;
-	const dsp::AudioBlock<const float>sourceBlock = context.getInputBlock();
-	const size_t numSamplesInput = sourceBlock.getNumSamples();
-	size_t samplesRemaining = numSamplesInput;
+    const dsp::AudioBlock<const float> sourceBlock = context.getInputBlock();
+    const size_t numSamples = sourceBlock.getNumSamples();
+    const size_t numChannels = sourceBlock.getNumChannels();
 
-	while (samplesRemaining > 0)
-	{
-		const size_t numWriteSamples = (samplesRemaining > sumBufferSize ? sumBufferSize : samplesRemaining) - sumIndex;
-		// for all channels
-		for (size_t channelIndex = 0; channelIndex < sourceBlock.getNumChannels(); ++channelIndex)
-		{
-			const auto* channelPointer = sourceBlock.getChannelPointer(channelIndex);
-			sumBuffer.copyFrom(channelIndex, sumIndex, channelPointer, numWriteSamples);
-		}
-		sumIndex += numWriteSamples;
-		sumIndex %= sumBufferSize;
-		samplesRemaining -= numWriteSamples;
-		if (sumIndex == 0)
-		{
-			auto value = Helpers::getNormalisedDB(Helpers::getAverageMagnitude(sumBuffer), -60.0f);
-			audioDisplayData.writeValue(value);
-		}
-	}
+    for (size_t sampleIndex = 0; sampleIndex < numSamples; ++sampleIndex)
+    {
+        float sum = 0.0f;
+        for (size_t channelIndex = 0; channelIndex < numChannels; ++channelIndex)
+        {
+            sum += sourceBlock.getChannelPointer(channelIndex)[sampleIndex];
+        }
+        float average = sum / static_cast<float>(numChannels);
+        audioDisplayData.writeValue(average);
+    }
 }
 
 void Graph::reset()
