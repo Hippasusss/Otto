@@ -53,9 +53,9 @@ void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& contex
         {
             const float sample = std::fabs(inputBlock.getSample(channelIndex, sampleIndex));
             if (sample > envelopeState[channelIndex]) 
-                envelopeState[channelIndex] = attackAlpha * envelopeState[channelIndex] + (1 - attackAlpha) * sample * 10;
+                envelopeState[channelIndex] = attackAlpha * envelopeState[channelIndex] + (1 - attackAlpha) * sample;
             else
-                envelopeState[channelIndex] = releaseAlpha * envelopeState[channelIndex] + (1 - releaseAlpha) * sample * 10;
+                envelopeState[channelIndex] = releaseAlpha * envelopeState[channelIndex] + (1 - releaseAlpha) * sample;
 
             envelopeOutput[sampleIndex] = (channelIndex == 0) ? 
                 envelopeState[channelIndex] : 
