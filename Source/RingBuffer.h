@@ -22,7 +22,9 @@ public:
 	virtual void writeValue(ValueType);
 	virtual void writeValues(ContainerType&);
 	virtual ValueType readValue();
+    virtual ContainerType readAllValues();
 	virtual void readPreviousValues(ContainerType& values);
+    virtual void copyToOtherRingBuffer(RingBuffer< ValueType, ContainerType>& other);
 
 	virtual size_t getSize() const;
 	virtual ValueType operator[](size_t i);
@@ -47,26 +49,82 @@ RingBuffer<ValueType, ContainerType>::RingBuffer(size_t size) : valueArray(size,
 {
 }
 
+// writes one value to the ring buffer and moves the write index forward
 template <typename ValueType, typename ContainerType>
 void RingBuffer<ValueType, ContainerType>::writeValue(ValueType value)
 {
 	valueArray[writeIndex] = value;
 	++writeIndex %= size;
 }
+
+// writes container of data to the ring buffer and moves the write index forward
 template <typename ValueType, typename ContainerType>
 void RingBuffer<ValueType, ContainerType>::writeValues(ContainerType& values)
 {
-    for (const auto& value : values) {
+    for (const auto& value : values) 
+    {
         valueArray[writeIndex] = value;
 	    ++writeIndex %= size;
     }
 }
+
+// returns a value and moves the readIndex forward
 template <typename ValueType, typename ContainerType>
 ValueType RingBuffer<ValueType, ContainerType>::readValue()
 {
 	const ValueType returnValue = valueArray[readIndex];
 	++readIndex %= size;
 	return returnValue;
+}
+
+// returns a copy of values and moves the readIndex forward
+template <typename ValueType, typename ContainerType>
+ContainerType RingBuffer<ValueType, ContainerType>::readAllValues() 
+{
+    ContainerType values;
+    const size_t available = (writeIndex + size - readIndex - 1) % size;
+    values.resize(available);
+    
+    const size_t firstChunk = std::min(available, size - readIndex);
+    std::copy_n(&valueArray[readIndex], firstChunk, values.begin());
+    
+    if (firstChunk < available) {
+        std::copy_n(&valueArray[0], available - firstChunk, values.begin() + firstChunk);
+    }
+    
+    readIndex = (readIndex + available) % size;
+    return values;
+}
+
+
+// copies into provided array/container. copies as many as 
+// can into given size. doesn't take into account the 
+// readIndex or advance it. will always return the most
+// recently written values
+//
+// -----|----------------|-|---
+//    n ^                ^ ^ write pointer
+//      ^-This is copied-^
+//      
+template <typename ValueType, typename ContainerType>
+void RingBuffer<ValueType, ContainerType>::readPreviousValues(ContainerType& values)
+{
+    const size_t inputSize = std::min(values.size(), size);
+    if (inputSize == 0) return;
+    
+    const size_t writeIndexLocal = writeIndex;
+
+    for (size_t i = 0; i < inputSize; i++)
+    {
+        const size_t copyIndex = (writeIndexLocal - inputSize + i + size) % size;
+        values[i] = valueArray[copyIndex];
+    }
+}
+
+template <typename ValueType, typename ContainerType>
+void RingBuffer<ValueType, ContainerType>::copyToOtherRingBuffer(RingBuffer<ValueType, ContainerType>& other)
+{
+    writeValue(other.readValue());
 }
 
 
@@ -81,25 +139,6 @@ template <typename ValueType, typename ContainerType>
 ValueType RingBuffer<ValueType, ContainerType>::operator[](size_t i)
 {
 	return valueArray[i];
-}
-
-// copies into provided array/container. copies as many as can into given size
-// --------------------|---------------------------|-|----------
-//                     ^ size             <i--- -1 ^ ^ write pointer
-//                     |------This is copied-------|
-//
-template <typename ValueType, typename ContainerType>
-void RingBuffer<ValueType, ContainerType>::readPreviousValues(ContainerType& values)
-{
-	const size_t inputSize = values.size();
-	const size_t writeIndexLocal = writeIndex; // take local value in case class member is changed in separate thread.
-
-	for (size_t i = 0; i < inputSize; i++)
-	{
-		// vile one liner takes care of wraparound of index when copying
-		const size_t copyIndex = ((((writeIndexLocal - (i + 1)) % size) + size) % size);
-		values[inputSize - 1 - i] = valueArray[copyIndex];
-	}
 }
 
 //===============================================================================
