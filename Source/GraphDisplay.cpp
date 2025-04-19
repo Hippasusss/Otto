@@ -20,49 +20,45 @@ GraphDisplay::GraphDisplay(Graph* newGraph, EnvelopeFollower* newEnvelopeFollowe
 }
 GraphDisplay::~GraphDisplay() = default;
 
+
+void GraphDisplay::drawPath(Graphics& graphics, const std::vector<float>& data, 
+                           Colour colour, bool shouldFill, float strokeThickness = 1.0f)
+{
+    graphics.setColour(colour);
+    
+    const int width = getBounds().getWidth();
+    const int height = getBounds().getHeight();
+    const int numPoints = data.size();
+    const float segmentWidth = static_cast<float>(width) / numPoints;
+
+    Path path;
+    path.preallocateSpace(numPoints * 3 + (shouldFill ? 4 : 0));
+    
+    if (shouldFill) {
+        path.startNewSubPath(0, height);
+    } else {
+        path.startNewSubPath(0, height - (data[0] * height));
+    }
+
+    for (int i = shouldFill ? 0 : 1; i < numPoints; i++) {
+        path.lineTo(i * segmentWidth, height - (data[i] * height));
+    }
+
+    if (shouldFill) {
+        path.lineTo(width, height);
+        path.closeSubPath();
+        graphics.fillPath(path);
+    } else {
+        PathStrokeType stroke(strokeThickness);
+        stroke.setEndStyle(PathStrokeType::rounded);
+        graphics.strokePath(path, stroke);
+    }
+}
+
 void GraphDisplay::paint(Graphics& graphics)
 {
-    // Draw Audio
-    graphics.setColour(colour_constants::lightMain);
-
-    const int width = getBounds().getWidth();
-    const int height = getBounds().getHeight(); 
-    const int numPointsInPathAudio = displayAudioVector.size();
-    const float segmentWidthAudio = static_cast<float>(width) / numPointsInPathAudio;
-
-    Path pathAudio = Path();
-    pathAudio.preallocateSpace(numPointsInPathAudio * 3 + 3 + 1); // * 3 for each line segment, +3 to end path,  +1 to close path
-    pathAudio.startNewSubPath(0, height);
-
-    for (int i = 0; i < numPointsInPathAudio; i++)
-    {
-        pathAudio.lineTo(i * segmentWidthAudio, height - (displayAudioVector[i] * height) );
-    }
-    pathAudio.lineTo(width, height);
-
-    pathAudio.closeSubPath();
-
-    graphics.fillPath(pathAudio);
-
-    // Draw Envelope
-    graphics.setColour(colour_constants::red);
-
-    const int numPointsInPathEnvelope = displayEnvelopeVector.size();
-    const float segmentWidthEnvelope = static_cast<float>(width)/ numPointsInPathEnvelope;
-
-    Path pathEnvelope = Path();
-    pathEnvelope.preallocateSpace(numPointsInPathEnvelope * 3);
-    pathEnvelope.startNewSubPath(0, height - (displayEnvelopeVector[0] * height));
-    for (int i = 1; i < numPointsInPathEnvelope; i++)
-    {
-        pathEnvelope.lineTo(i * segmentWidthEnvelope, height - (displayEnvelopeVector[i] * height) );
-    }
-
-    PathStrokeType stroke(1.0f); 
-    stroke.setEndStyle(PathStrokeType::rounded); 
-    stroke.setStrokeThickness(3);
-    graphics.strokePath(pathEnvelope, stroke);
-
+    drawPath(graphics, displayAudioVector, colour_constants::lightMain, true);
+    drawPath(graphics, displayEnvelopeVector, colour_constants::red, false, 3.0f);
 }
 
 void GraphDisplay::resized()

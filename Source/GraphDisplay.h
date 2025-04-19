@@ -24,6 +24,8 @@ public:
 	GraphDisplay(Graph* newGraph, EnvelopeFollower* newEnvelopeFollower);
 	~GraphDisplay();
 
+    void drawPath(Graphics& graphics, const std::vector<float>& data, 
+                           Colour colour, bool shouldFill, float strokeThickness);
 	void paint(Graphics&) override;
 	void timerCallback() override;
 	void resized() override;
