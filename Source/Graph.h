@@ -19,11 +19,9 @@ public:
 	void prepare(const dsp::ProcessSpec&) override;
 	void process(const dsp::ProcessContextReplacing<float>&) override;
 	void reset() override;
-
-    void fillVectorWithAudioDisplayData(std::vector<float>& data);
+    RingBufferVector<float> audioDisplayData;
 
 private:
-    RingBufferVector<float> audioDisplayData;
     size_t numChannels;
     size_t sampleRate;
 };

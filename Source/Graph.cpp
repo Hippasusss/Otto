@@ -45,7 +45,3 @@ void Graph::reset()
 {
 }
 
-void Graph::fillVectorWithAudioDisplayData(std::vector<float>& data)
-{
-	audioDisplayData.readPreviousValues(data);
-}

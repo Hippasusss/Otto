@@ -124,7 +124,7 @@ void RingBuffer<ValueType, ContainerType>::readPreviousValues(ContainerType& val
 template <typename ValueType, typename ContainerType>
 void RingBuffer<ValueType, ContainerType>::copyToOtherRingBuffer(RingBuffer<ValueType, ContainerType>& other)
 {
-    writeValue(other.readValue());
+    // writeValues(other.readAllValues());
 }
 
 

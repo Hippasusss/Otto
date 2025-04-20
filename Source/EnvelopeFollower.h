@@ -29,7 +29,7 @@ public:
     float getAmount();
     const std::vector<float>& getEnvelope() const;
     std::function<void(float)> onValueCalculated;
-    void fillVectorWithEnvelopeDisplayData(std::vector<float>& data);
+    RingBufferVector<float> envelopeDisplayData;
 
 private:
     double sampleRate;
@@ -42,7 +42,5 @@ private:
 
     std::vector<float> envelopeOutput;
     std::vector<float> envelopeState;
-    RingBufferVector<float> envelopeDisplayData;
-
 };
 

@@ -14,6 +14,7 @@ Author:  Danny Herbert
 #include "Helpers.h"
 
 EnvelopeFollower::EnvelopeFollower(): 
+    envelopeDisplayData{44100},
     sampleRate(44100),
     numChannels(2),
     maxBlockSize(0),
@@ -21,8 +22,7 @@ EnvelopeFollower::EnvelopeFollower():
     attackTime(10.0f),
     releaseTime(10.0f),
     envelopeOutput{},
-    envelopeState{},
-    envelopeDisplayData{44100}
+    envelopeState{}
 {
     setAttack(attackTime);
     setRelease(releaseTime);
@@ -98,7 +98,3 @@ const std::vector<float>& EnvelopeFollower::getEnvelope() const
     return envelopeOutput;
 }
 
-void EnvelopeFollower::fillVectorWithEnvelopeDisplayData(std::vector<float>& data)
-{
-	envelopeDisplayData.readPreviousValues(data);
-}
