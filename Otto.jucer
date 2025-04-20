@@ -36,6 +36,7 @@
       </GROUP>
       <GROUP id="{5C837F25-B0D1-9AE4-9897-114DE1C33272}" name="Components">
         <FILE id="qkxB0k" name="TitleBar.h" compile="0" resource="0" file="Source/TitleBar.h"/>
+        <FILE id="rAbf0g" name="DisplayData.h" compile="0" resource="0" file="Source/DisplayData.h"/>
         <FILE id="kbkoTG" name="TitleBar.cpp" compile="1" resource="0" file="Source/TitleBar.cpp"/>
         <FILE id="kX1FSF" name="MeterDisplay.cpp" compile="1" resource="0"
               file="Source/MeterDisplay.cpp"/>
