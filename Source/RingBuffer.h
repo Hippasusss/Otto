@@ -49,12 +49,11 @@ RingBuffer<ValueType, ContainerType>::RingBuffer(size_t size) : valueArray(size,
 {
 }
 
-// writes one value to the ring buffer and moves the write index forward
 template <typename ValueType, typename ContainerType>
 void RingBuffer<ValueType, ContainerType>::writeValue(ValueType value)
 {
-	valueArray[writeIndex] = value;
-	++writeIndex %= size;
+    valueArray[writeIndex] = value;
+    writeIndex = (writeIndex + 1) % size;  // Fixed: Proper modulo operation
 }
 
 // writes container of data to the ring buffer and moves the write index forward
@@ -77,14 +76,18 @@ ValueType RingBuffer<ValueType, ContainerType>::readValue()
 	return returnValue;
 }
 
-// returns a copy of values and moves the readIndex forward
+
 template <typename ValueType, typename ContainerType>
 ContainerType RingBuffer<ValueType, ContainerType>::readAllValues() 
 {
     ContainerType values;
-    const size_t available = (writeIndex + size - readIndex - 1) % size;
-    values.resize(available);
+    const size_t available = (writeIndex > readIndex) 
+        ? (writeIndex - readIndex) 
+        : (size - (readIndex - writeIndex));
     
+    if (available == 0) return values;
+    
+    values.resize(available);
     const size_t firstChunk = std::min(available, size - readIndex);
     std::copy_n(&valueArray[readIndex], firstChunk, values.begin());
     
@@ -95,7 +98,6 @@ ContainerType RingBuffer<ValueType, ContainerType>::readAllValues()
     readIndex = (readIndex + available) % size;
     return values;
 }
-
 
 // copies into provided array/container. copies as many as 
 // can into given size. doesn't take into account the 
