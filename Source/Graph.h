@@ -20,8 +20,4 @@ public:
 	void process(const dsp::ProcessContextReplacing<float>&) override;
 	void reset() override;
     RingBufferVector<float> audioDisplayData;
-
-private:
-    size_t numChannels;
-    size_t sampleRate;
 };
