@@ -12,8 +12,11 @@
 
 //==============================================================================
 
-GraphDisplay::GraphDisplay(Graph* newGraph, EnvelopeFollower* newEnvelopeFollower) : graph(newGraph), envelopeFollower(newEnvelopeFollower), audioDisplayData(newGraph->audioDisplayData), 
-envelopeDisplayData(newEnvelopeFollower->envelopeDisplayData)
+GraphDisplay::GraphDisplay(Graph* newGraph, EnvelopeFollower* newEnvelopeFollower) :
+    graph(newGraph),
+    envelopeFollower(newEnvelopeFollower),
+    audioDisplayData(newGraph->audioDisplayData),
+    envelopeDisplayData(newEnvelopeFollower->envelopeDisplayData)
 {
 	startTimerHz(timer_constants::REFRESH_RATE);
 }

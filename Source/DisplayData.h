@@ -14,9 +14,11 @@
 template <typename ValueType = float>
 class DisplayData {
 public:
-    DisplayData(RingBufferVector<ValueType>& sourceBuffer, size_t bufferSize = 400)
-        : sourceBuffer(sourceBuffer),
-        historyBuffer(bufferSize)
+    DisplayData(RingBufferVector<ValueType>& sourceBuffer, size_t bufferSize = 600) : 
+        sourceBuffer(sourceBuffer),
+        historyBuffer(bufferSize),
+        reductionFactor(bufferSize),
+        bufferSize(bufferSize)
     {
     }
 
@@ -42,13 +44,14 @@ public:
 
     std::vector<ValueType> getPreviousValues() const
     {
-        std::vector<ValueType> returnVector(400);
+        std::vector<ValueType> returnVector(bufferSize);
         historyBuffer.readPreviousValues(returnVector);
         return returnVector;
     }
 
 private:
-    const size_t reductionFactor = 100;
+    const size_t reductionFactor;
+    const size_t bufferSize;
     size_t nextReadPosition = 0;
     RingBufferVector<ValueType>& sourceBuffer;
     RingBufferVector<ValueType> historyBuffer;
