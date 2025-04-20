@@ -8,27 +8,27 @@
   ==============================================================================
 */
 
-#include <JuceHeader.h>
 #include "GraphDisplay.h"
-#include "Constants.h"
 
 //==============================================================================
 
-GraphDisplay::GraphDisplay(Graph* newGraph, EnvelopeFollower* newEnvelopeFollower) : graph(newGraph), envelopeFollower(newEnvelopeFollower),  displayAudioVector(RING_BUFFER_SIZE, 0), displayEnvelopeVector(RING_BUFFER_SIZE, 0)
+GraphDisplay::GraphDisplay(Graph* newGraph, EnvelopeFollower* newEnvelopeFollower) : graph(newGraph), envelopeFollower(newEnvelopeFollower), audioDisplayData(newGraph->audioDisplayData), 
+envelopeDisplayData(newEnvelopeFollower->envelopeDisplayData)
 {
 	startTimerHz(timer_constants::REFRESH_RATE);
 }
 GraphDisplay::~GraphDisplay() = default;
 
 
-void GraphDisplay::drawPath(Graphics& graphics, const std::vector<float>& data, 
+void GraphDisplay::drawPath(Graphics& graphics, const DisplayData<float>& data, 
                            Colour colour, bool shouldFill, float strokeThickness = 1.0f)
 {
     graphics.setColour(colour);
     
+    auto previousValues = data.getPreviousValues();
     const int width = getBounds().getWidth();
     const int height = getBounds().getHeight();
-    const int numPoints = data.size();
+    const int numPoints = previousValues.size();
     const float segmentWidth = static_cast<float>(width) / numPoints;
 
     Path path;
@@ -37,11 +37,11 @@ void GraphDisplay::drawPath(Graphics& graphics, const std::vector<float>& data,
     if (shouldFill) {
         path.startNewSubPath(0, height);
     } else {
-        path.startNewSubPath(0, height - (data[0] * height));
+        path.startNewSubPath(0, height - (previousValues[0] * height));
     }
 
     for (int i = shouldFill ? 0 : 1; i < numPoints; i++) {
-        path.lineTo(i * segmentWidth, height - (data[i] * height));
+        path.lineTo(i * segmentWidth, height - (previousValues[i] * height));
     }
 
     if (shouldFill) {
@@ -57,8 +57,8 @@ void GraphDisplay::drawPath(Graphics& graphics, const std::vector<float>& data,
 
 void GraphDisplay::paint(Graphics& graphics)
 {
-    drawPath(graphics, displayAudioVector, colour_constants::lightMain, true);
-    drawPath(graphics, displayEnvelopeVector, colour_constants::red, false, 3.0f);
+    drawPath(graphics, audioDisplayData, colour_constants::lightMain, true);
+    drawPath(graphics, envelopeDisplayData, colour_constants::red, false, 3.0f);
 }
 
 void GraphDisplay::resized()
@@ -67,9 +67,13 @@ void GraphDisplay::resized()
 
 void GraphDisplay::timerCallback()
 {
-	graph->fillVectorWithAudioDisplayData(displayAudioVector);
-    envelopeFollower->fillVectorWithEnvelopeDisplayData(displayEnvelopeVector);
+    envelopeDisplayData.updateValues();
+    audioDisplayData.updateValues();
 	repaint();
 }
+
+
+
+
 
 
