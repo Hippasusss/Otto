@@ -23,7 +23,7 @@ public:
 	virtual void writeValues(ContainerType&);
 	virtual ValueType readValue();
     virtual ContainerType readAllValues();
-	virtual void readPreviousValues(ContainerType& values);
+	virtual void readPreviousValues(ContainerType& values) const;
     virtual void copyToOtherRingBuffer(RingBuffer< ValueType, ContainerType>& other);
 
 	virtual size_t getSize() const;
@@ -107,7 +107,7 @@ ContainerType RingBuffer<ValueType, ContainerType>::readAllValues()
 //      ^-This is copied-^
 //      
 template <typename ValueType, typename ContainerType>
-void RingBuffer<ValueType, ContainerType>::readPreviousValues(ContainerType& values)
+void RingBuffer<ValueType, ContainerType>::readPreviousValues(ContainerType& values) const
 {
     const size_t inputSize = std::min(values.size(), size);
     if (inputSize == 0) return;
