@@ -31,10 +31,10 @@ void Graph::process(const dsp::ProcessContextReplacing<float>& context)
         float sum = 0.0f;
         for (size_t channelIndex = 0; channelIndex < numChannels; ++channelIndex)
         {
-            sum += sourceBlock.getChannelPointer(channelIndex)[sampleIndex];
+            sum += std::abs(sourceBlock.getChannelPointer(channelIndex)[sampleIndex]);
         }
         float average = sum / static_cast<float>(numChannels);
-        audioDisplayData.writeValue(average);
+        audioDisplayData.writeValue(average); 
     }
 }
 

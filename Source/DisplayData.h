@@ -31,16 +31,28 @@ public:
 
         if (sourceSize == 0) return;
 
-        for (size_t i = nextReadPosition; i < sourceSize; i += reductionFactor) 
+        size_t count = 0;
+        ValueType sum = runningSum;
+        size_t pos = 0;
+
+        while (pos < sourceSize)
         {
-            historyBuffer.writeValue(values[i]);
+            sum += values[pos++];
+            count++;
+
+            if (count == reductionFactor || pos == sourceSize)
+            {
+                ValueType avg = sum / count;
+                historyBuffer.writeValue(Helpers::getNormalisedDB(avg));
+                sum = 0;
+                count = 0;
+            }
         }
 
-        if (sourceSize > nextReadPosition) 
-        {
-            nextReadPosition = reductionFactor - ((sourceSize - nextReadPosition) % reductionFactor);
-        }
+        runningSum = sum;
+        nextReadPosition = count;
     }
+    
 
     std::vector<ValueType> getPreviousValues() const
     {
@@ -52,6 +64,7 @@ public:
 private:
     const size_t reductionFactor;
     const size_t bufferSize;
+    ValueType runningSum = 0;
     size_t nextReadPosition = 0;
     RingBufferVector<ValueType>& sourceBuffer;
     RingBufferVector<ValueType> historyBuffer;
