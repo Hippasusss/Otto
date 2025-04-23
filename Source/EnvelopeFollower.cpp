@@ -9,9 +9,8 @@ Author:  Danny Herbert
 */
 
 
-#include "JuceHeader.h"
+#include <JuceHeader.h>
 #include "EnvelopeFollower.h"
-#include "Helpers.h"
 
 EnvelopeFollower::EnvelopeFollower(): 
     envelopeDisplayData{44100},
