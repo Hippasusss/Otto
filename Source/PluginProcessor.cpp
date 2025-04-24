@@ -168,6 +168,11 @@ void Auto_AudioProcessor::updateAllParameters()
         filterFollower.setAttack(speed);
         filterFollower.setRelease(speed);
     }
+    if(apvts.getRawParameterValue(parameter_constants::TWO_FOUR_POLE_ID)->load())
+        chain.get<filterIndex>().setMode(LadderFilterMode::LPF12);
+    else
+        chain.get<filterIndex>().setMode(LadderFilterMode::LPF24);
+
     chain.get<followerIndex>().setAmount(apvts.getRawParameterValue(parameter_constants::ENV_AMOUNT_ID)->load()); 
     chain.get<mixerIndex>().setMix(apvts.getRawParameterValue(parameter_constants::MIX_ID)->load());
 }
