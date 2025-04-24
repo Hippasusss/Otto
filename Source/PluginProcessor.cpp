@@ -156,17 +156,17 @@ void Auto_AudioProcessor::updateAllParameters()
     chain.get<filterIndex>().setCutoffFrequencyHz(apvts.getRawParameterValue(parameter_constants::FREQUENCY_ID)->load());
     chain.get<filterIndex>().setResonance(apvts.getRawParameterValue(parameter_constants::RESONANCE_ID)->load());
     chain.get<filterIndex>().setDrive(apvts.getRawParameterValue(parameter_constants::DRIVE_ID)->load());
-    auto& filterFollower = chain.get<followerIndex>();
+    auto& envelopeFollower = chain.get<followerIndex>();
     if (apvts.getRawParameterValue(parameter_constants::ENV_ADVANCED_ID)->load())
     {
-        filterFollower.setAttack(apvts.getRawParameterValue(parameter_constants::ENV_ATTACK_ID)->load());
-        filterFollower.setRelease(apvts.getRawParameterValue(parameter_constants::ENV_RELEASE_ID)->load());
+        envelopeFollower.setAttack(apvts.getRawParameterValue(parameter_constants::ENV_ATTACK_ID)->load());
+        envelopeFollower.setRelease(apvts.getRawParameterValue(parameter_constants::ENV_RELEASE_ID)->load());
     }
     else
     {
-        auto speed = apvts.getRawParameterValue(parameter_constants::ENV_SPEED_ID)->load() ? filterFollower.getSlowTime() : filterFollower.getFastTime();
-        filterFollower.setAttack(speed);
-        filterFollower.setRelease(speed);
+        auto speed = apvts.getRawParameterValue(parameter_constants::ENV_SPEED_ID)->load() ? envelopeFollower.getSlowTime() : envelopeFollower.getFastTime();
+        envelopeFollower.setAttack(speed);
+        envelopeFollower.setRelease(speed);
     }
     if(apvts.getRawParameterValue(parameter_constants::TWO_FOUR_POLE_ID)->load())
         chain.get<filterIndex>().setMode(LadderFilterMode::LPF12);
