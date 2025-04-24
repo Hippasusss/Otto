@@ -76,13 +76,10 @@ void Auto_AudioProcessorEditor::resized()
     constexpr int ENV_ADVANCED_WIDTH = 50;
     constexpr int ENV_ADVANCED_PADDING = 5;
     constexpr int PARAMETER_SECTION_HEIGHT = 100;
-    constexpr int SLIDER_WIDTH = 100;
-    constexpr int SLIDER_HEIGHT = 80;
     constexpr int SLIDER_PADDING = 12;
     constexpr int SLIDER_EXTRA_TOP_PADDING = 6;
     constexpr int BUTTON_AREA_WIDTH = 100;
     constexpr int BUTTON_PADDING = 10;
-    constexpr int BUTTON_VERTICAL_PADDING = 5;
     constexpr int BUTTON_HEIGHT_RATIO = 2;
     constexpr int BUTTON_AREA_PAD_TOP_AND_BOTTOM = 4;
 
