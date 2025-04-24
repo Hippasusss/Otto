@@ -157,9 +157,18 @@ void Auto_AudioProcessor::updateAllParameters()
     chain.get<filterIndex>().setResonance(apvts.getRawParameterValue(parameter_constants::RESONANCE_ID)->load());
     chain.get<filterIndex>().setDrive(apvts.getRawParameterValue(parameter_constants::DRIVE_ID)->load());
     chain.get<filterIndex>().setEnvAmountPercent(apvts.getRawParameterValue(parameter_constants::ENV_AMOUNT_ID)->load());
-    chain.get<followerIndex>().setAttack(apvts.getRawParameterValue(parameter_constants::ENV_ATTACK_ID)->load());
-    chain.get<followerIndex>().setRelease(apvts.getRawParameterValue(parameter_constants::ENV_RELEASE_ID)->load());
-    //chain.get<followerIndex>().setAmount(apvts.getRawParameterValue(parameter_constants::ENV_AMOUNT_ID)->load()); //TODO: remove? or use?
+    auto& filterFollower = chain.get<followerIndex>();
+    if (apvts.getRawParameterValue(parameter_constants::ENV_ADVANCED_ID)->load())
+    {
+        filterFollower.setAttack(apvts.getRawParameterValue(parameter_constants::ENV_ATTACK_ID)->load());
+        filterFollower.setRelease(apvts.getRawParameterValue(parameter_constants::ENV_RELEASE_ID)->load());
+    }
+    else
+    {
+        auto speed = apvts.getRawParameterValue(parameter_constants::ENV_SPEED_ID)->load() ? filterFollower.getSlowTime() : filterFollower.getFastTime();
+        filterFollower.setAttack(speed);
+        filterFollower.setRelease(speed);
+    }
     chain.get<mixerIndex>().setMix(apvts.getRawParameterValue(parameter_constants::MIX_ID)->load());
 }
 
