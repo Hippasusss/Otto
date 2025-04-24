@@ -10,7 +10,8 @@
 
 
 #pragma once
-#include "JuceHeader.h"
+#include <JuceHeader.h>
+
 namespace parameter_constants
 {
 	const String INPUT_GAIN_ID = "inputGain";
