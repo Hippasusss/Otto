@@ -73,8 +73,6 @@ public:
     void setDrive (SampleType newDrive) noexcept;
     /** Sets how much the envelope will effect the final frequency of the filter
     */
-    void setEnvAmountPercent(SampleType newAmount) noexcept;
-
     void setEnvFollowerPtr(EnvelopeFollower* ptr);
 
     float getFilterFequencyDelta();

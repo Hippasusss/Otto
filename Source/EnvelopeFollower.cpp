@@ -16,7 +16,7 @@ EnvelopeFollower::EnvelopeFollower():
     sampleRate(44100),
     numChannels(2),
     maxBlockSize(0),
-    amount(0),
+    amount(1),
     attackTime(10.0f),
     releaseTime(10.0f),
     envelopeOutput{},
@@ -56,8 +56,8 @@ void EnvelopeFollower::process(const dsp::ProcessContextReplacing<float>& contex
                 envelopeState[channelIndex] = releaseAlpha * envelopeState[channelIndex] + (1 - releaseAlpha) * sample;
 
             envelopeOutput[sampleIndex] = (channelIndex == 0) ? 
-                envelopeState[channelIndex] : 
-                std::max(envelopeOutput[sampleIndex], envelopeState[channelIndex]);
+                envelopeState[channelIndex] * amount : 
+                std::max(envelopeOutput[sampleIndex], envelopeState[channelIndex]) * amount;
         }
     }
     envelopeDisplayData.writeValues(envelopeOutput);
@@ -84,12 +84,6 @@ void EnvelopeFollower::setAmount(float newAmount)
 {
     amount = newAmount;
 }
-
-float EnvelopeFollower::getAmount()
-{
-    return amount;
-}
-
 
 const std::vector<float>& EnvelopeFollower::getEnvelope() const
 {
