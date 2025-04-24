@@ -61,7 +61,7 @@ void GraphDisplay::drawPath(Graphics& graphics, const DisplayData<float>& data,
 void GraphDisplay::paint(Graphics& graphics)
 {
     drawPath(graphics, audioDisplayData, colour_constants::lightMain, true);
-    drawPath(graphics, envelopeDisplayData, colour_constants::red, false, 3.0f);
+    drawPath(graphics, envelopeDisplayData, colour_constants::main, false, 3.0f);
 }
 
 void GraphDisplay::resized()

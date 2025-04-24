@@ -25,7 +25,7 @@ void Graph::process(const dsp::ProcessContextReplacing<float>& context)
     const dsp::AudioBlock<const float> sourceBlock = context.getInputBlock();
     const size_t numSamples = sourceBlock.getNumSamples();
     const size_t numChannels = sourceBlock.getNumChannels();
-
+    
     for (size_t sampleIndex = 0; sampleIndex < numSamples; ++sampleIndex)
     {
         float sum = 0.0f;
