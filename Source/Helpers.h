@@ -8,9 +8,7 @@ Author:  Danny Herbert
 ==============================================================================
 */
 #pragma once
-
 #include <JuceHeader.h>
-#include <juce_dsp/juce_dsp.h>
 
 class Helpers
 {

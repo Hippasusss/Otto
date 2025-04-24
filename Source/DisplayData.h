@@ -14,9 +14,10 @@
 template <typename ValueType = float>
 class DisplayData {
 public:
-    DisplayData(RingBufferVector<ValueType>& sourceBuffer, size_t bufferSize = 600) : 
+    DisplayData(RingBufferVector<ValueType>& sourceBuffer, bool dbScale = false ,size_t bufferSize = 600 ) : 
         sourceBuffer(sourceBuffer),
         historyBuffer(bufferSize),
+        dbScale(dbScale),
         reductionFactor(bufferSize),
         bufferSize(bufferSize)
     {
@@ -43,7 +44,8 @@ public:
             if (count == reductionFactor || pos == sourceSize)
             {
                 ValueType avg = sum / count;
-                historyBuffer.writeValue(Helpers::getNormalisedDB(avg));
+                ValueType value = dbScale ? Helpers::getNormalisedDB(avg) : avg;
+                historyBuffer.writeValue(value);
                 sum = 0;
                 count = 0;
             }
@@ -66,6 +68,7 @@ private:
     const size_t bufferSize;
     ValueType runningSum = 0;
     size_t nextReadPosition = 0;
+    bool dbScale = false;
     RingBufferVector<ValueType>& sourceBuffer;
     RingBufferVector<ValueType> historyBuffer;
 };

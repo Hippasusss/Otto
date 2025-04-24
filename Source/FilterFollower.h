@@ -12,7 +12,6 @@
 #include <JuceHeader.h>
 #include "EnvelopeFollower.h"
 
-
 enum class LadderFilterMode
 {
     LPF12,  // low-pass  12 dB/octave
@@ -74,8 +73,6 @@ public:
     void setDrive (SampleType newDrive) noexcept;
     /** Sets how much the envelope will effect the final frequency of the filter
     */
-    void setEnvAmountPercent(SampleType newAmount) noexcept;
-
     void setEnvFollowerPtr(EnvelopeFollower* ptr);
 
     float getFilterFequencyDelta();
