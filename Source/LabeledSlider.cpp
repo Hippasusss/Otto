@@ -21,7 +21,6 @@ LabeledSlider::LabeledSlider(const String& name, bool hideLabel)
 
     sliderValueLabel.setJustificationType(Justification::right);
     sliderValueLabel.setInterceptsMouseClicks(false, false);
-    sliderValueLabel.setLookAndFeel(&lookAndFeel2);
     sliderValueLabel.setText(String(slider.getValue()), sendNotification);
     sliderValueLabel.setVisible(false);
     sliderValueLabel.attachToComponent(&slider, true);
@@ -47,8 +46,8 @@ void LabeledSlider::mouseExit(const MouseEvent&) {
 }
 
 void LabeledSlider::mouseEnter(const MouseEvent&) {
-    sliderValueLabel.setVisible(true);
     if(hiddenLabel) sliderValueLabel.setText(name, NotificationType::sendNotification);
+    sliderValueLabel.setVisible(true);
 }
 
 void LabeledSlider::mouseDown(const MouseEvent& e) {
@@ -102,4 +101,14 @@ void LabeledSlider::returnToDefault() {
 void LabeledSlider::init() {
     resized();
     sliderValueLabel.setVisible(false);
+}
+
+Label& LabeledSlider::getValueLabel()
+{
+    return sliderValueLabel;
+}
+
+Label& LabeledSlider::getNameLabel()
+{
+    return sliderNameLabel;
 }

@@ -72,10 +72,17 @@ void drawLabel(Graphics& graphics, Label& label) override
     const Justification justification = Justification::centredTop;
     const Rectangle<int> area = getLocalComponentArea<int>(label);
     const auto text = label.getText();
-    graphics.setColour(colour_constants::main);
+    auto backgroundColour = label.findColour(Label::ColourIds::backgroundColourId);
+    if (backgroundColour == Colour())  // Check if color is unset
+        backgroundColour = colour_constants::backGround;
+    
+    auto textColour = label.findColour(Label::ColourIds::textColourId);
+    if (textColour == Colour())  // Check if color is unset
+        textColour = colour_constants::main;
+    graphics.setColour(backgroundColour);
     graphics.fillRect(area.reduced(8, 0).removeFromTop(15));
     graphics.setFont(font);
-    graphics.setColour(colour_constants::backGround);
+    graphics.setColour(textColour);
     graphics.drawText(text.toUpperCase(), area, justification);
 }
 
@@ -105,6 +112,7 @@ class CustomLookAndFeel2: public CustomLookAndFeel
 {
     public:
 CustomLookAndFeel2() {}
+const Font font2 {FontOptions{"Futara", 11, Font::plain}};
 
 void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
 {
@@ -112,7 +120,8 @@ void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawB
     const int height = button.getBounds().getHeight();
 
     const Rectangle<int> fillArea {0, 0 , width, height};
-    graphics.setColour(colour_constants::red);
+    graphics.setColour(button.findColour(ToggleButton::ColourIds::tickColourId));
+    
     if(shouldDrawButtonAsHighlighted)
     {
         graphics.drawRect(fillArea);
@@ -121,19 +130,18 @@ void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawB
     if(button.getToggleState())
     {
         graphics.fillRect(fillArea);
-        graphics.setColour(colour_constants::backGround);
+        graphics.setColour(button.findColour(ToggleButton::ColourIds::tickDisabledColourId));
     }
     else
-{
+    {
         graphics.setColour(colour_constants::red);
     }
 }
 void drawLabel(Graphics& graphics, Label& label) override
 {
-    const Font font {FontOptions{"Futara", 15, Font::plain}};
     const String text = label.getText();
     const Rectangle<int> fillArea = getLocalComponentArea<int>(label);
-    graphics.setFont(font);
+    graphics.setFont(font2);
     graphics.setColour(colour_constants::main);
     graphics.drawText(text, fillArea, Justification::centredTop, false);
 }
@@ -159,4 +167,5 @@ Rectangle<T> getLocalComponentArea(const Component& component)
 
 JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CustomLookAndFeel2)
 };
+
 

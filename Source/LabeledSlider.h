@@ -14,6 +14,8 @@ public:
 
     void setName(const String& newName) override;
     void setDefault(float newDefault, bool setValueToo = true);
+    Label& getValueLabel();
+    Label& getNameLabel();
     void returnToDefault();
     void init();
 

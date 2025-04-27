@@ -27,6 +27,8 @@ MeterDisplay::MeterDisplay(Meter* newMeter) :
     RMS.setRate(0.5);
     peakHold.setRate(0.5);
     clipMeter.setLookAndFeel(&lookAndFeel2);
+    clipMeter.setColour(ToggleButton::ColourIds::tickColourId, colour_constants::red);
+    clipMeter.setColour(ToggleButton::ColourIds::tickDisabledColourId, colour_constants::backGround);
 }
 
 MeterDisplay::~MeterDisplay()

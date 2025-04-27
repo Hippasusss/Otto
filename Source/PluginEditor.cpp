@@ -13,8 +13,8 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     resonance("Reso"),
     mix("Mix"),
     outputGain("Out"),
-    attack("Atk"),
-    release("Rel"),
+    attack("Atk", true),
+    release("Rel", true),
     envSpeed("Slo/Fst"),
     twoFourPole("12/24"),
     envAdvanced(""),
@@ -34,7 +34,6 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     twoA(processor.apvts, parameter_constants::TWO_FOUR_POLE_ID, twoFourPole),
     envadvA(processor.apvts, parameter_constants::ENV_ADVANCED_ID, envAdvanced)
 {
-    setLookAndFeel(&lookAndFeel);
     setSize (800, 428);
 
     // Make all components visible
@@ -47,25 +46,47 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     {
         slider->init();
         mainParameterGroup.addChildComponent(slider);
+        slider->setLookAndFeel(&lookAndFeel);
+        Label& valueLabel = slider->getValueLabel();
+        valueLabel.setColour(Label::ColourIds::backgroundColourId, colour_constants::transparent);
+        valueLabel.setColour(Label::ColourIds::textColourId, colour_constants::main);
+
+        Label& nameLabel = slider->getNameLabel();
+        nameLabel.setColour(Label::ColourIds::backgroundColourId, colour_constants::main);
+        nameLabel.setColour(Label::ColourIds::textColourId, colour_constants::backGround);
     }
 
     for(auto& slider : timeSliders)
     {
         buttonParameterGroup.addChildComponent(slider);
+        slider->setLookAndFeel(&lookAndFeel2);
     }
 
     buttonParameterGroup.addChildComponent(twoFourPole);
     buttonParameterGroup.addChildComponent(envSpeed);
 
+    envAdvanced.setLookAndFeel(&lookAndFeel2);;
     envAdvanced.setToggleable(true);
+    envAdvanced.setColour(ToggleButton::ColourIds::tickColourId, colour_constants::main);
+    envAdvanced.setColour(ToggleButton::ColourIds::tickDisabledColourId, colour_constants::lightMain);
     envAdvanced.setClickingTogglesState(true);
     envAdvanced.onClick = [this]() {
         resized();
     };
+    setLookAndFeel(&lookAndFeel);
 }
 
 Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
 {
+    for (auto& slider : mainSliders)
+    {
+        slider->setLookAndFeel(nullptr);
+    }
+    for(auto& slider : timeSliders)
+    {
+        slider->setLookAndFeel(nullptr);
+    }
+    envAdvanced.setLookAndFeel(nullptr);
     setLookAndFeel(nullptr);
 }
 
@@ -81,7 +102,7 @@ void Auto_AudioProcessorEditor::resized()
     constexpr int BUTTON_AREA_WIDTH = 100;
     constexpr int BUTTON_PADDING = 10;
     constexpr int BUTTON_HEIGHT_RATIO = 2;
-    constexpr int BUTTON_AREA_PAD_TOP_AND_BOTTOM = 4;
+    constexpr int BUTTON_AREA_PAD_TOP_AND_BOTTOM = 6;
 
     constexpr int SMALL_SLIDER_PADDING = 4;
     constexpr int METER_PADDING_X = 7;
@@ -92,8 +113,8 @@ void Auto_AudioProcessorEditor::resized()
     auto rect = getLocalBounds();
     // Title Bar --------------------
     auto titleBounds = rect.removeFromTop(TITLE_BAR_HEIGHT);
-    envAdvanced.setBounds(titleBounds.removeFromRight(ENV_ADVANCED_WIDTH).reduced(ENV_ADVANCED_PADDING));
     titleBar.setBounds(titleBounds);
+    envAdvanced.setBounds(titleBounds.removeFromRight(ENV_ADVANCED_WIDTH).reduced(ENV_ADVANCED_PADDING));
 
     // Parameter Section -------------
     auto parameterBounds = rect.removeFromTop(PARAMETER_SECTION_HEIGHT);

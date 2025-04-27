@@ -139,7 +139,7 @@ AudioProcessorValueTreeState::ParameterLayout Auto_AudioProcessor::getParameterL
     layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::RESONANCE_ID, "Resonance",    NormalisableRange(0.f, 1.f, 0.01f), 0.f));
     layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::FREQUENCY_ID, "Frequency",    NormalisableRange(20.0f, 20000.0f, 1.f, 0.5f), 1000.f));
     layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::MIX_ID, "Mix",                NormalisableRange(0.f, 100.f, 1.f), 100.f));
-    layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::ENV_AMOUNT_ID, "Env %",        NormalisableRange(0.f, 5.f, 0.01f), 1.f));
+    layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::ENV_AMOUNT_ID, "Env %",        NormalisableRange(0.f, 10.f, 0.01f), 1.f));
     layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::ENV_ATTACK_ID, "Attack Speed",        NormalisableRange(0.f, 1000.f, 1.f), 100.f));
     layout.add(std::make_unique<AudioParameterFloat>(parameter_constants::ENV_RELEASE_ID, "Release Speed",        NormalisableRange(0.f, 1000.f, 1.f), 100.f));
     layout.add(std::make_unique<AudioParameterBool>(parameter_constants::ENV_ADVANCED_ID, "Advanced", false));
