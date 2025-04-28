@@ -126,15 +126,14 @@ void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawB
     {
         graphics.drawRect(fillArea);
     }
-
     if(button.getToggleState())
     {
         graphics.fillRect(fillArea);
-        graphics.setColour(button.findColour(ToggleButton::ColourIds::tickDisabledColourId));
     }
     else
     {
-        graphics.setColour(colour_constants::red);
+        graphics.setColour(button.findColour(ToggleButton::ColourIds::tickDisabledColourId));
+        graphics.fillRect(fillArea);
     }
 }
 void drawLabel(Graphics& graphics, Label& label) override

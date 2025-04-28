@@ -67,9 +67,10 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
 
     envAdvanced.setLookAndFeel(&lookAndFeel2);;
     envAdvanced.setToggleable(true);
-    envAdvanced.setColour(ToggleButton::ColourIds::tickColourId, colour_constants::main);
-    envAdvanced.setColour(ToggleButton::ColourIds::tickDisabledColourId, colour_constants::lightMain);
+    envAdvanced.setColour(ToggleButton::ColourIds::tickColourId, colour_constants::lightMain);
+    envAdvanced.setColour(ToggleButton::ColourIds::tickDisabledColourId, colour_constants::backGround);
     envAdvanced.setClickingTogglesState(true);
+
     envAdvanced.onClick = [this]() {
         resized();
     };
@@ -94,7 +95,7 @@ void Auto_AudioProcessorEditor::resized()
 {
     // Layout constants
     constexpr int TITLE_BAR_HEIGHT = 28;
-    constexpr int ENV_ADVANCED_WIDTH = 50;
+    constexpr int ENV_ADVANCED_WIDTH = 30;
     constexpr int ENV_ADVANCED_PADDING = 5;
     constexpr int PARAMETER_SECTION_HEIGHT = 100;
     constexpr int SLIDER_PADDING = 12;
