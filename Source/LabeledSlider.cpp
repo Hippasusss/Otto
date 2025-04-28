@@ -46,19 +46,19 @@ void LabeledSlider::mouseExit(const MouseEvent&) {
 }
 
 void LabeledSlider::mouseEnter(const MouseEvent&) {
-    if(hiddenLabel) sliderValueLabel.setText(name, NotificationType::sendNotification);
+    if(hiddenLabel) sliderValueLabel.setText(name, NotificationType::dontSendNotification);
     sliderValueLabel.setVisible(true);
 }
 
 void LabeledSlider::mouseDown(const MouseEvent& e) {
-    if(hiddenLabel) sliderValueLabel.setText(String(slider.getValue()), sendNotification);
+    if(hiddenLabel) sliderValueLabel.setText(String(slider.getValue()), NotificationType::dontSendNotification);
     if(e.mods.isAltDown()) {
         returnToDefault();
     }
 }
 
 void LabeledSlider::mouseUp(const MouseEvent&) {
-    if(hiddenLabel) sliderValueLabel.setText(name, NotificationType::sendNotification);
+    if(hiddenLabel) sliderValueLabel.setText(name, NotificationType::dontSendNotification);
 }
 
 void LabeledSlider::mouseDoubleClick(const MouseEvent&) {
@@ -66,10 +66,9 @@ void LabeledSlider::mouseDoubleClick(const MouseEvent&) {
 }
 
 void LabeledSlider::valueChanged() {
-    sliderValueLabel.setText(String(slider.getValue()), dontSendNotification);
+    sliderValueLabel.setText(String(slider.getValue()), NotificationType::dontSendNotification);
     resized();
 }
-
 
 void LabeledSlider::resized() {
     constexpr float SLIDER_PERCENT_OF_HEIGHT = 0.75;
