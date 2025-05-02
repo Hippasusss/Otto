@@ -10,19 +10,19 @@ LabeledSlider::LabeledSlider(const String& name, bool hideLabel)
     slider.setSliderStyle(Slider::RotaryVerticalDrag);
     slider.setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
 
-    if(!hideLabel) {
+    if(!hideLabel) 
+    {
         sliderNameLabel.setName(name);
         sliderNameLabel.setText(name, NotificationType::sendNotification);
         sliderNameLabel.setJustificationType(Justification::centredTop);
         sliderNameLabel.attachToComponent(&slider, true);
         sliderNameLabel.setInterceptsMouseClicks(false, false);
-        addAndMakeVisible(sliderNameLabel);
     }
 
+    addAndMakeVisible(sliderNameLabel);
     sliderValueLabel.setJustificationType(Justification::right);
     sliderValueLabel.setInterceptsMouseClicks(false, false);
     sliderValueLabel.setText(String(slider.getValue()), sendNotification);
-    sliderValueLabel.setVisible(false);
     sliderValueLabel.attachToComponent(&slider, true);
     addChildComponent(sliderValueLabel);
     slider.addMouseListener(this, false);
@@ -42,12 +42,14 @@ void LabeledSlider::setName(const String& newName) {
 }
 
 void LabeledSlider::mouseExit(const MouseEvent&) {
-    sliderValueLabel.setVisible(false);
+    if (!hiddenLabel) sliderValueLabel.setVisible(false);
+    resized();
 }
 
 void LabeledSlider::mouseEnter(const MouseEvent&) {
     if(hiddenLabel) sliderValueLabel.setText(name, NotificationType::dontSendNotification);
     sliderValueLabel.setVisible(true);
+    resized();
 }
 
 void LabeledSlider::mouseDown(const MouseEvent& e) {
@@ -55,6 +57,7 @@ void LabeledSlider::mouseDown(const MouseEvent& e) {
     if(e.mods.isAltDown()) {
         returnToDefault();
     }
+    resized();
 }
 
 void LabeledSlider::mouseUp(const MouseEvent&) {
@@ -99,7 +102,7 @@ void LabeledSlider::returnToDefault() {
 
 void LabeledSlider::init() {
     resized();
-    sliderValueLabel.setVisible(false);
+    if (!hiddenLabel) sliderValueLabel.setVisible(false);
 }
 
 Label& LabeledSlider::getValueLabel()

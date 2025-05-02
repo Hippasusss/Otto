@@ -58,8 +58,12 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
 
     for(auto& slider : timeSliders)
     {
+        slider->init();
         buttonParameterGroup.addChildComponent(slider);
         slider->setLookAndFeel(&lookAndFeel2);
+        auto& valueLabel = slider->getSliderValueLabel();
+        valueLabel.setColour(Label::ColourIds::backgroundColourId, colour_constants::transparent);
+        valueLabel.setColour(Label::ColourIds::textColourId, colour_constants::main);
     }
 
     buttonParameterGroup.addChildComponent(twoFourPole);
