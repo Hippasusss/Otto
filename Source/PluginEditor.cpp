@@ -61,6 +61,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
         auto& valueLabel = slider->getSliderValueLabel();
         valueLabel.setColour(Label::ColourIds::backgroundColourId, colour_constants::transparent);
         valueLabel.setColour(Label::ColourIds::textColourId, colour_constants::main);
+        valueLabel.setText(valueLabel.getName(), NotificationType::dontSendNotification);
     }
 
     buttonParameterGroup.addChildComponent(twoFourPole);

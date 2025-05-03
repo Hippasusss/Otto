@@ -69,7 +69,7 @@ void drawRotarySlider(Graphics& graphics, int x, int y, int width, int height,
 
 void drawLabel(Graphics& graphics, Label& label) override
 {
-    const Justification justification = Justification::centredTop;
+    const Justification justification = Justification::centred;
     const Rectangle<int> area = getLocalComponentArea<int>(label);
     const auto text = label.getText();
     auto backgroundColour = label.findColour(Label::ColourIds::backgroundColourId);
@@ -112,7 +112,7 @@ class CustomLookAndFeel2: public CustomLookAndFeel
 {
     public:
 CustomLookAndFeel2() {}
-const Font font2 {FontOptions{"Futara", 11, Font::plain}};
+const Font font2 {FontOptions{"Futara", 11, Font::bold}};
 
 void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
 {
@@ -142,7 +142,7 @@ void drawLabel(Graphics& graphics, Label& label) override
     const Rectangle<int> fillArea = getLocalComponentArea<int>(label);
     graphics.setFont(font2);
     graphics.setColour(colour_constants::main);
-    graphics.drawText(text, fillArea, Justification::centredTop, false);
+    graphics.drawText(text, fillArea, Justification::centred, false);
 }
 
 void drawGroupComponentOutline(Graphics& graphics, int w, int h, const String& text, const Justification&, GroupComponent& group) override
