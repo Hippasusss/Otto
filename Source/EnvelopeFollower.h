@@ -42,7 +42,7 @@ private:
     float attackAlpha, releaseAlpha;
 
     const float fastTime = 100;
-    const float slowTime = 100;
+    const float slowTime = 600;
 
     std::vector<float> envelopeOutput;
     std::vector<float> envelopeState;

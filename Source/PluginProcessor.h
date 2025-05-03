@@ -52,10 +52,6 @@ public:
     void updateAllParameters();
 
 private:
-
-    const float slow = 1.0;
-    const float fast = 0.3;
-
     enum processors
     {
         inputGainIndex,
