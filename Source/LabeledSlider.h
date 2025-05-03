@@ -8,16 +8,13 @@ public:
     explicit LabeledSlider(const String& name, bool hideLabel = false);
     ~LabeledSlider() = default;
 
+    Slider& getSlider();
     Label& getSliderNameLabel();
     Label& getSliderValueLabel();
-    Slider& getSlider();
 
     void setName(const String& newName) override;
     void setDefault(float newDefault, bool setValueToo = true);
-    Label& getValueLabel();
-    Label& getNameLabel();
     void returnToDefault();
-    void init();
 
 private:
     void mouseExit(const MouseEvent&) override;

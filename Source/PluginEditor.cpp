@@ -35,8 +35,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     envadvA(processor.apvts, parameter_constants::ENV_ADVANCED_ID, envAdvanced)
 {
     setSize (800, 428);
-
-    // Make all components visible
+    
     for(auto& comp : components)
     {
         addAndMakeVisible(comp);
@@ -44,21 +43,19 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
 
     for (auto& slider : mainSliders)
     {
-        slider->init();
         mainParameterGroup.addChildComponent(slider);
         slider->setLookAndFeel(&lookAndFeel);
-        Label& valueLabel = slider->getValueLabel();
+        Label& valueLabel = slider->getSliderValueLabel();
         valueLabel.setColour(Label::ColourIds::backgroundColourId, colour_constants::transparent);
         valueLabel.setColour(Label::ColourIds::textColourId, colour_constants::main);
 
-        Label& nameLabel = slider->getNameLabel();
+        Label& nameLabel = slider->getSliderNameLabel();
         nameLabel.setColour(Label::ColourIds::backgroundColourId, colour_constants::main);
         nameLabel.setColour(Label::ColourIds::textColourId, colour_constants::backGround);
     }
 
     for(auto& slider : timeSliders)
     {
-        slider->init();
         buttonParameterGroup.addChildComponent(slider);
         slider->setLookAndFeel(&lookAndFeel2);
         auto& valueLabel = slider->getSliderValueLabel();

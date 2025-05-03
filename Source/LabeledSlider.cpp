@@ -96,21 +96,8 @@ void LabeledSlider::setDefault(float newDefault, bool setValueToo) {
     if(setValueToo) slider.setValue(defaultValue);
 }
 
-void LabeledSlider::returnToDefault() {
+void LabeledSlider::returnToDefault() 
+{
     slider.setValue(defaultValue);
 }
 
-void LabeledSlider::init() {
-    resized();
-    if (!hiddenLabel) sliderValueLabel.setVisible(false);
-}
-
-Label& LabeledSlider::getValueLabel()
-{
-    return sliderValueLabel;
-}
-
-Label& LabeledSlider::getNameLabel()
-{
-    return sliderNameLabel;
-}
