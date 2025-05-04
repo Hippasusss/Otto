@@ -66,6 +66,7 @@ private:
     };
 
 
+    dsp::Oversampling<float> oversampler =  dsp::Oversampling<float>(2, 3, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple) ;
     dsp::ProcessorChain <dsp::Gain<float>,
                          BufferStore,
                          Meter, 

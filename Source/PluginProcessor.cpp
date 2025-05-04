@@ -70,8 +70,13 @@ void Auto_AudioProcessor::changeProgramName (int index, const String& newName)
 
 void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    const auto spec = dsp::ProcessSpec {sampleRate,
-        static_cast<uint32>(samplesPerBlock),
+    oversampler.numChannels = getTotalNumInputChannels();
+    oversampler.initProcessing(static_cast<size_t>(samplesPerBlock));
+    oversampler.setUsingIntegerLatency(false);
+    oversampler.reset();
+
+    auto spec = dsp::ProcessSpec {sampleRate * oversampler.getOversamplingFactor(),
+        static_cast<uint32>(samplesPerBlock * oversampler.getOversamplingFactor()),
         static_cast<uint32>(getTotalNumInputChannels())};
 
 
@@ -90,11 +95,15 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 
 void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
-    ScopedNoDenormals noDenormals;
-    auto block = dsp::AudioBlock<float>(buffer);
-    const auto context = dsp::ProcessContextReplacing<float>(block);
     updateAllParameters();
+    ScopedNoDenormals noDenormals;
+
+    auto inputBlock = dsp::AudioBlock<float>(buffer);
+
+    auto oversampled = oversampler.processSamplesUp(inputBlock);
+    const auto context = dsp::ProcessContextReplacing<float>(oversampled);
     chain.process(context);
+    oversampler.processSamplesDown(inputBlock);
 }
 
 void Auto_AudioProcessor::releaseResources()
