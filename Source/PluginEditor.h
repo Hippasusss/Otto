@@ -22,6 +22,7 @@ private:
 
     LabeledSlider inputGain, drive, envAmount, frequency, resonance, mix, outputGain;
     LabeledSlider attack, release;
+    ComboBox oversampling;
     ToggleButton envSpeed, twoFourPole, envAdvanced;
     GroupComponent mainParameterGroup, buttonParameterGroup;
     TitleBar titleBar;
@@ -30,7 +31,7 @@ private:
     CustomLookAndFeel lookAndFeel;
     CustomLookAndFeel2 lookAndFeel2;
     
-    std::array<Component*, 18> components 
+    std::array<Component*, 19> components 
        {&inputGain, 
         &drive, 
         &envAmount, 
@@ -48,6 +49,7 @@ private:
         &inputMeter, 
         &outputMeter, 
         &titleBar, 
+        &oversampling,
         &envAdvanced};
     std::array<LabeledSlider*, 7> mainSliders {&inputGain, &drive, &envAmount, &frequency, &resonance, &mix, &outputGain};
     std::array<LabeledSlider*, 2> timeSliders{&attack, &release};

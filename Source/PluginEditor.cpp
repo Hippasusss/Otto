@@ -35,6 +35,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     envadvA(processor.apvts, parameter_constants::ENV_ADVANCED_ID, envAdvanced)
 {
     setSize (800, 428);
+    oversampling.addItemList(StringArray("0x", "2x", "4x", "8x"), 1);
     
     for(auto& comp : components)
     {
@@ -118,6 +119,7 @@ void Auto_AudioProcessorEditor::resized()
     auto titleBounds = rect.removeFromTop(TITLE_BAR_HEIGHT);
     titleBar.setBounds(titleBounds);
     envAdvanced.setBounds(titleBounds.removeFromRight(ENV_ADVANCED_WIDTH).reduced(ENV_ADVANCED_PADDING));
+    oversampling.setBounds(titleBounds.removeFromRight(ENV_ADVANCED_WIDTH).reduced(ENV_ADVANCED_PADDING));
 
     // Parameter Section -------------
     auto parameterBounds = rect.removeFromTop(PARAMETER_SECTION_HEIGHT);
