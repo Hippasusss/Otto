@@ -53,7 +53,7 @@ template <typename ValueType, typename ContainerType>
 void RingBuffer<ValueType, ContainerType>::writeValue(ValueType value)
 {
     valueArray[writeIndex] = value;
-    writeIndex = (writeIndex + 1) % size;  // Fixed: Proper modulo operation
+    writeIndex = (writeIndex + 1) % size;  
 }
 
 // writes container of data to the ring buffer and moves the write index forward
