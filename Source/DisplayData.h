@@ -20,15 +20,28 @@ public:
         bufferSize(calculateBufferSize(lengthMs)),
         historyBuffer(bufferSize),
         dbScale(dbScale),
+        sampleRate(sourceBuffer.getSize()),
         lengthMs(lengthMs)
     {
     }
 
     const size_t calculateBufferSize(size_t ms) const { return ((sourceBuffer.getSize()/ 1000) * ms) / reductionFactor; } ;
 
+    void prepare()
+    {
+        sampleRate = sourceBuffer.getSize();
+        bufferSize = calculateBufferSize(lengthMs);
+        historyBuffer.resize(bufferSize);
+        runningSum = 0;
+        nextReadPosition = 0;
+    }
+
     void updateValues() 
     {
-        if (reductionFactor == 0) return;
+        if (sourceBuffer.getSize() != sampleRate)
+        {   
+            prepare();
+        }
 
         auto values = sourceBuffer.readAllValues();
         const size_t sourceSize = values.size();
@@ -57,7 +70,6 @@ public:
         runningSum = sum;
         nextReadPosition = count;
     }
-    
 
     std::vector<ValueType> getPreviousValues() const
     {
@@ -71,6 +83,7 @@ private:
     size_t reductionFactor;
     size_t bufferSize;
     RingBufferVector<ValueType> historyBuffer;
+    size_t sampleRate;
     size_t lengthMs;
     bool dbScale = false;
 
