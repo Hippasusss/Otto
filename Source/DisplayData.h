@@ -14,14 +14,17 @@
 template <typename ValueType = float>
 class DisplayData {
 public:
-    DisplayData(RingBufferVector<ValueType>& sourceBuffer, bool dbScale = false ,size_t bufferSize = 600 ) : 
+    DisplayData(RingBufferVector<ValueType>& sourceBuffer, bool dbScale = false ,size_t lengthMs = 2600 ) : 
         sourceBuffer(sourceBuffer),
+        reductionFactor(500),
+        bufferSize(calculateBufferSize(lengthMs)),
         historyBuffer(bufferSize),
         dbScale(dbScale),
-        reductionFactor(bufferSize),
-        bufferSize(bufferSize)
+        lengthMs(lengthMs)
     {
     }
+
+    const size_t calculateBufferSize(size_t ms) const { return ((sourceBuffer.getSize()/ 1000) * ms) / reductionFactor; } ;
 
     void updateValues() 
     {
@@ -64,11 +67,13 @@ public:
     }
 
 private:
-    const size_t reductionFactor;
-    const size_t bufferSize;
+    RingBufferVector<ValueType>& sourceBuffer;
+    size_t reductionFactor;
+    size_t bufferSize;
+    RingBufferVector<ValueType> historyBuffer;
+    size_t lengthMs;
+    bool dbScale = false;
+
     ValueType runningSum = 0;
     size_t nextReadPosition = 0;
-    bool dbScale = false;
-    RingBufferVector<ValueType>& sourceBuffer;
-    RingBufferVector<ValueType> historyBuffer;
 };

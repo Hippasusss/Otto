@@ -17,7 +17,9 @@ Graph::Graph() :  audioDisplayData(44100)
 
 void Graph::prepare(const dsp::ProcessSpec& spec) 
 {
-	audioDisplayData.resize(spec.sampleRate); // get 1 second
+    // get 1 second. Don't change this unless you rewrite GraphDisplay/DisplayData. it gets the sample rate from it.
+    // quite gross but it works.
+	audioDisplayData.resize(spec.sampleRate); 
 }
 
 void Graph::process(const dsp::ProcessContextReplacing<float>& context)
