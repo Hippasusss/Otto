@@ -100,6 +100,7 @@ void Auto_AudioProcessorEditor::resized()
     constexpr int TITLE_BAR_HEIGHT = 28;
     constexpr int ENV_ADVANCED_WIDTH = 30;
     constexpr int ENV_ADVANCED_PADDING = 5;
+    constexpr int OVERSAMPLING_WIDTH = 100;
     constexpr int PARAMETER_SECTION_HEIGHT = 100;
     constexpr int SLIDER_PADDING = 12;
     constexpr int SLIDER_EXTRA_TOP_PADDING = 6;
@@ -119,7 +120,7 @@ void Auto_AudioProcessorEditor::resized()
     auto titleBounds = rect.removeFromTop(TITLE_BAR_HEIGHT);
     titleBar.setBounds(titleBounds);
     envAdvanced.setBounds(titleBounds.removeFromRight(ENV_ADVANCED_WIDTH).reduced(ENV_ADVANCED_PADDING));
-    oversampling.setBounds(titleBounds.removeFromRight(ENV_ADVANCED_WIDTH).reduced(ENV_ADVANCED_PADDING));
+    oversampling.setBounds(titleBounds.removeFromRight(OVERSAMPLING_WIDTH).reduced(ENV_ADVANCED_PADDING));
 
     // Parameter Section -------------
     auto parameterBounds = rect.removeFromTop(PARAMETER_SECTION_HEIGHT);
