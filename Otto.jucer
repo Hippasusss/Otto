@@ -35,6 +35,9 @@
         <FILE id="Din5QH" name="Mixer.h" compile="0" resource="0" file="Source/Mixer.h"/>
       </GROUP>
       <GROUP id="{5C837F25-B0D1-9AE4-9897-114DE1C33272}" name="Components">
+        <FILE id="NI2hGn" name="DropDownMenu.cpp" compile="1" resource="0"
+              file="Source/DropDownMenu.cpp"/>
+        <FILE id="l0IahW" name="DropDownMenu.h" compile="0" resource="0" file="Source/DropDownMenu.h"/>
         <FILE id="qkxB0k" name="TitleBar.h" compile="0" resource="0" file="Source/TitleBar.h"/>
         <FILE id="rAbf0g" name="DisplayData.h" compile="0" resource="0" file="Source/DisplayData.h"/>
         <FILE id="kbkoTG" name="TitleBar.cpp" compile="1" resource="0" file="Source/TitleBar.cpp"/>
