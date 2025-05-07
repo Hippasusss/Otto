@@ -75,7 +75,7 @@ void drawLabel(Graphics& graphics, Label& label) override
     auto backgroundColour = label.findColour(Label::ColourIds::backgroundColourId);
     if (backgroundColour == Colour())  // Check if color is unset
         backgroundColour = colour_constants::backGround;
-    
+
     auto textColour = label.findColour(Label::ColourIds::textColourId);
     if (textColour == Colour())  // Check if color is unset
         textColour = colour_constants::main;
@@ -92,6 +92,7 @@ void drawGroupComponentOutline(Graphics& graphics, int w, int h, const String& t
     graphics.setColour(colour_constants::main);
     graphics.drawRect(area, lineThickness);
 }
+
 
     private:
 const int lineThickness = 3;
@@ -121,7 +122,7 @@ void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawB
 
     const Rectangle<int> fillArea {0, 0 , width, height};
     graphics.setColour(button.findColour(ToggleButton::ColourIds::tickColourId));
-    
+
     if(shouldDrawButtonAsHighlighted)
     {
         graphics.drawRect(fillArea);
@@ -131,7 +132,7 @@ void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawB
         graphics.fillRect(fillArea);
     }
     else
-    {
+{
         graphics.setColour(button.findColour(ToggleButton::ColourIds::tickDisabledColourId));
         graphics.fillRect(fillArea);
     }
