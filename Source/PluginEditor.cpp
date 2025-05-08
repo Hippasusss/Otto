@@ -35,7 +35,9 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     envadvA(processor.apvts, parameter_constants::ENV_ADVANCED_ID, envAdvanced)
 {
     setSize (800, 428);
-    oversampling.addItemList(StringArray("0x", "2x", "4x", "8x"), 1);
+    oversampling.addToContents("x2");
+    oversampling.addToContents("x4");
+    oversampling.addToContents("x8");
     
     for(auto& comp : components)
     {

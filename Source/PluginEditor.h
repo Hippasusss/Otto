@@ -7,6 +7,7 @@
 #include "GraphDisplay.h"
 #include "MeterDisplay.h"
 #include "TitleBar.h"
+#include "DropDownMenu.h"
 
 class Auto_AudioProcessorEditor  : public AudioProcessorEditor
 {
@@ -22,7 +23,7 @@ private:
 
     LabeledSlider inputGain, drive, envAmount, frequency, resonance, mix, outputGain;
     LabeledSlider attack, release;
-    ComboBox oversampling;
+    DropDownMenu oversampling;
     ToggleButton envSpeed, twoFourPole, envAdvanced;
     GroupComponent mainParameterGroup, buttonParameterGroup;
     TitleBar titleBar;

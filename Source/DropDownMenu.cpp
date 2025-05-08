@@ -14,9 +14,6 @@
 //==============================================================================
 DropDownMenu::DropDownMenu()
 {
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
-
 }
 
 DropDownMenu::~DropDownMenu()
@@ -25,27 +22,47 @@ DropDownMenu::~DropDownMenu()
 
 void DropDownMenu::paint (juce::Graphics& g)
 {
-    /* This demo code just fills the component's background and
-       draws some placeholder text to get you started.
 
-       You should replace everything in this method with your own
-       drawing code..
-    */
+    const auto& localBounds = getLocalBounds();
+    g.setColour(colour_constants::main);
+    g.fillRect(localBounds);
 
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));   // clear the background
+    g.setColour (colour_constants::backGround);
+    g.drawRect (localBounds, 1);
 
-    g.setColour (juce::Colours::grey);
-    g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
-    g.setColour (juce::Colours::white);
+    g.setColour (colour_constants::backGround);
     g.setFont (juce::FontOptions (14.0f));
-    g.drawText ("DropDownMenu", getLocalBounds(),
-                juce::Justification::centred, true);   // draw some placeholder text
+    g.drawText (title, localBounds, juce::Justification::centred, true);  
+    for (size_t i = 0; i < contents.size(); ++i) 
+    {
+        const int initialY = (i + 2) * localBounds.getHeight();
+        const int initialX = 0;
+        const int width = localBounds.getWidth();
+        const int height = localBounds.getHeight();
+        Rectangle<int> bounds = {initialX, initialY, width, height };
+        g.setColour(colour_constants::main);
+        g.fillRect(bounds);
+
+        g.setColour (juce::Colours::white);
+        g.setFont (juce::FontOptions (14.0f));
+        g.drawText (title, getLocalBounds(), juce::Justification::centred, true);  
+    };
+
+    Rectangle<int> bounds = {0, localBounds.getHeight(), localBounds.getWidth(), static_cast<int>(contents.size() * localBounds.getHeight()) };
+    g.setColour(colour_constants::backGround);
+    g.drawRect(bounds);
 }
 
 void DropDownMenu::resized()
 {
-    // This method is where you should set the bounds of any child
-    // components that your component contains..
+}
 
+void DropDownMenu::addToContents(String entryToAdd)
+{
+    contents.push_back(entryToAdd);
+}
+
+void DropDownMenu::setCurrentIndex(size_t index)
+{
+    currentIndex = index;
 }
