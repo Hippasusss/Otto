@@ -11,55 +11,70 @@
 #include <JuceHeader.h>
 #include "DropDownMenu.h"
 
+// DROPDOWNCONTEXT
 //==============================================================================
-DropDownMenu::DropDownMenu()
+
+DropDownContext::DropDownContext(Component& parentDDMenu) : parent(parentDDMenu)
 {
 }
 
-DropDownMenu::~DropDownMenu()
+void DropDownContext::paint (juce::Graphics& graphics) 
 {
+    const auto& localBounds = getLocalBounds();
+    graphics.setColour(colour_constants::lightMain);
+    graphics.fillRect(localBounds);
 }
 
-void DropDownMenu::paint (juce::Graphics& g)
+void DropDownContext::resized() 
+{
+    for (size_t i = 0; i < buttonEntries.size(); ++i) 
+    {
+        auto bounds = getLocalBounds();
+        bounds.setY(bounds.getY() + bounds.getHeight() * i);
+        buttonEntries[i]->setBounds(bounds);
+    }
+}
+
+void DropDownContext::addEntry(const String& entryName)
+{    
+    buttonEntries.emplace_back(std::make_unique<ToggleButton>(entryName));
+    resized();
+}
+
+// DROPDOWNMENU
+//==============================================================================
+DropDownMenu::DropDownMenu() : contextMenu(*this)
+{
+    getTopLevelComponent()->addAndMakeVisible(contextMenu);
+    resized();
+}
+
+void DropDownMenu::paint (juce::Graphics& graphics)
 {
 
     const auto& localBounds = getLocalBounds();
-    g.setColour(colour_constants::main);
-    g.fillRect(localBounds);
+    graphics.setColour(colour_constants::lightMain);
+    graphics.fillRect(localBounds);
 
-    g.setColour (colour_constants::backGround);
-    g.drawRect (localBounds, 1);
+    graphics.setColour (colour_constants::backGround);
+    graphics.drawRect (localBounds, 1);
 
-    g.setColour (colour_constants::backGround);
-    g.setFont (juce::FontOptions (14.0f));
-    g.drawText (title, localBounds, juce::Justification::centred, true);  
-    for (size_t i = 0; i < contents.size(); ++i) 
-    {
-        const int initialY = (i + 2) * localBounds.getHeight();
-        const int initialX = 0;
-        const int width = localBounds.getWidth();
-        const int height = localBounds.getHeight();
-        Rectangle<int> bounds = {initialX, initialY, width, height };
-        g.setColour(colour_constants::main);
-        g.fillRect(bounds);
-
-        g.setColour (juce::Colours::white);
-        g.setFont (juce::FontOptions (14.0f));
-        g.drawText (title, getLocalBounds(), juce::Justification::centred, true);  
-    };
-
-    Rectangle<int> bounds = {0, localBounds.getHeight(), localBounds.getWidth(), static_cast<int>(contents.size() * localBounds.getHeight()) };
-    g.setColour(colour_constants::backGround);
-    g.drawRect(bounds);
+    graphics.setColour (colour_constants::backGround);
+    graphics.setFont (juce::FontOptions (14.0f));
+    graphics.drawText (text, localBounds, juce::Justification::centred, true);  
+    contextMenu.paint(graphics);
 }
 
 void DropDownMenu::resized()
 {
+    Rectangle<int> bounds = {0,0,100,100}; //getTopLevelComponent()->getLocalArea(this, getLocalBounds());
+    bounds.setY(bounds.getY() + bounds.getHeight());
+    contextMenu.setBounds(bounds);
 }
 
-void DropDownMenu::addToContents(String entryToAdd)
+void DropDownMenu::addToContents(const String& entryToAdd)
 {
-    contents.push_back(entryToAdd);
+    contextMenu.addEntry(entryToAdd);
 }
 
 void DropDownMenu::setCurrentIndex(size_t index)

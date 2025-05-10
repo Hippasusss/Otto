@@ -12,6 +12,7 @@
 
 #include <JuceHeader.h>
 #include "Constants.h"
+#include "juce_gui_basics/juce_gui_basics.h"
 
 //==============================================================================
 /*
@@ -25,23 +26,40 @@ struct DropDownColours
     juce::Colour bordorColour = colour_constants::main;
 };
 
+class DropDownContext : public juce::Component
+{
+public:
+    DropDownContext(Component& parentDDMenu);
+    ~DropDownContext() override = default ;
+
+    void paint (juce::Graphics&) override;
+    void resized() override;
+    void addEntry(const String&);
+
+private:
+    std::vector<std::unique_ptr<ToggleButton>> buttonEntries {};
+    Component& parent;
+};
+
 class DropDownMenu  : public juce::Component
 {
 public:
     DropDownMenu();
-    ~DropDownMenu() override;
+    ~DropDownMenu() =  default;
 
     void paint (juce::Graphics&) override;
     void resized() override;
-    void addToContents(String entryToAdd);
+
+    void addToContents(const String& entryToAdd);
     void setCurrentIndex(size_t index);
     DropDownColours colours;
 
 private:
 
-    std::vector<String> contents;
-    String title;
+    DropDownContext contextMenu;
+    String text;
     size_t currentIndex = 0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DropDownMenu)
 };
+
