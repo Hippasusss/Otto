@@ -31,8 +31,9 @@ void DropDownContext::resized()
 {
     setVisible(true);
     toFront(false);
-    auto parentBounds = getTopLevelComponent()->getLocalArea(&parent, parent.getBounds());
-    auto fullBounds = {parentBounds.getX(), parentBounds.getHeight() + parentBounds.getY(), parentBounds.getWidth(), static_cast<int>(parentBounds.getHeight() * buttonEntries.size()) };
+    auto parentBounds = getTopLevelComponent()->getLocalArea(&parent, parent.getLocalBounds());
+    Rectangle<int> fullBounds = {parentBounds.getX(), parentBounds.getHeight() + parentBounds.getY(), parentBounds.getWidth(), static_cast<int>(parentBounds.getHeight() * buttonEntries.size()) };
+    setBounds(fullBounds);
     for (size_t i = 0; i < buttonEntries.size(); ++i) 
     {
         auto bounds = getTopLevelComponent()->getLocalArea(&parent, parent.getBounds());
