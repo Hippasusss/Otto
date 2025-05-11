@@ -30,7 +30,7 @@ class DropDownContext : public juce::Component
 {
 public:
     DropDownContext(Component& parentDDMenu);
-    ~DropDownContext() override = default ;
+    ~DropDownContext() override = default;
 
     void paint (juce::Graphics&) override;
     void resized() override;
@@ -45,6 +45,7 @@ class DropDownMenu  : public juce::Component
 {
 public:
     DropDownMenu();
+    DropDownMenu(const String&);
     ~DropDownMenu() =  default;
 
     void paint (juce::Graphics&) override;
@@ -56,6 +57,7 @@ public:
 
 private:
 
+    void init();
     DropDownContext contextMenu;
     String text;
     size_t currentIndex = 0;

@@ -16,21 +16,27 @@
 
 DropDownContext::DropDownContext(Component& parentDDMenu) : parent(parentDDMenu)
 {
+    setAlwaysOnTop(true);
+    setVisible(true);
 }
 
 void DropDownContext::paint (juce::Graphics& graphics) 
 {
     const auto& localBounds = getLocalBounds();
-    graphics.setColour(colour_constants::lightMain);
+    graphics.setColour(colour_constants::red);
     graphics.fillRect(localBounds);
 }
 
 void DropDownContext::resized() 
 {
+    setVisible(true);
+    toFront(false);
+    auto parentBounds = getTopLevelComponent()->getLocalArea(&parent, parent.getBounds());
+    auto fullBounds = {parentBounds.getX(), parentBounds.getHeight() + parentBounds.getY(), parentBounds.getWidth(), static_cast<int>(parentBounds.getHeight() * buttonEntries.size()) };
     for (size_t i = 0; i < buttonEntries.size(); ++i) 
     {
-        auto bounds = getLocalBounds();
-        bounds.setY(bounds.getY() + bounds.getHeight() * i);
+        auto bounds = getTopLevelComponent()->getLocalArea(&parent, parent.getBounds());
+        bounds.setY(bounds.getY() + bounds.getHeight() * (i + 1));
         buttonEntries[i]->setBounds(bounds);
     }
 }
@@ -45,7 +51,16 @@ void DropDownContext::addEntry(const String& entryName)
 //==============================================================================
 DropDownMenu::DropDownMenu() : contextMenu(*this)
 {
-    getTopLevelComponent()->addAndMakeVisible(contextMenu);
+    init();
+}
+DropDownMenu::DropDownMenu(const String& name) : contextMenu(*this)
+{
+    init();
+    setName(name);
+}
+
+void DropDownMenu::init()
+{
     resized();
 }
 
@@ -62,18 +77,20 @@ void DropDownMenu::paint (juce::Graphics& graphics)
     graphics.setColour (colour_constants::backGround);
     graphics.setFont (juce::FontOptions (14.0f));
     graphics.drawText (text, localBounds, juce::Justification::centred, true);  
-    contextMenu.paint(graphics);
 }
 
 void DropDownMenu::resized()
 {
-    Rectangle<int> bounds = {0,0,100,100}; //getTopLevelComponent()->getLocalArea(this, getLocalBounds());
+    Rectangle<int> bounds = getTopLevelComponent()->getLocalArea(this, getLocalBounds());
     bounds.setY(bounds.getY() + bounds.getHeight());
     contextMenu.setBounds(bounds);
 }
 
 void DropDownMenu::addToContents(const String& entryToAdd)
 {
+    if (getParentComponent() != nullptr) {
+        getTopLevelComponent()->addAndMakeVisible(contextMenu);
+    }
     contextMenu.addEntry(entryToAdd);
 }
 

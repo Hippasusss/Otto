@@ -15,6 +15,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     outputGain("Out"),
     attack("Atk", true),
     release("Rel", true),
+    oversampling("Over"),
     envSpeed("Slo/Fst"),
     twoFourPole("12/24"),
     envAdvanced(""),
@@ -35,9 +36,6 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     envadvA(processor.apvts, parameter_constants::ENV_ADVANCED_ID, envAdvanced)
 {
     setSize (800, 428);
-    oversampling.addToContents("x2");
-    oversampling.addToContents("x4");
-    oversampling.addToContents("x8");
     
     for(auto& comp : components)
     {
@@ -67,6 +65,9 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
         valueLabel.setText(valueLabel.getName(), NotificationType::dontSendNotification);
     }
 
+    oversampling.addToContents("x2");
+    oversampling.addToContents("x4");
+    oversampling.addToContents("x8");
     buttonParameterGroup.addChildComponent(twoFourPole);
     buttonParameterGroup.addChildComponent(envSpeed);
 
