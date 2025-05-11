@@ -97,12 +97,12 @@ void DropDownMenu::paint (juce::Graphics& graphics)
 
 void DropDownMenu::resized()
 {
-    Rectangle<int> bounds = getTopLevelComponent()->getLocalArea(this, getLocalBounds());
-    bounds.setY(bounds.getY() + bounds.getHeight());
-    contextMenu.setBounds(bounds);
+    // Rectangle<int> contextBounds = getTopLevelComponent()->getLocalArea(this, getLocalBounds());
+    // contextBounds.setY(contextBounds.getY() + contextBounds.getHeight());
+    // contextMenu.setBounds(contextBounds);
 }
 
-void DropDownMenu::addToContents(const String& entryToAdd)
+void DropDownMenu::addToDropDownContext(const String& entryToAdd)
 {
     if (getParentComponent() != nullptr) {
         getTopLevelComponent()->addAndMakeVisible(contextMenu);

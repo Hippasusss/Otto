@@ -65,9 +65,10 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
         valueLabel.setText(valueLabel.getName(), NotificationType::dontSendNotification);
     }
 
-    oversampling.addToContents("x2");
-    oversampling.addToContents("x4");
-    oversampling.addToContents("x8");
+    oversampling.addToDropDownContext("x2");
+    oversampling.addToDropDownContext("x4");
+    oversampling.addToDropDownContext("x8");
+    oversampling.addToDropDownContext("x16");
     buttonParameterGroup.addChildComponent(twoFourPole);
     buttonParameterGroup.addChildComponent(envSpeed);
 
