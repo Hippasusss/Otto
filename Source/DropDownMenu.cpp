@@ -23,28 +23,30 @@ DropDownContext::DropDownContext(Component& parentDDMenu) : parent(parentDDMenu)
 void DropDownContext::paint (juce::Graphics& graphics) 
 {
     const auto& localBounds = getLocalBounds();
-    graphics.setColour(colour_constants::red);
-    graphics.fillRect(localBounds);
+    graphics.setColour(colour_constants::lightMain);
+    graphics.drawRect(localBounds);
 }
 
 void DropDownContext::resized() 
 {
-    setVisible(true);
     toFront(false);
     auto parentBounds = getTopLevelComponent()->getLocalArea(&parent, parent.getLocalBounds());
     Rectangle<int> fullBounds = {parentBounds.getX(), parentBounds.getHeight() + parentBounds.getY(), parentBounds.getWidth(), static_cast<int>(parentBounds.getHeight() * buttonEntries.size()) };
     setBounds(fullBounds);
     for (size_t i = 0; i < buttonEntries.size(); ++i) 
     {
-        auto bounds = getTopLevelComponent()->getLocalArea(&parent, parent.getBounds());
-        bounds.setY(bounds.getY() + bounds.getHeight() * (i + 1));
+        auto bounds = getLocalBounds();
+        bounds.setHeight(parentBounds.getHeight());
+        bounds.setY(parentBounds.getHeight() * i);
         buttonEntries[i]->setBounds(bounds);
     }
 }
 
 void DropDownContext::addEntry(const String& entryName)
 {    
-    buttonEntries.emplace_back(std::make_unique<ToggleButton>(entryName));
+    auto newButton = std::make_unique<TextButton>(entryName);
+    addAndMakeVisible(*newButton);
+    buttonEntries.emplace_back(std::move(newButton));
     resized();
 }
 

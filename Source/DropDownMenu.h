@@ -37,7 +37,7 @@ public:
     void addEntry(const String&);
 
 private:
-    std::vector<std::unique_ptr<ToggleButton>> buttonEntries {};
+    std::vector<std::unique_ptr<TextButton>> buttonEntries {};
     Component& parent;
 };
 
