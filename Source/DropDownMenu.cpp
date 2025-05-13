@@ -95,6 +95,17 @@ void DropDownMenu::paint (juce::Graphics& graphics)
     graphics.drawText (text, localBounds, juce::Justification::centred, true);  
 }
 
+void DropDownMenu::mouseUp(const juce::MouseEvent& event) 
+{
+    if (contextMenu.isShowing())
+    {
+        contextMenu.setVisible(false);
+    }
+    else
+    {
+        contextMenu.setVisible(true);
+    }
+}
 void DropDownMenu::resized()
 {
     // Rectangle<int> contextBounds = getTopLevelComponent()->getLocalArea(this, getLocalBounds());

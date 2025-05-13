@@ -52,6 +52,8 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 
+    void mouseUp(const juce::MouseEvent& event) override;
+
     void addToDropDownContext(const String& entryToAdd);
     void setCurrentIndex(size_t index);
     DropDownColours colours;
