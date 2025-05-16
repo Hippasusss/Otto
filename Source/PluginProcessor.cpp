@@ -70,13 +70,15 @@ void Auto_AudioProcessor::changeProgramName (int index, const String& newName)
 
 void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    oversampler.numChannels = getTotalNumInputChannels();
-    oversampler.initProcessing(static_cast<size_t>(samplesPerBlock));
-    oversampler.setUsingIntegerLatency(false);
-    oversampler.reset();
+    for (auto& overSampler: oversamplers) {
+        overSampler.numChannels = getTotalNumInputChannels();
+        overSampler.initProcessing(static_cast<size_t>(samplesPerBlock));
+        overSampler.setUsingIntegerLatency(false);
+        overSampler.reset();
+    }
 
-    auto spec = dsp::ProcessSpec {sampleRate * oversampler.getOversamplingFactor(),
-        static_cast<uint32>(samplesPerBlock * oversampler.getOversamplingFactor()),
+    auto spec = dsp::ProcessSpec {sampleRate * currentOversampler->getOversamplingFactor(),
+        static_cast<uint32>(samplesPerBlock * currentOversampler->getOversamplingFactor()),
         static_cast<uint32>(getTotalNumInputChannels())};
 
 
@@ -100,10 +102,10 @@ void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& 
 
     auto inputBlock = dsp::AudioBlock<float>(buffer);
 
-    auto oversampled = oversampler.processSamplesUp(inputBlock);
+    auto oversampled = currentOversampler->processSamplesUp(inputBlock);
     const auto context = dsp::ProcessContextReplacing<float>(oversampled);
     chain.process(context);
-    oversampler.processSamplesDown(inputBlock);
+    currentOversampler->processSamplesDown(inputBlock);
 }
 
 void Auto_AudioProcessor::releaseResources()
@@ -136,6 +138,17 @@ Meter* Auto_AudioProcessor::getOutputMeter()
 Graph* Auto_AudioProcessor::getGraph()
 {
     return &chain.get<graphIndex>();
+}
+
+dsp::Oversampling<float>* Auto_AudioProcessor::getOversampling()
+{
+    return currentOversampler;
+}
+
+void Auto_AudioProcessor::changeOversampling(int factor)
+{
+    currentOversampler = &oversamplers[factor-1];
+    currentOversampler->reset();
 }
 
 AudioProcessorValueTreeState::ParameterLayout Auto_AudioProcessor::getParameterLayout()

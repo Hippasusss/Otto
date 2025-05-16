@@ -46,6 +46,8 @@ public:
     Meter* getInputMeter();
     Meter* getOutputMeter();
     Graph* getGraph();
+    dsp::Oversampling<float>* getOversampling();
+    void changeOversampling(int factor);
 
     static AudioProcessorValueTreeState::ParameterLayout getParameterLayout();
     AudioProcessorValueTreeState apvts { *this, nullptr, "Parameters", getParameterLayout()};
@@ -66,7 +68,15 @@ private:
     };
 
 
-    dsp::Oversampling<float> oversampler =  dsp::Oversampling<float>(2, 3, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple) ;
+    dsp::Oversampling<float> oversamplers[4] =  
+    {
+        dsp::Oversampling<float>(2, 1, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
+        dsp::Oversampling<float>(2, 2, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
+        dsp::Oversampling<float>(2, 3, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
+        dsp::Oversampling<float>(2, 4, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
+    };
+    dsp::Oversampling<float>* currentOversampler = &oversamplers[0];
+
     dsp::ProcessorChain <dsp::Gain<float>,
                          BufferStore,
                          Meter, 

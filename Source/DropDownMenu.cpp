@@ -42,10 +42,11 @@ void DropDownContext::resized()
     }
 }
 
-void DropDownContext::addEntry(const String& entryName)
+void DropDownContext::addEntry(const String& entryName, std::function<void()> callback)
 {    
     auto newButton = std::make_unique<TextButton>(entryName);
     addAndMakeVisible(*newButton);
+    newButton->onClick = callback;
     buttonEntries.emplace_back(std::move(newButton));
     resized();
 }
@@ -59,7 +60,6 @@ void DropDownContext::addEntries(std::initializer_list<juce::String> entries)
         auto& button = buttonEntries.emplace_back(std::make_unique<juce::TextButton>(entry));
         addAndMakeVisible(button.get());
     }
-    
     resized();
 }
 
@@ -108,17 +108,14 @@ void DropDownMenu::mouseUp(const juce::MouseEvent& event)
 }
 void DropDownMenu::resized()
 {
-    // Rectangle<int> contextBounds = getTopLevelComponent()->getLocalArea(this, getLocalBounds());
-    // contextBounds.setY(contextBounds.getY() + contextBounds.getHeight());
-    // contextMenu.setBounds(contextBounds);
 }
 
-void DropDownMenu::addToDropDownContext(const String& entryToAdd)
+void DropDownMenu::addToDropDownContext(const String& entryToAdd, std::function<void()> callback)
 {
     if (getParentComponent() != nullptr) {
         getTopLevelComponent()->addAndMakeVisible(contextMenu);
     }
-    contextMenu.addEntry(entryToAdd);
+    contextMenu.addEntry(entryToAdd, callback);
 }
 
 void DropDownMenu::setCurrentIndex(size_t index)

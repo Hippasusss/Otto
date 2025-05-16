@@ -65,10 +65,11 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
         valueLabel.setText(valueLabel.getName(), NotificationType::dontSendNotification);
     }
 
-    oversampling.addToDropDownContext("x2");
-    oversampling.addToDropDownContext("x4");
-    oversampling.addToDropDownContext("x8");
-    oversampling.addToDropDownContext("x16");
+    //TODO:: surley not ok thread wise lol
+    oversampling.addToDropDownContext("x2", [&processor](){processor.changeOversampling(1);});
+    oversampling.addToDropDownContext("x4", [&processor](){processor.changeOversampling(2);});
+    oversampling.addToDropDownContext("x8", [&processor](){processor.changeOversampling(3);});
+    oversampling.addToDropDownContext("x16", [&processor](){processor.changeOversampling(4);});
     buttonParameterGroup.addChildComponent(twoFourPole);
     buttonParameterGroup.addChildComponent(envSpeed);
 
