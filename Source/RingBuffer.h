@@ -237,6 +237,14 @@ void RingBufferAudio<SampleType>::resize(size_t channels, size_t length)
 	aggregateBuffer.setSize(channels, length);
 	numSamples = length;
 	numChannels = channels;
+    if (this->readIndex >= length)
+    {
+        this->readIndex = 0;
+    }
+    if (this->writeIndex >= length)
+    {
+        this->writeIndex = 0;
+    }
 }
 
 template <typename SampleType>
