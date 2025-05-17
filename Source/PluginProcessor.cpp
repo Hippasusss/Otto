@@ -150,12 +150,11 @@ dsp::Oversampling<float>* Auto_AudioProcessor::getOversampling()
 void Auto_AudioProcessor::changeOversampling(int factor)
 {
     suspendProcessing(true);
-    currentOversampler->numChannels = getTotalNumInputChannels();
-    currentOversampler->initProcessing(static_cast<size_t>(getBlockSize()));
-    currentOversampler->setUsingIntegerLatency(true);
-    currentOversampler->reset();
+    currentOversampler = &oversamplers[factor-1];
     //TODO: fix this, you're not meant to do it.
-    prepareToPlay(getSampleRate(), getBlockSize());
+    const auto sampleRate = getSampleRate();
+    const auto blockSize = getBlockSize();
+    prepareToPlay(sampleRate, blockSize);
     setLatencySamples(currentOversampler->getLatencyInSamples());
     suspendProcessing(false);
 }
