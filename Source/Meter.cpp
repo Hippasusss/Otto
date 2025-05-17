@@ -45,12 +45,12 @@ void Meter::calculateRMS(const dsp::AudioBlock<float>& block)
 {
     RMSAudioBuffer.writeBlock(block);
     const auto RMSBlock = RMSAudioBuffer.getBlock(); // buffer is the length required for the RMS calc. Set in ctor
-    const int blockSize = RMSBlock.getNumSamples();
-    for(auto i = 0; i < numChannels; ++i)
+    const size_t blockSize = RMSBlock.getNumSamples();
+    for(size_t i = 0; i < numChannels; ++i)
     {
         float sum = 0.0f;
         const auto chan = RMSBlock.getChannelPointer(i);
-        for (auto j = 0; j < blockSize; ++j)
+        for (size_t j = 0; j < blockSize; ++j)
         {
             const auto sample = chan[j];
             sum += sample * sample;
@@ -60,12 +60,12 @@ void Meter::calculateRMS(const dsp::AudioBlock<float>& block)
 }
 void Meter::calculatePeak(const dsp::AudioBlock<float>& block)
 {
-    const int numSamples = block.getNumSamples();
+    const size_t numSamples = block.getNumSamples();
     for(int i = 0; i < numChannels; ++i)
     {
         float max = 0.0f;
         const auto data = block.getChannelPointer(i);
-        for (int j = 0; j < numSamples; ++j)
+        for (size_t j = 0; j < numSamples; ++j)
         {
             const auto sample = abs(data[j]);
             max = sample > max ? sample : max;
