@@ -147,7 +147,7 @@ dsp::Oversampling<float>* Auto_AudioProcessor::getOversampling()
     return currentOversampler;
 }
 
-void Auto_AudioProcessor::changeOversampling(int factor)
+void Auto_AudioProcessor::changeOversampling(size_t factor)
 {
     suspendProcessing(true);
     currentOversampler = &oversamplers[factor-1];
