@@ -101,6 +101,9 @@ void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& 
 
     auto inputBlock = dsp::AudioBlock<float>(buffer);
 
+    // TODO: don't over sample for the whole chain. It just adds unnecesarry overhead. 
+    // only really needed for the filter drive. Doing this is a pain though. I think best
+    // way is to split the processor chain into bits.
     auto oversampled = currentOversampler->processSamplesUp(inputBlock);
     const auto context = dsp::ProcessContextReplacing<float>(oversampled);
     chain.process(context);
