@@ -175,6 +175,14 @@ void RingBufferVector<ValueType>::resize(size_t newSize)
 {
 	this->size = newSize;
 	this->valueArray.resize(newSize);
+    if (this->readIndex >= this->size)
+    {
+        this->readIndex = 0;
+    }
+    if (this->writeIndex >= this->size)
+    {
+        this->writeIndex = 0;
+    }
 }
 
 //===============================================================================
