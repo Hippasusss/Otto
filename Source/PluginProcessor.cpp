@@ -94,7 +94,6 @@ void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     updateAllParameters();
     chain.prepare(spec);
 }
-
 void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
     updateAllParameters();
@@ -147,8 +146,15 @@ dsp::Oversampling<float>* Auto_AudioProcessor::getOversampling()
 
 void Auto_AudioProcessor::changeOversampling(int factor)
 {
-    currentOversampler = &oversamplers[factor-1];
+    suspendProcessing(true);
+    currentOversampler->numChannels = getTotalNumInputChannels();
+    currentOversampler->initProcessing(static_cast<size_t>(getBlockSize()));
+    currentOversampler->setUsingIntegerLatency(true);
     currentOversampler->reset();
+    //TODO: fix this, you're not meant to do it.
+    prepareToPlay(getSampleRate(), getBlockSize());
+    setLatencySamples(currentOversampler->getLatencyInSamples());
+    suspendProcessing(false);
 }
 
 AudioProcessorValueTreeState::ParameterLayout Auto_AudioProcessor::getParameterLayout()
