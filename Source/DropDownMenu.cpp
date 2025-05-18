@@ -46,7 +46,10 @@ void DropDownContext::addEntry(const String& entryName, std::function<void()> ca
 {    
     auto newButton = std::make_unique<TextButton>(entryName);
     addAndMakeVisible(*newButton);
-    newButton->onClick = callback;
+    newButton->onClick = [callback, this, buttonText = newButton->getButtonText()](){ 
+        callback(); 
+        this->parent.setText(buttonText);
+    };
     buttonEntries.emplace_back(std::move(newButton));
     resized();
 }
