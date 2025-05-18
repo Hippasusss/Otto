@@ -23,6 +23,8 @@ DropDownContext::DropDownContext(DropDownMenu& parentDDMenu) : parent(parentDDMe
 void DropDownContext::paint (juce::Graphics& graphics) 
 {
     const auto& localBounds = getLocalBounds();
+    graphics.setColour(colour_constants::backGround);
+    graphics.fillRect(localBounds);
     graphics.setColour(colour_constants::lightMain);
     graphics.drawRect(localBounds);
 }
@@ -45,11 +47,17 @@ void DropDownContext::resized()
 void DropDownContext::addEntry(const String& entryName, std::function<void()> callback)
 {    
     auto newButton = std::make_unique<TextButton>(entryName);
+    // TODO: this seems gross. it works, and pretty sure it's all good memory wise, but i don't like the 
+    // lambda getting the raw pointer. 
+    auto* buttonRaw = newButton.get();
     addAndMakeVisible(*newButton);
-    newButton->onClick = [callback, this, buttonText = newButton->getButtonText()](){ 
-        callback(); 
-        this->parent.setText(buttonText);
-    };
+    newButton->toFront(false);
+    newButton->onClick = [this, callback, buttonRaw]()
+        { 
+            callback(); 
+            this->parent.setText(buttonRaw->getButtonText());
+            this->setVisible(false);
+        };
     buttonEntries.emplace_back(std::move(newButton));
     resized();
 }
@@ -106,6 +114,7 @@ void DropDownMenu::resized()
 void DropDownMenu::setText(const String& newText)
 {
     text = newText;
+    repaint();
 }
 
 void DropDownMenu::addToDropDownContext(const String& entryToAdd, std::function<void()> callback)
