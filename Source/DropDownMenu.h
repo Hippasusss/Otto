@@ -27,6 +27,8 @@ struct DropDownColours
     juce::Colour bordorColour = colour_constants::main;
 };
 
+//==================================================================================
+
 class DropDownContext : public juce::Component
 {
 public:
@@ -42,6 +44,8 @@ private:
     std::vector<std::unique_ptr<TextButton>> buttonEntries {};
     DropDownMenu& parent;
 };
+
+//===================================================================================
 
 class DropDownMenu  : public juce::Component
 {
