@@ -117,8 +117,9 @@ const Font font2 {FontOptions{"Futara", 11, Font::bold}};
 
 void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
 {
-    const int width = button.getBounds().getWidth();
-    const int height = button.getBounds().getHeight();
+    const auto bounds = button.getBounds();
+    const int width = bounds.getWidth();
+    const int height = bounds.getHeight();
 
     const Rectangle<int> fillArea {0, 0 , width, height};
     graphics.setColour(button.findColour(ToggleButton::ColourIds::tickColourId));
@@ -132,10 +133,20 @@ void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawB
         graphics.fillRect(fillArea);
     }
     else
-{
+    {
         graphics.setColour(button.findColour(ToggleButton::ColourIds::tickDisabledColourId));
         graphics.fillRect(fillArea);
     }
+
+    auto text = button.getButtonText();
+    if (text.isNotEmpty())
+    {
+        graphics.setColour(button.findColour(ToggleButton::ColourIds::textColourId));
+        graphics.setFont(font2);
+        graphics.drawText(text, bounds, Justification::centred);
+    }
+}
+
 }
 void drawLabel(Graphics& graphics, Label& label) override
 {
