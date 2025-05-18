@@ -70,6 +70,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     oversampling.addToDropDownContext("x2", [&processor](){processor.changeOversampling(1);});
     oversampling.addToDropDownContext("x4", [&processor](){processor.changeOversampling(2);});
     oversampling.addToDropDownContext("x8", [&processor](){processor.changeOversampling(3);});
+    oversampling.setLookAndFeel(&lookAndFeel2);
     buttonParameterGroup.addChildComponent(twoFourPole);
     buttonParameterGroup.addChildComponent(envSpeed);
 
@@ -95,6 +96,7 @@ Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
     {
         slider->setLookAndFeel(nullptr);
     }
+    oversampling.setLookAndFeel(nullptr);
     envAdvanced.setLookAndFeel(nullptr);
     setLookAndFeel(nullptr);
 }
@@ -105,7 +107,7 @@ void Auto_AudioProcessorEditor::resized()
     constexpr int TITLE_BAR_HEIGHT = 28;
     constexpr int ENV_ADVANCED_WIDTH = 30;
     constexpr int ENV_ADVANCED_PADDING = 5;
-    constexpr int OVERSAMPLING_WIDTH = 100;
+    constexpr int OVERSAMPLING_WIDTH = 50;
     constexpr int PARAMETER_SECTION_HEIGHT = 100;
     constexpr int SLIDER_PADDING = 12;
     constexpr int SLIDER_EXTRA_TOP_PADDING = 6;
