@@ -70,6 +70,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     oversampling.addToDropDownContext("x2", [&processor](){processor.changeOversampling(1);});
     oversampling.addToDropDownContext("x4", [&processor](){processor.changeOversampling(2);});
     oversampling.addToDropDownContext("x8", [&processor](){processor.changeOversampling(3);});
+    oversampling.setText("Off");
     oversampling.setLookAndFeel(&lookAndFeel2);
     buttonParameterGroup.addChildComponent(twoFourPole);
     buttonParameterGroup.addChildComponent(envSpeed);

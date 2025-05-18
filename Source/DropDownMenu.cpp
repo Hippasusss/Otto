@@ -77,6 +77,7 @@ DropDownMenu::DropDownMenu(const String& name) : contextMenu(*this)
 
 void DropDownMenu::init()
 {
+    text = "";
     resized();
 }
 
@@ -108,6 +109,11 @@ void DropDownMenu::mouseUp(const juce::MouseEvent& event)
 }
 void DropDownMenu::resized()
 {
+}
+
+void DropDownMenu::setText(const String& newText)
+{
+    text = newText;
 }
 
 void DropDownMenu::addToDropDownContext(const String& entryToAdd, std::function<void()> callback)
