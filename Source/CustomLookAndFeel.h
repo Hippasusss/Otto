@@ -147,7 +147,13 @@ void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawB
     }
 }
 
+void drawButtonBackground(juce::Graphics& graphics, juce::Button& button, const juce::Colour& backgroundColour, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
+{
+    auto bounds = button.getBounds();
+    graphics.setColour(colour_constants::backGround);
+    graphics.fillRect(bounds);
 }
+
 void drawLabel(Graphics& graphics, Label& label) override
 {
     const String text = label.getText();
