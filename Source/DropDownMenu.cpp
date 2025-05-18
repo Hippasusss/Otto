@@ -54,17 +54,6 @@ void DropDownContext::addEntry(const String& entryName, std::function<void()> ca
     resized();
 }
 
-void DropDownContext::addEntries(std::initializer_list<juce::String> entries)
-{
-    buttonEntries.reserve(buttonEntries.size() + entries.size());  
-    
-    for (const auto& entry : entries)
-    {
-        auto& button = buttonEntries.emplace_back(std::make_unique<juce::TextButton>(entry));
-        addAndMakeVisible(button.get());
-    }
-    resized();
-}
 
 // DROPDOWNMENU
 //==============================================================================

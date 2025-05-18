@@ -38,7 +38,6 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void addEntry(const String&, std::function<void()>);
-    void addEntries(std::initializer_list<juce::String> entries);
 
 private:
     std::vector<std::unique_ptr<TextButton>> buttonEntries {};
