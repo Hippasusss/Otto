@@ -150,7 +150,7 @@ dsp::Oversampling<float>* Auto_AudioProcessor::getOversampling()
 void Auto_AudioProcessor::changeOversampling(size_t factor)
 {
     suspendProcessing(true);
-    currentOversampler = &oversamplers[factor-1];
+    currentOversampler = &oversamplers[factor];
     //TODO: fix this, you're not meant to do it.
     const auto sampleRate = getSampleRate();
     const auto blockSize = getBlockSize();
