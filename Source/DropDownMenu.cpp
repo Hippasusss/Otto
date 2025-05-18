@@ -124,5 +124,8 @@ void DropDownMenu::addToDropDownContext(const String& entryToAdd, std::function<
     contextMenu.addEntry(entryToAdd, callback);
 }
 
+void DropDownMenu::lookAndFeelChanged()
 {
+    contextMenu.setLookAndFeel(&getLookAndFeel());
 }
+
