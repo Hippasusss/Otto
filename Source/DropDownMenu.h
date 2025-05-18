@@ -52,16 +52,14 @@ public:
 
     void paint (juce::Graphics&) override;
     void resized() override;
-
-    void mouseUp(const juce::MouseEvent& event) override;
-
     void setText(const String&);
     void addToDropDownContext(const String& entryToAdd, std::function<void()>);
-    void setCurrentIndex(size_t index);
-    DropDownColours colours;
 
 private:
 
+    void lookAndFeelChanged() override;
+    void mouseUp(const juce::MouseEvent& event) override;
+    DropDownColours colours;
     void init();
     DropDownContext contextMenu;
     String text;
