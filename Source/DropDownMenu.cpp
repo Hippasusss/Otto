@@ -14,7 +14,7 @@
 // DROPDOWNCONTEXT
 //==============================================================================
 
-DropDownContext::DropDownContext(Component& parentDDMenu) : parent(parentDDMenu)
+DropDownContext::DropDownContext(DropDownMenu& parentDDMenu) : parent(parentDDMenu)
 {
     setAlwaysOnTop(true);
     setVisible(true);

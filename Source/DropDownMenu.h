@@ -13,6 +13,7 @@
 #include <JuceHeader.h>
 #include "Constants.h"
 #include "juce_gui_basics/juce_gui_basics.h"
+class DropDownMenu;
 
 //==============================================================================
 /*
@@ -29,7 +30,7 @@ struct DropDownColours
 class DropDownContext : public juce::Component
 {
 public:
-    DropDownContext(Component& parentDDMenu);
+    DropDownContext(DropDownMenu& parentDDMenu);
     ~DropDownContext() override = default;
 
     void paint (juce::Graphics&) override;
@@ -39,7 +40,7 @@ public:
 
 private:
     std::vector<std::unique_ptr<TextButton>> buttonEntries {};
-    Component& parent;
+    DropDownMenu& parent;
 };
 
 class DropDownMenu  : public juce::Component
