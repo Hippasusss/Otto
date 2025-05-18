@@ -150,8 +150,18 @@ void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawB
 void drawButtonBackground(juce::Graphics& graphics, juce::Button& button, const juce::Colour& backgroundColour, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
 {
     auto bounds = button.getBounds();
-    graphics.setColour(colour_constants::backGround);
+    if(shouldDrawButtonAsHighlighted) graphics.setColour(colour_constants::lightMain); 
+    else graphics.setColour(colour_constants::backGround);
     graphics.fillRect(bounds);
+}
+
+void drawButtonText(juce::Graphics& graphics, juce::TextButton& button, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
+{
+    String text = button.getButtonText();
+    auto bounds = button.getLocalBounds();
+    graphics.setColour(colour_constants::main);
+    graphics.setFont(font2);
+    graphics.drawText(text, bounds, Justification::centred);
 }
 
 void drawLabel(Graphics& graphics, Label& label) override
