@@ -15,6 +15,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     outputGain("Out"),
     attack("Atk", true),
     release("Rel", true),
+    oversamplingLabel("oversampling:"),
     oversampling("Over"),
     envSpeed("Slo/Fst"),
     twoFourPole("12/24"),
@@ -129,6 +130,7 @@ void Auto_AudioProcessorEditor::resized()
     titleBar.setBounds(titleBounds);
     envAdvanced.setBounds(titleBounds.removeFromRight(ENV_ADVANCED_WIDTH).reduced(ENV_ADVANCED_PADDING));
     oversampling.setBounds(titleBounds.removeFromRight(OVERSAMPLING_WIDTH).reduced(ENV_ADVANCED_PADDING));
+    // oversamplingLabel.setBounds(titleBounds.removeFromRight(200));
 
     // Parameter Section -------------
     auto parameterBounds = rect.removeFromTop(PARAMETER_SECTION_HEIGHT);
