@@ -68,7 +68,7 @@ void DropDownContext::addEntries(std::initializer_list<juce::String> entries)
 
 // DROPDOWNMENU
 //==============================================================================
-DropDownMenu::DropDownMenu() : contextMenu(*this)
+DropDownMenu::DropDownMenu() : contextMenu(*this) 
 {
     init();
 }
@@ -88,13 +88,13 @@ void DropDownMenu::paint (juce::Graphics& graphics)
 {
 
     const auto& localBounds = getLocalBounds();
-    graphics.setColour(colour_constants::lightMain);
+    graphics.setColour(colour_constants::backGround);
     graphics.fillRect(localBounds);
 
-    graphics.setColour (colour_constants::backGround);
-    graphics.drawRect (localBounds, 1);
+    graphics.setColour(colour_constants::main);
+    graphics.drawText(text, localBounds, Justification::centred);
 
-    graphics.setColour (colour_constants::backGround);
+    graphics.setColour (colour_constants::main);
     graphics.setFont (juce::FontOptions (14.0f));
     graphics.drawText (text, localBounds, juce::Justification::centred, true);  
 }
