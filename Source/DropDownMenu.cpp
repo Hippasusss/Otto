@@ -17,7 +17,6 @@
 DropDownContext::DropDownContext(DropDownMenu& parentDDMenu) : parent(parentDDMenu)
 {
     setAlwaysOnTop(true);
-    setVisible(true);
 }
 
 void DropDownContext::paint (juce::Graphics& graphics) 
@@ -120,7 +119,7 @@ void DropDownMenu::setText(const String& newText)
 void DropDownMenu::addToDropDownContext(const String& entryToAdd, std::function<void()> callback)
 {
     if (getParentComponent() != nullptr) {
-        getTopLevelComponent()->addAndMakeVisible(contextMenu);
+        getTopLevelComponent()->addChildComponent(contextMenu);
     }
     contextMenu.addEntry(entryToAdd, callback);
 }
