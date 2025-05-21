@@ -50,6 +50,7 @@ void DropDownContext::addEntry(const String& entryName, std::function<void()> ca
     // lambda getting the raw pointer. 
     auto* buttonRaw = newButton.get();
     addAndMakeVisible(*newButton);
+    // FIX: buttons after the first don't highlight correctly on mouse over. 
     newButton->onClick = [this, callback, buttonRaw]()
         { 
             callback(); 
