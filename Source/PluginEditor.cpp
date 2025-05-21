@@ -73,6 +73,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     oversampling.addToDropDownContext("x8", [&processor](){processor.changeOversampling(3);});
     oversampling.setText("Off");
     oversampling.setLookAndFeel(&lookAndFeel2);
+
     buttonParameterGroup.addChildComponent(twoFourPole);
     buttonParameterGroup.addChildComponent(envSpeed);
 
@@ -82,9 +83,6 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     envAdvanced.setColour(ToggleButton::ColourIds::tickDisabledColourId, colour_constants::backGround);
     envAdvanced.setClickingTogglesState(true);
 
-    envAdvanced.onClick = [this]() {
-        resized();
-    };
     setLookAndFeel(&lookAndFeel);
 }
 
