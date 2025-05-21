@@ -50,7 +50,6 @@ void DropDownContext::addEntry(const String& entryName, std::function<void()> ca
     // lambda getting the raw pointer. 
     auto* buttonRaw = newButton.get();
     addAndMakeVisible(*newButton);
-    newButton->toFront(false);
     newButton->onClick = [this, callback, buttonRaw]()
         { 
             callback(); 
