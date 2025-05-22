@@ -73,6 +73,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     oversampling.addToDropDownContext("x8", [&processor](){processor.changeOversampling(3);});
     oversampling.setText("Off");
     oversampling.setLookAndFeel(&lookAndFeel2);
+    oversamplingLabel.setLookAndFeel(&lookAndFeel2);
     buttonParameterGroup.addChildComponent(twoFourPole);
     buttonParameterGroup.addChildComponent(envSpeed);
 
@@ -99,6 +100,7 @@ Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
         slider->setLookAndFeel(nullptr);
     }
     oversampling.setLookAndFeel(nullptr);
+    oversamplingLabel.setLookAndFeel(nullptr);
     envAdvanced.setLookAndFeel(nullptr);
     setLookAndFeel(nullptr);
 }
@@ -130,7 +132,7 @@ void Auto_AudioProcessorEditor::resized()
     titleBar.setBounds(titleBounds);
     envAdvanced.setBounds(titleBounds.removeFromRight(ENV_ADVANCED_WIDTH).reduced(ENV_ADVANCED_PADDING));
     oversampling.setBounds(titleBounds.removeFromRight(OVERSAMPLING_WIDTH).reduced(ENV_ADVANCED_PADDING));
-    // oversamplingLabel.setBounds(titleBounds.removeFromRight(200));
+    oversamplingLabel.setBounds(titleBounds.removeFromRight(100));
 
     // Parameter Section -------------
     auto parameterBounds = rect.removeFromTop(PARAMETER_SECTION_HEIGHT);
