@@ -83,9 +83,6 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     envAdvanced.setColour(ToggleButton::ColourIds::tickDisabledColourId, colour_constants::backGround);
     envAdvanced.setClickingTogglesState(true);
 
-    envAdvanced.onClick = [this]() {
-        resized();
-    };
     setLookAndFeel(&lookAndFeel);
 }
 
