@@ -1,7 +1,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "LabeledSlider.h"
 #include "Constants.h"
+#include "melatonin_inspector/melatonin_inspector.h"
 
 Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& processor)
     : AudioProcessorEditor (&processor), 
@@ -83,6 +83,9 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     envAdvanced.setColour(ToggleButton::ColourIds::tickDisabledColourId, colour_constants::backGround);
     envAdvanced.setClickingTogglesState(true);
 
+    envAdvanced.onClick = [this]() {
+        resized();
+    };
     setLookAndFeel(&lookAndFeel);
 }
 
