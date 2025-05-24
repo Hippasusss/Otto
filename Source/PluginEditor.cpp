@@ -1,7 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "Constants.h"
-#include "melatonin_inspector/melatonin_inspector.h"
 
 Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& processor)
     : AudioProcessorEditor (&processor), 
@@ -67,12 +66,12 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     }
 
     //TODO:: surley not ok thread wise lol
+    oversampling.setLookAndFeel(&lookAndFeel2);
     oversampling.addToDropDownContext("Off", [&processor](){processor.changeOversampling(0);});
     oversampling.addToDropDownContext("x2", [&processor](){processor.changeOversampling(1);});
     oversampling.addToDropDownContext("x4", [&processor](){processor.changeOversampling(2);});
     oversampling.addToDropDownContext("x8", [&processor](){processor.changeOversampling(3);});
-    oversampling.setText("Off");
-    oversampling.setLookAndFeel(&lookAndFeel2);
+    oversampling.setText("x2");
     oversamplingLabel.setLookAndFeel(&lookAndFeel2);
     buttonParameterGroup.addChildComponent(twoFourPole);
     buttonParameterGroup.addChildComponent(envSpeed);

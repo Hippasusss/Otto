@@ -33,11 +33,12 @@ class DropDownContext : public juce::Component
 {
 public:
     DropDownContext(DropDownMenu& parentDDMenu);
-    ~DropDownContext() override = default;
+    ~DropDownContext() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
     void addEntry(const String&, std::function<void()>);
+    void lookAndFeelChanged() override;
 
 private:
     std::vector<std::unique_ptr<TextButton>> buttonEntries {};

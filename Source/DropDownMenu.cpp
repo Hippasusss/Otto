@@ -19,6 +19,15 @@ DropDownContext::DropDownContext(DropDownMenu& parentDDMenu) : parent(parentDDMe
     setAlwaysOnTop(true);
 }
 
+DropDownContext::~DropDownContext()
+{
+    for (auto& button : buttonEntries) 
+    {
+        setLookAndFeel(nullptr);
+        button->setLookAndFeel(nullptr);
+    }
+}
+
 void DropDownContext::paint (juce::Graphics& graphics) 
 {
     const auto& localBounds = getLocalBounds();
@@ -46,10 +55,9 @@ void DropDownContext::resized()
 void DropDownContext::addEntry(const String& entryName, std::function<void()> callback)
 {    
     auto newButton = std::make_unique<TextButton>(entryName);
-    // TODO: this seems gross. it works, and pretty sure it's all good memory wise, but i don't like the 
-    // lambda getting the raw pointer. 
     auto* buttonRaw = newButton.get();
     addAndMakeVisible(*newButton);
+    newButton->setLookAndFeel(&getLookAndFeel());
     // FIX: buttons after the first don't highlight correctly on mouse over. 
     newButton->onClick = [this, callback, buttonRaw]()
         { 
@@ -61,6 +69,13 @@ void DropDownContext::addEntry(const String& entryName, std::function<void()> ca
     resized();
 }
 
+void DropDownContext::lookAndFeelChanged()
+{
+    for (auto& button : buttonEntries) 
+    {
+        button->setLookAndFeel(&getLookAndFeel());
+    }
+}
 
 // DROPDOWNMENU
 //==============================================================================
