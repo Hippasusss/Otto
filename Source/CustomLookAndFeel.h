@@ -149,7 +149,7 @@ void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawB
 
 void drawButtonBackground(juce::Graphics& graphics, juce::Button& button, const juce::Colour& backgroundColour, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
 {
-    auto bounds = button.getBounds();
+    auto bounds = button.getLocalBounds();
     if(shouldDrawButtonAsHighlighted) graphics.setColour(colour_constants::lightMain); 
     else graphics.setColour(colour_constants::backGround);
     graphics.fillRect(bounds);
