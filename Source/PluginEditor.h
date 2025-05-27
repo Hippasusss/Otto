@@ -33,7 +33,7 @@ private:
     MeterDisplay inputMeter, outputMeter;
     CustomLookAndFeel lookAndFeel;
     CustomLookAndFeel2 lookAndFeel2;
-    melatonin::Inspector inspector { *this };
+    // melatonin::Inspector inspector { *this };
     
     std::array<Component*, 20> components 
        {&inputGain, 
