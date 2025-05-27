@@ -19,14 +19,6 @@ DropDownContext::DropDownContext(DropDownMenu& parentDDMenu) : parent(parentDDMe
     setAlwaysOnTop(true);
 }
 
-DropDownContext::~DropDownContext()
-{
-    for (auto& button : buttonEntries) 
-    {
-        setLookAndFeel(nullptr);
-        button->setLookAndFeel(nullptr);
-    }
-}
 
 void DropDownContext::paint (juce::Graphics& graphics) 
 {
@@ -57,7 +49,6 @@ void DropDownContext::addEntry(const String& entryName, std::function<void()> ca
     auto newButton = std::make_unique<TextButton>(entryName);
     auto* buttonRaw = newButton.get();
     addAndMakeVisible(*newButton);
-    newButton->setLookAndFeel(&getLookAndFeel());
     newButton->onClick = [this, callback, buttonRaw]()
         { 
             callback(); 
@@ -68,13 +59,6 @@ void DropDownContext::addEntry(const String& entryName, std::function<void()> ca
     resized();
 }
 
-void DropDownContext::lookAndFeelChanged()
-{
-    for (auto& button : buttonEntries) 
-    {
-        button->setLookAndFeel(&getLookAndFeel());
-    }
-}
 
 // DROPDOWNMENU
 //==============================================================================
