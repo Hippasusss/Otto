@@ -8,7 +8,7 @@
 #include "MeterDisplay.h"
 #include "TitleBar.h"
 #include "DropDownMenu.h"
-#include "melatonin_inspector/melatonin_inspector.h"
+// #include "melatonin_inspector/melatonin_inspector.h"
 
 class Auto_AudioProcessorEditor  : public AudioProcessorEditor
 {
