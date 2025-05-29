@@ -73,6 +73,8 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     oversampling.addToDropDownContext("x8", [&processor](){processor.changeOversampling(3);});
     oversampling.setText("x2");
     oversamplingLabel.setLookAndFeel(&lookAndFeel2);
+    oversamplingLabel.setText("oversampling: ", NotificationType::dontSendNotification);
+    oversamplingLabel.setJustificationType(Justification::right);
     buttonParameterGroup.addChildComponent(twoFourPole);
     buttonParameterGroup.addChildComponent(envSpeed);
 

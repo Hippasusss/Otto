@@ -169,7 +169,7 @@ void drawLabel(Graphics& graphics, Label& label) override
     const String text = label.getText();
     const Rectangle<int> fillArea = getLocalComponentArea<int>(label);
     graphics.setFont(font2);
-    graphics.setColour(colour_constants::main);
+    graphics.setColour(colour_constants::backGround);
     graphics.drawText(text, fillArea, Justification::centred, false);
 }
 
