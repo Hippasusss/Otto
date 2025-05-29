@@ -15,6 +15,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     attack("Atk", true),
     release("Rel", true),
     oversamplingLabel("oversampling:"),
+    envAdvancedLabel("env:"),
     oversampling("Over"),
     envSpeed("Slo/Fst"),
     twoFourPole("12/24"),
@@ -88,6 +89,9 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
         resized();
     };
     setLookAndFeel(&lookAndFeel);
+    envAdvancedLabel.setLookAndFeel(&lookAndFeel2);
+    envAdvancedLabel.setText("Env: ", NotificationType::dontSendNotification);
+    envAdvancedLabel.setJustificationType(Justification::right);
 }
 
 Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
@@ -102,6 +106,7 @@ Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
     }
     oversampling.setLookAndFeel(nullptr);
     oversamplingLabel.setLookAndFeel(nullptr);
+    envAdvancedLabel.setLookAndFeel(nullptr);
     envAdvanced.setLookAndFeel(nullptr);
     setLookAndFeel(nullptr);
 }
@@ -132,6 +137,7 @@ void Auto_AudioProcessorEditor::resized()
     auto titleBounds = rect.removeFromTop(TITLE_BAR_HEIGHT);
     titleBar.setBounds(titleBounds);
     envAdvanced.setBounds(titleBounds.removeFromRight(ENV_ADVANCED_WIDTH).reduced(ENV_ADVANCED_PADDING));
+    envAdvancedLabel.setBounds(titleBounds.removeFromRight(100));
     oversampling.setBounds(titleBounds.removeFromRight(OVERSAMPLING_WIDTH).reduced(ENV_ADVANCED_PADDING));
     oversamplingLabel.setBounds(titleBounds.removeFromRight(100));
 

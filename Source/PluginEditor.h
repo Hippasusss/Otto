@@ -24,7 +24,7 @@ private:
 
     LabeledSlider inputGain, drive, envAmount, frequency, resonance, mix, outputGain;
     LabeledSlider attack, release;
-    Label oversamplingLabel;
+    Label oversamplingLabel, envAdvancedLabel;
     DropDownMenu oversampling;
     ToggleButton envSpeed, twoFourPole, envAdvanced;
     GroupComponent mainParameterGroup, buttonParameterGroup;
@@ -35,7 +35,7 @@ private:
     CustomLookAndFeel2 lookAndFeel2;
     // melatonin::Inspector inspector { *this };
     
-    std::array<Component*, 20> components 
+    std::array<Component*, 21> components 
        {&inputGain, 
         &drive, 
         &envAmount, 
@@ -55,7 +55,9 @@ private:
         &titleBar, 
         &oversamplingLabel,
         &oversampling,
-        &envAdvanced};
+        &envAdvanced,
+        &envAdvancedLabel
+    };
     std::array<LabeledSlider*, 7> mainSliders {&inputGain, &drive, &envAmount, &frequency, &resonance, &mix, &outputGain};
     std::array<LabeledSlider*, 2> timeSliders{&attack, &release};
     std::array<ToggleButton*, 3> buttons{&envSpeed, &twoFourPole, &envAdvanced};
