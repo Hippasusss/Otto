@@ -38,5 +38,5 @@ namespace colour_constants
 	const Colour lightMain = juce::Colour(0xffe0f4ff);
 	const Colour backGround = Colours::white;
 	const Colour red = Colours::salmon;
-	const Colour transparent = Colours::transparentWhite;
+	const Colour transparent = Colours::transparentBlack;
 }

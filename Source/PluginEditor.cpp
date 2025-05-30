@@ -64,6 +64,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
         valueLabel.setColour(Label::ColourIds::backgroundColourId, colour_constants::transparent);
         valueLabel.setColour(Label::ColourIds::textColourId, colour_constants::main);
         valueLabel.setText(valueLabel.getName(), NotificationType::dontSendNotification);
+        valueLabel.setJustificationType(Justification::centred);
     }
 
     //TODO:: surley not ok thread wise lol
@@ -137,7 +138,7 @@ void Auto_AudioProcessorEditor::resized()
     auto titleBounds = rect.removeFromTop(TITLE_BAR_HEIGHT);
     titleBar.setBounds(titleBounds);
     envAdvanced.setBounds(titleBounds.removeFromRight(ENV_ADVANCED_WIDTH).reduced(ENV_ADVANCED_PADDING));
-    envAdvancedLabel.setBounds(titleBounds.removeFromRight(100));
+    envAdvancedLabel.setBounds(titleBounds.removeFromRight(30));
     oversampling.setBounds(titleBounds.removeFromRight(OVERSAMPLING_WIDTH).reduced(ENV_ADVANCED_PADDING));
     oversamplingLabel.setBounds(titleBounds.removeFromRight(100));
 

@@ -18,6 +18,7 @@ LabeledSlider::LabeledSlider(const String& name, bool hideLabel)
         sliderNameLabel.setText(name, NotificationType::sendNotification);
         sliderNameLabel.setInterceptsMouseClicks(false, false);
         sliderNameLabel.setVisible(true);
+        sliderNameLabel.setJustificationType(Justification::centred);
         addChildComponent(sliderNameLabel);
     }
 
@@ -34,6 +35,7 @@ LabeledSlider::LabeledSlider(const String& name, bool hideLabel)
         sliderValueLabel.setText(String(slider.getValue()), NotificationType::dontSendNotification);
         sliderValueLabel.setVisible(false);
     }
+    sliderValueLabel.setJustificationType(Justification::centred);
     sliderValueLabel.setName(name);
     sliderValueLabel.setInterceptsMouseClicks(false, false);
     addChildComponent(sliderValueLabel);

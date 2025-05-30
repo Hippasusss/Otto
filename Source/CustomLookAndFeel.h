@@ -69,21 +69,18 @@ void drawRotarySlider(Graphics& graphics, int x, int y, int width, int height,
 
 void drawLabel(Graphics& graphics, Label& label) override
 {
-    const Justification justification = Justification::centred;
-    const Rectangle<int> area = getLocalComponentArea<int>(label);
-    const auto text = label.getText();
-    auto backgroundColour = label.findColour(Label::ColourIds::backgroundColourId);
-    if (backgroundColour == Colour())  // Check if color is unset
-        backgroundColour = colour_constants::backGround;
+    const String text = label.getText();
+    const Colour labelTextColour = label.findColour(Label::ColourIds::textColourId);
+    const Colour labelBackgroundColour = label.findColour(Label::ColourIds::backgroundColourId);
+    const Rectangle<int> localBounds = label.getLocalBounds();
 
-    auto textColour = label.findColour(Label::ColourIds::textColourId);
-    if (textColour == Colour())  // Check if color is unset
-        textColour = colour_constants::main;
+    const auto textColour = labelTextColour == Colours::transparentWhite ? colour_constants::main : labelTextColour;
+    const auto backgroundColour = labelBackgroundColour == Colours::transparentWhite ? colour_constants::transparent: labelBackgroundColour;
     graphics.setColour(backgroundColour);
-    graphics.fillRect(area.reduced(8, 0).removeFromTop(15));
+    graphics.fillRect(localBounds);
     graphics.setFont(font);
     graphics.setColour(textColour);
-    graphics.drawText(text.toUpperCase(), area, justification);
+    graphics.drawText(text, localBounds, label.getJustificationType(), false);
 }
 
 void drawGroupComponentOutline(Graphics& graphics, int w, int h, const String& text, const Justification&, GroupComponent& group) override
@@ -113,7 +110,7 @@ class CustomLookAndFeel2: public CustomLookAndFeel
 {
     public:
 CustomLookAndFeel2() {}
-const Font font2 {FontOptions{"Futara", 11, Font::bold}};
+const Font font {FontOptions{"Futara", 11, Font::bold}};
 
 void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
 {
@@ -142,7 +139,7 @@ void drawToggleButton(Graphics& graphics, ToggleButton& button, bool shouldDrawB
     if (text.isNotEmpty())
     {
         graphics.setColour(button.findColour(ToggleButton::ColourIds::textColourId));
-        graphics.setFont(font2);
+        graphics.setFont(font);
         graphics.drawText(text, bounds, Justification::centred);
     }
 }
@@ -160,18 +157,25 @@ void drawButtonText(juce::Graphics& graphics, juce::TextButton& button, bool sho
     String text = button.getButtonText();
     auto bounds = button.getLocalBounds();
     graphics.setColour(colour_constants::main);
-    graphics.setFont(font2);
+    graphics.setFont(font);
     graphics.drawText(text, bounds, Justification::centred);
 }
 
-void drawLabel(Graphics& graphics, Label& label) override
-{
-    const String text = label.getText();
-    const Rectangle<int> fillArea = getLocalComponentArea<int>(label);
-    graphics.setFont(font2);
-    graphics.setColour(colour_constants::backGround);
-    graphics.drawText(text, fillArea, Justification::centred, false);
-}
+// void drawLabel(Graphics& graphics, Label& label) override
+// {
+//     const String text = label.getText();
+//     const Colour labelTextColour = label.findColour(Label::ColourIds::textColourId);
+//     const Colour labelBackgroundColour = label.findColour(Label::ColourIds::backgroundColourId);
+//     const Rectangle<int> localBounds = label.getLocalBounds();//getLocalComponentArea<int>(label);
+//
+//     const auto textColour = labelTextColour == Colours::transparentWhite ? colour_constants::main : labelTextColour;
+//     const auto backgroundColour = labelBackgroundColour == Colours::transparentBlack ? colour_constants::transparent: labelBackgroundColour;
+//     graphics.setColour(backgroundColour);
+//     graphics.fillRect(localBounds);
+//     graphics.setFont(font2);
+//     graphics.setColour(textColour);
+//     graphics.drawText(text, localBounds, label.getJustificationType(), false);
+// }
 
 void drawGroupComponentOutline(Graphics& graphics, int w, int h, const String& text, const Justification&, GroupComponent& group) override
 {
