@@ -6,11 +6,14 @@ cmake_minimum_required(VERSION 3.22)
 
 
 
-project(EARL VERSION 0.0.1)
+set (JUCE_LIBRARY_PATH ../JUCE)
+
+project(Otto VERSION 0.0.1)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-add_subdirectory(../JUCE ${CMAKE_CURRENT_BINARY_DIR}/JUCE)
+add_subdirectory(${JUCE_LIBRARY_PATH} ${CMAKE_CURRENT_BINARY_DIR}/JUCE)
 add_subdirectory(libs/JUCECC)
-juce_set_aax_sdk_path(../JUCE/modules/juce_audio_plugin_client/AAX/SDK)
+add_subdirectory(modules/melatonin_inspector)
+juce_set_aax_sdk_path($(JUCE_LIBRARY_PATH)/modules/juce_audio_plugin_client/AAX/SDK)
 
 juce_add_plugin(Otto
     # ICON_SMALL ...
