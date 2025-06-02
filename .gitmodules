@@ -2,3 +2,6 @@
 	path = modules/melatonin_inspector
 	url = https://github.com/sudara/melatonin_inspector.git
 	branch = main
+[submodule "JUCECC"]
+	path = JUCECC
+	url = git@github.com:Hippasusss/JUCECC.git
