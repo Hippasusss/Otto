@@ -1,7 +1,6 @@
-[submodule "modules/melatonin_inspector"]
-	path = modules/melatonin_inspector
-	url = https://github.com/sudara/melatonin_inspector.git
-	branch = main
-[submodule "JUCECC"]
+[submodule "libs/JUCECC"]
 	path = libs/JUCECC
 	url = git@github.com:Hippasusss/JUCECC.git
+[submodule "libs/melatonin_inspector"]
+	path = libs/melatonin_inspector
+	url = git@github.com:sudara/melatonin_inspector.git

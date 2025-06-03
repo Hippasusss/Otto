@@ -13,7 +13,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_subdirectory(${JUCE_LIBRARY_PATH} ${CMAKE_CURRENT_BINARY_DIR}/JUCE)
 add_subdirectory(libs/JUCECC)
 add_subdirectory(modules/melatonin_inspector)
-juce_set_aax_sdk_path($(JUCE_LIBRARY_PATH)/modules/juce_audio_plugin_client/AAX/SDK)
+juce_set_aax_sdk_path(${JUCE_LIBRARY_PATH}/modules/juce_audio_plugin_client/AAX/SDK)
 
 juce_add_plugin(Otto
     # ICON_SMALL ...
@@ -28,7 +28,7 @@ juce_add_plugin(Otto
     FORMATS AAX VST3                   # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME Otto)        # The name of the final executable, which can differ from the target name
 
-# juce_generate_juce_header(Otto)
+juce_generate_juce_header(Otto)
 
 target_sources(Otto
     PRIVATE
