@@ -3,16 +3,6 @@
 #include "Constants.h"
 
 Auto_AudioProcessor::Auto_AudioProcessor()
-#ifndef JucePlugin_PreferredChannelConfigurations
-    : AudioProcessor(BusesProperties()
-#if ! JucePlugin_IsMidiEffect
-#if ! JucePlugin_IsSynth
-            .withInput("Input", AudioChannelSet::stereo(), true)
-#endif
-            .withOutput("Output", AudioChannelSet::stereo(), true)
-#endif
-            )
-#endif
 {
     chain.get<filterIndex>().setEnvFollowerPtr(&chain.get<followerIndex>());
 }
@@ -20,7 +10,7 @@ Auto_AudioProcessor::~Auto_AudioProcessor() = default;
 
 const String Auto_AudioProcessor::getName() const
 {
-    return JucePlugin_Name;
+    return "Otto";
 }
 
 bool Auto_AudioProcessor::acceptsMidi() const
@@ -65,8 +55,6 @@ const String Auto_AudioProcessor::getProgramName (int index)
 void Auto_AudioProcessor::changeProgramName (int index, const String& newName)
 {
 }
-
-
 
 void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
@@ -210,21 +198,10 @@ void Auto_AudioProcessor::updateAllParameters()
 #ifndef JucePlugin_PreferredChannelConfigurations
 bool Auto_AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
-#if JucePlugin_IsMidiEffect
-    ignoreUnused (layouts);
-    return true;
-#else
     if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
             && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
         return false;
-
-#if ! JucePlugin_IsSynth
-    if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
-        return false;
-#endif
-
     return true;
-#endif
 }
 #endif
 

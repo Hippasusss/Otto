@@ -17,6 +17,7 @@ juce_set_aax_sdk_path(${JUCE_LIBRARY_PATH}/modules/juce_audio_plugin_client/AAX/
 
 juce_add_plugin(Otto
     # ICON_SMALL ...
+    PLUGIN_CHANNEL_CONFIGURATIONS "1, 2"  # Example: mono and stereo
     COMPANY_NAME Hippasus
     IS_SYNTH FALSE                       # Is this a synth or an effect?
     NEEDS_MIDI_INPUT FALSE               # Does the plugin need midi input?
@@ -27,8 +28,6 @@ juce_add_plugin(Otto
     PLUGIN_CODE Otto # A unique four-character plugin id with exactly one upper-case character
     FORMATS AAX VST3                   # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME Otto)        # The name of the final executable, which can differ from the target name
-
-juce_generate_juce_header(Otto)
 
 target_sources(Otto
     PRIVATE
