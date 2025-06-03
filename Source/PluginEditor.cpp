@@ -20,7 +20,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     envSpeed("Slo/Fst"),
     twoFourPole("12/24"),
     envAdvanced(""),
-    titleBar(processor.getName()),
+    titleBar("Otto"),
     graphDisplay{
         DisplayData<float>(processor.getGraph()->audioDisplayData, colour_constants::lightMain, true),
         DisplayData<float>(processor.getEnvelopeFollower()->envelopeDisplayData, colour_constants::lightMain, false)

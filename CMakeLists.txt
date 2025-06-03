@@ -26,7 +26,7 @@ juce_add_plugin(Otto
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE    # Does the editor need keyboard focus?
     PLUGIN_MANUFACTURER_CODE Hipp # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE Otto # A unique four-character plugin id with exactly one upper-case character
-    FORMATS AAX VST3                   # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    FORMATS AAX VST3 
     PRODUCT_NAME Otto)        # The name of the final executable, which can differ from the target name
 
 target_sources(Otto
@@ -39,7 +39,7 @@ target_compile_definitions(Otto
     PUBLIC
     JUCE_WEB_BROWSER=0  # If you remove this, add `NEEDS_WEB_BROWSER TRUE` to the `juce_add_plugin` call
     JUCE_USE_CURL=0     # If you remove this, add `NEEDS_CURL TRUE` to the `juce_add_plugin` call
-    JUCE_VST3_CAN_REPLACE_VST2=0)
+)
 
 
 # juce_add_binary_data(AudioPluginData SOURCES ...)
