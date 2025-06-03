@@ -23,7 +23,7 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     titleBar("Otto"),
     graphDisplay{
         DisplayData<float>(processor.getGraph()->audioDisplayData, colour_constants::lightMain, true),
-        DisplayData<float>(processor.getEnvelopeFollower()->envelopeDisplayData, colour_constants::lightMain, false)
+        DisplayData<float>(processor.getEnvelopeFollower()->envelopeDisplayData, colour_constants::main, false, 3)
     },
     inputMeter(processor.getInputMeter()),
     outputMeter(processor.getOutputMeter()),
