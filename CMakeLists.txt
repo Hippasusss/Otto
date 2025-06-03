@@ -12,7 +12,7 @@ project(Otto VERSION 0.0.1)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_subdirectory(${JUCE_LIBRARY_PATH} ${CMAKE_CURRENT_BINARY_DIR}/JUCE)
 add_subdirectory(libs/JUCECC)
-add_subdirectory(modules/melatonin_inspector)
+add_subdirectory(libs/melatonin_inspector)
 juce_set_aax_sdk_path(${JUCE_LIBRARY_PATH}/modules/juce_audio_plugin_client/AAX/SDK)
 
 juce_add_plugin(Otto
@@ -33,7 +33,8 @@ juce_generate_juce_header(Otto)
 target_sources(Otto
     PRIVATE
     Source/PluginEditor.cpp
-    Source/PluginProcessor.cpp)
+    Source/PluginProcessor.cpp
+    Source/FilterFollower.cpp)
 
 target_compile_definitions(Otto
     PUBLIC
@@ -51,9 +52,14 @@ endif()
 
 target_link_libraries(Otto
     PRIVATE
-    # AudioPluginData           # If we'd created a binary data target, we'd link to it here
-    juce::juce_audio_utils
+    juce::juce_audio_basics
+    juce::juce_gui_basics
+    juce::juce_graphics
+    juce::juce_events
+    JUCECC
+    melatonin_inspector
     PUBLIC
     juce::juce_recommended_config_flags
     juce::juce_recommended_lto_flags
-    juce::juce_recommended_warning_flags)
+    juce::juce_recommended_warning_flags
+)

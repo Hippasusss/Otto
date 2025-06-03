@@ -20,7 +20,11 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     envSpeed("Slo/Fst"),
     twoFourPole("12/24"),
     envAdvanced(""),
-    graphDisplay(processor.getGraph(), processor.getEnvelopeFollower()),
+    titleBar(processor.getName()),
+    graphDisplay{
+        DisplayData<float>(processor.getGraph()->audioDisplayData, colour_constants::lightMain, true),
+        DisplayData<float>(processor.getEnvelopeFollower()->envelopeDisplayData, colour_constants::lightMain, false)
+    },
     inputMeter(processor.getInputMeter()),
     outputMeter(processor.getOutputMeter()),
     inA(processor.apvts, parameter_constants::INPUT_GAIN_ID, inputGain.getSlider()), 
