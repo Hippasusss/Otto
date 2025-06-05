@@ -129,16 +129,16 @@ private:
     //==============================================================================
     SampleType drive, drive2, gain, gain2, comp;
 
-    dsp::Oversampling<float>* getOversampling();
+    dsp::Oversampling<SampleType>* getOversampling();
     void changeOversampling(size_t factor);
-    dsp::Oversampling<float> oversamplers[4] =  
+    dsp::Oversampling<SampleType> oversamplers[4] =  
     {
-        dsp::Oversampling<float>(2, 1, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
-        dsp::Oversampling<float>(2, 2, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
-        dsp::Oversampling<float>(2, 3, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
-        dsp::Oversampling<float>(2, 4, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
+        dsp::Oversampling<SampleType>(2, 1, dsp::Oversampling<SampleType>::FilterType::filterHalfBandFIREquiripple),
+        dsp::Oversampling<SampleType>(2, 2, dsp::Oversampling<SampleType>::FilterType::filterHalfBandFIREquiripple),
+        dsp::Oversampling<SampleType>(2, 3, dsp::Oversampling<SampleType>::FilterType::filterHalfBandFIREquiripple),
+        dsp::Oversampling<SampleType>(2, 4, dsp::Oversampling<SampleType>::FilterType::filterHalfBandFIREquiripple),
     };
-    dsp::Oversampling<float>* currentOversampler = &oversamplers[0];
+    dsp::Oversampling<SampleType>* currentOversampler = &oversamplers[0];
 
     static constexpr size_t numStates = 5;
     std::vector<std::array<SampleType, numStates>> state;

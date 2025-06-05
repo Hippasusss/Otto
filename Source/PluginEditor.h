@@ -22,6 +22,8 @@ public:
 private:
     Auto_AudioProcessor& processor;
 
+    CustomLookAndFeel lookAndFeel {};
+    CustomLookAndFeel2 lookAndFeel2 {};
     LabeledSlider inputGain, drive, envAmount, frequency, resonance, mix, outputGain;
     LabeledSlider attack, release;
     Label oversamplingLabel, envAdvancedLabel;
@@ -31,8 +33,6 @@ private:
     TitleBar titleBar;
     GraphDisplay graphDisplay;
     MeterDisplay inputMeter, outputMeter;
-    CustomLookAndFeel lookAndFeel;
-    CustomLookAndFeel2 lookAndFeel2;
     // melatonin::Inspector inspector { *this };
     
     std::array<Component*, 21> components 
