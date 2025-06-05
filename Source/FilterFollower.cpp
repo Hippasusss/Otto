@@ -61,6 +61,17 @@ void FilterFollower<SampleType>::setMode (Mode newMode) noexcept
 template <typename SampleType>
 void FilterFollower<SampleType>::prepare (const dsp::ProcessSpec& spec)
 {
+    // for (auto& overSampler: oversamplers) {
+    //     overSampler.numChannels = getTotalNumInputChannels();
+    //     overSampler.initProcessing(static_cast<size_t>(samplesPerBlock));
+    //     overSampler.setUsingIntegerLatency(false);
+    //     overSampler.reset();
+    // }
+    //
+    // auto spec = dsp::ProcessSpec {sampleRate * currentOversampler->getOversamplingFactor(),
+    //     static_cast<uint32>(samplesPerBlock * currentOversampler->getOversamplingFactor()),
+    //     static_cast<uint32>(getTotalNumInputChannels())};
+
     setSampleRate (SampleType (spec.sampleRate));
     setNumChannels (spec.numChannels);
     reset();
