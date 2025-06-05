@@ -54,28 +54,47 @@ public:
     void updateAllParameters();
 
 private:
-    enum processors
+    enum inputProcessors
     {
         inputGainIndex,
         bufferStoreIndex,
         inputMeterIndex,
         graphIndex,
+    };
+
+    enum mainProcessors
+    {
         followerIndex,
         filterIndex,
+    };
+    enum outputProcessors
+    {
         mixerIndex,
         outputGainIndex,
         outputMeterIndex
     };
 
+    dsp::Oversampling<float> oversamplers[4] =  
+    {
+        dsp::Oversampling<float>(2, 1, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
+        dsp::Oversampling<float>(2, 2, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
+        dsp::Oversampling<float>(2, 3, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
+        dsp::Oversampling<float>(2, 4, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
+    };
+
+    dsp::Oversampling<float>* currentOversampler = &oversamplers[0];
+
     dsp::ProcessorChain <dsp::Gain<float>,
                          BufferStore,
                          Meter, 
-                         Graph,
-                         EnvelopeFollower,
-                         FilterFollower<float>,
-                         Mixer,
+                         Graph> inputChain;
+
+    dsp::ProcessorChain <EnvelopeFollower,
+                         FilterFollower<float>> chain;
+
+    dsp::ProcessorChain <Mixer,
                          dsp::Gain<float>,
-                         Meter> chain;
+                         Meter> outputChain;
    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Auto_AudioProcessor)
 };

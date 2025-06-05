@@ -80,8 +80,6 @@ public:
     //==============================================================================
     void process (const dsp::ProcessContextReplacing<SampleType>& context) noexcept
     {
-
-        // currentOversampler->processSamplesDown(inputBlock);
         const auto& inputBlock = context.getInputBlock();
         auto& outputBlock      = context.getOutputBlock();
         const auto numChannels = outputBlock.getNumChannels();
@@ -96,22 +94,15 @@ public:
             outputBlock.copyFrom (inputBlock);
             return;
         }
-
-        auto oversampled = currentOversampler->processSamplesUp(inputBlock);
-        const auto numOversampledSamples = oversampled.getNumSamples();
-
         const auto& envelope = follower->getEnvelope();
-
-        for (size_t n = 0; n < numOversampledSamples; ++n)
+        for (size_t n = 0; n < numSamples; ++n)
         {
-            cuttoffFreqModifierHz = envelope[n] * (cutoffFreqMaxHz - cutoffFreqHz);
+            cuttoffFreqModifierHz = envTransformSmoother.getNextValue() * envelope[n]; 
             updateCutoffFreq();
             updateSmoothers();
             for (size_t ch = 0; ch < numChannels; ++ch)
-                oversampled.getChannelPointer (ch)[n] = processSample (inputBlock.getChannelPointer (ch)[n], ch);
+                outputBlock.getChannelPointer (ch)[n] = processSample (inputBlock.getChannelPointer (ch)[n], ch);
         }
-
-        currentOversampler->processSamplesDown(outputBlock);
     }
 
 protected:
@@ -125,33 +116,24 @@ private:
     void setNumChannels (size_t newValue)   { state.resize (newValue); }
     void updateCutoffFreq() noexcept        { cutoffTransformSmoother.setTargetValue (std::exp ((cutoffFreqHz + cuttoffFreqModifierHz) * cutoffFreqScaler)); }
     void updateResonance() noexcept         { scaledResonanceSmoother.setTargetValue (jmap (resonance, SampleType (0.1), SampleType (1.0))); }
+    void updateEnvAmount() noexcept         { envTransformSmoother.setTargetValue (envAmountHz); }
 
     //==============================================================================
     SampleType drive, drive2, gain, gain2, comp;
-
-    dsp::Oversampling<SampleType>* getOversampling();
-    void changeOversampling(size_t factor);
-    dsp::Oversampling<SampleType> oversamplers[4] =  
-    {
-        dsp::Oversampling<SampleType>(2, 1, dsp::Oversampling<SampleType>::FilterType::filterHalfBandFIREquiripple),
-        dsp::Oversampling<SampleType>(2, 2, dsp::Oversampling<SampleType>::FilterType::filterHalfBandFIREquiripple),
-        dsp::Oversampling<SampleType>(2, 3, dsp::Oversampling<SampleType>::FilterType::filterHalfBandFIREquiripple),
-        dsp::Oversampling<SampleType>(2, 4, dsp::Oversampling<SampleType>::FilterType::filterHalfBandFIREquiripple),
-    };
-    dsp::Oversampling<SampleType>* currentOversampler = &oversamplers[0];
 
     static constexpr size_t numStates = 5;
     std::vector<std::array<SampleType, numStates>> state;
     std::array<SampleType, numStates> A;
 
-    SmoothedValue<SampleType> cutoffTransformSmoother, scaledResonanceSmoother;
-    SampleType cutoffTransformValue, scaledResonanceValue;
+    SmoothedValue<SampleType> cutoffTransformSmoother, scaledResonanceSmoother, envTransformSmoother;
+    SampleType cutoffTransformValue, scaledResonanceValue, envTransformValue;
 
     dsp::LookupTableTransform<SampleType> saturationLUT { [] (SampleType x) { return std::tanh (x); },
                                                      SampleType (-5), SampleType (5), 128 };
 
     SampleType cutoffFreqHz { SampleType (200) };
     std::atomic<SampleType> cuttoffFreqModifierHz { SampleType (0)};
+    SampleType envAmountHz { SampleType (0)};
     SampleType resonance;
 
     SampleType cutoffFreqScaler;
