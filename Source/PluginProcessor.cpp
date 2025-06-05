@@ -58,15 +58,9 @@ void Auto_AudioProcessor::changeProgramName (int index, const String& newName)
 
 void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    for (auto& overSampler: oversamplers) {
-        overSampler.numChannels = getTotalNumInputChannels();
-        overSampler.initProcessing(static_cast<size_t>(samplesPerBlock));
-        overSampler.setUsingIntegerLatency(false);
-        overSampler.reset();
-    }
 
-    auto spec = dsp::ProcessSpec {sampleRate * currentOversampler->getOversamplingFactor(),
-        static_cast<uint32>(samplesPerBlock * currentOversampler->getOversamplingFactor()),
+    auto spec = dsp::ProcessSpec {sampleRate,
+        static_cast<uint32>(samplesPerBlock),
         static_cast<uint32>(getTotalNumInputChannels())};
 
 
@@ -88,14 +82,8 @@ void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& 
     ScopedNoDenormals noDenormals;
 
     auto inputBlock = dsp::AudioBlock<float>(buffer);
-
-    // TODO: don't over sample for the whole chain. It just adds unnecesarry overhead. 
-    // only really needed for the filter drive. Doing this is a pain though. I think best
-    // way is to split the processor chain into bits.
-    auto oversampled = currentOversampler->processSamplesUp(inputBlock);
-    const auto context = dsp::ProcessContextReplacing<float>(oversampled);
+    const auto context = dsp::ProcessContextReplacing<float>(inputBlock);
     chain.process(context);
-    currentOversampler->processSamplesDown(inputBlock);
 }
 
 void Auto_AudioProcessor::releaseResources()
@@ -130,20 +118,13 @@ Graph* Auto_AudioProcessor::getGraph()
     return &chain.get<graphIndex>();
 }
 
-dsp::Oversampling<float>* Auto_AudioProcessor::getOversampling()
-{
-    return currentOversampler;
-}
-
 void Auto_AudioProcessor::changeOversampling(size_t factor)
 {
     suspendProcessing(true);
-    currentOversampler = &oversamplers[factor];
-    //TODO: fix this, you're not meant to do it.
     const auto sampleRate = getSampleRate();
     const auto blockSize = getBlockSize();
     prepareToPlay(sampleRate, blockSize);
-    setLatencySamples(currentOversampler->getLatencyInSamples());
+    setLatencySamples(0);
     suspendProcessing(false);
 }
 

@@ -80,6 +80,8 @@ public:
     //==============================================================================
     void process (const dsp::ProcessContextReplacing<SampleType>& context) noexcept
     {
+
+        // currentOversampler->processSamplesDown(inputBlock);
         const auto& inputBlock = context.getInputBlock();
         auto& outputBlock      = context.getOutputBlock();
         const auto numChannels = outputBlock.getNumChannels();
@@ -94,15 +96,22 @@ public:
             outputBlock.copyFrom (inputBlock);
             return;
         }
+
+        auto oversampled = currentOversampler->processSamplesUp(inputBlock);
+        const auto numOversampledSamples = oversampled.getNumSamples();
+
         const auto& envelope = follower->getEnvelope();
-        for (size_t n = 0; n < numSamples; ++n)
+
+        for (size_t n = 0; n < numOversampledSamples; ++n)
         {
             cuttoffFreqModifierHz = envelope[n] * (cutoffFreqMaxHz - cutoffFreqHz);
             updateCutoffFreq();
             updateSmoothers();
             for (size_t ch = 0; ch < numChannels; ++ch)
-                outputBlock.getChannelPointer (ch)[n] = processSample (inputBlock.getChannelPointer (ch)[n], ch);
+                oversampled.getChannelPointer (ch)[n] = processSample (inputBlock.getChannelPointer (ch)[n], ch);
         }
+
+        currentOversampler->processSamplesDown(outputBlock);
     }
 
 protected:
@@ -119,6 +128,17 @@ private:
 
     //==============================================================================
     SampleType drive, drive2, gain, gain2, comp;
+
+    dsp::Oversampling<float>* getOversampling();
+    void changeOversampling(size_t factor);
+    dsp::Oversampling<float> oversamplers[4] =  
+    {
+        dsp::Oversampling<float>(2, 1, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
+        dsp::Oversampling<float>(2, 2, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
+        dsp::Oversampling<float>(2, 3, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
+        dsp::Oversampling<float>(2, 4, dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple),
+    };
+    dsp::Oversampling<float>* currentOversampler = &oversamplers[0];
 
     static constexpr size_t numStates = 5;
     std::vector<std::array<SampleType, numStates>> state;
