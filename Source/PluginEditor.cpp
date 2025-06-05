@@ -101,18 +101,6 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
 
 Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
 {
-    for (auto& slider : mainSliders)
-    {
-        slider->setLookAndFeel(nullptr);
-    }
-    for(auto& slider : timeSliders)
-    {
-        slider->setLookAndFeel(nullptr);
-    }
-    oversampling.setLookAndFeel(nullptr);
-    oversamplingLabel.setLookAndFeel(nullptr);
-    envAdvancedLabel.setLookAndFeel(nullptr);
-    envAdvanced.setLookAndFeel(nullptr);
     setLookAndFeel(nullptr);
 }
 
