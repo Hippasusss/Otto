@@ -72,6 +72,11 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
         valueLabel.setJustificationType(Justification::centred);
     }
 
+    for (auto& button : buttons) {
+        button->setColour(ToggleButton::ColourIds::tickColourId, colour_constants::main);
+        button->setColour(ToggleButton::ColourIds::tickDisabledColourId, colour_constants::backGround);
+    }
+
     //TODO:: surley not ok thread wise lol
     oversampling.addToDropDownContext("Off", [&processor](){processor.changeOversampling(0);});
     oversampling.addToDropDownContext("x2", [&processor](){processor.changeOversampling(1);});
