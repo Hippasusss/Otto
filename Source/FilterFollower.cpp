@@ -75,6 +75,7 @@ void FilterFollower<SampleType>::reset() noexcept
 
     cutoffTransformSmoother.setCurrentAndTargetValue (cutoffTransformSmoother.getTargetValue());
     scaledResonanceSmoother.setCurrentAndTargetValue (scaledResonanceSmoother.getTargetValue());
+    envTransformSmoother.setCurrentAndTargetValue (envTransformSmoother.getTargetValue());
 }
 
 //==============================================================================
@@ -149,6 +150,7 @@ void FilterFollower<SampleType>::updateSmoothers() noexcept
 {
     cutoffTransformValue = cutoffTransformSmoother.getNextValue();
     scaledResonanceValue = scaledResonanceSmoother.getNextValue();
+    envTransformValue = envTransformSmoother.getNextValue();
 }
 
 //==============================================================================
@@ -161,6 +163,7 @@ void FilterFollower<SampleType>::setSampleRate (SampleType newValue) noexcept
     static constexpr SampleType smootherRampTimeSec = SampleType (0.05);
     cutoffTransformSmoother.reset (newValue, smootherRampTimeSec);
     scaledResonanceSmoother.reset (newValue, smootherRampTimeSec);
+    envTransformSmoother.reset (newValue, smootherRampTimeSec);
 
     updateCutoffFreq();
 }

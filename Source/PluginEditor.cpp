@@ -42,15 +42,16 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
 {
     setSize (800, 428);
     
+    setLookAndFeel(&lookAndFeel);
     for(auto& comp : components)
     {
         addAndMakeVisible(comp);
+        comp->setLookAndFeel(&lookAndFeel);
     }
 
     for (auto& slider : mainSliders)
     {
         mainParameterGroup.addChildComponent(slider);
-        slider->setLookAndFeel(&lookAndFeel);
         Label& valueLabel = slider->getSliderValueLabel();
         valueLabel.setColour(Label::ColourIds::backgroundColourId, colour_constants::transparent);
         valueLabel.setColour(Label::ColourIds::textColourId, colour_constants::main);
@@ -71,8 +72,12 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
         valueLabel.setJustificationType(Justification::centred);
     }
 
+    for (auto& button : buttons) {
+        button->setColour(ToggleButton::ColourIds::tickColourId, colour_constants::main);
+        button->setColour(ToggleButton::ColourIds::tickDisabledColourId, colour_constants::backGround);
+    }
+
     //TODO:: surley not ok thread wise lol
-    oversampling.setLookAndFeel(&lookAndFeel2);
     oversampling.addToDropDownContext("Off", [&processor](){processor.changeOversampling(0);});
     oversampling.addToDropDownContext("x2", [&processor](){processor.changeOversampling(1);});
     oversampling.addToDropDownContext("x4", [&processor](){processor.changeOversampling(2);});
@@ -93,7 +98,6 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     envAdvanced.onClick = [this]() {
         resized();
     };
-    setLookAndFeel(&lookAndFeel);
     envAdvancedLabel.setLookAndFeel(&lookAndFeel2);
     envAdvancedLabel.setText("Env: ", NotificationType::dontSendNotification);
     envAdvancedLabel.setJustificationType(Justification::right);
@@ -101,18 +105,6 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
 
 Auto_AudioProcessorEditor::~Auto_AudioProcessorEditor()
 {
-    for (auto& slider : mainSliders)
-    {
-        slider->setLookAndFeel(nullptr);
-    }
-    for(auto& slider : timeSliders)
-    {
-        slider->setLookAndFeel(nullptr);
-    }
-    oversampling.setLookAndFeel(nullptr);
-    oversamplingLabel.setLookAndFeel(nullptr);
-    envAdvancedLabel.setLookAndFeel(nullptr);
-    envAdvanced.setLookAndFeel(nullptr);
     setLookAndFeel(nullptr);
 }
 
@@ -133,7 +125,8 @@ void Auto_AudioProcessorEditor::resized()
 
     constexpr int SMALL_SLIDER_PADDING = 4;
     constexpr int METER_PADDING_X = 7;
-    constexpr int METER_PADDING_Y = 6;
+    constexpr int METER_PADDING_Y_BOTTOM = 6;
+    constexpr int METER_PADDING_Y_TOP = 3;
     constexpr int METER_WIDTH = 20;
     constexpr int GRAPH_PADDING = 2;
 
@@ -186,7 +179,9 @@ void Auto_AudioProcessorEditor::resized()
 
     // Visual Section -------------------
     // Meters
-    rect.reduce(METER_PADDING_X, METER_PADDING_Y);
+    rect.reduce(METER_PADDING_X, 0);
+    rect.removeFromBottom(METER_PADDING_Y_BOTTOM);
+    rect.removeFromTop(METER_PADDING_Y_TOP);
     inputMeter.setBounds(rect.removeFromLeft(METER_WIDTH));
     outputMeter.setBounds(rect.removeFromRight(METER_WIDTH));
 

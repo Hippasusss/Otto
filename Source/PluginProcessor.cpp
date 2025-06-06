@@ -58,29 +58,40 @@ void Auto_AudioProcessor::changeProgramName (int index, const String& newName)
 
 void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    for (auto& overSampler: oversamplers) {
+    for (auto& overSampler: oversamplers) 
+    {
         overSampler.numChannels = getTotalNumInputChannels();
         overSampler.initProcessing(static_cast<size_t>(samplesPerBlock));
         overSampler.setUsingIntegerLatency(false);
         overSampler.reset();
     }
 
-    auto spec = dsp::ProcessSpec {sampleRate * currentOversampler->getOversamplingFactor(),
-        static_cast<uint32>(samplesPerBlock * currentOversampler->getOversamplingFactor()),
-        static_cast<uint32>(getTotalNumInputChannels())};
+    spec = dsp::ProcessSpec 
+        {
+            sampleRate,
+            static_cast<uint32>(samplesPerBlock),
+            static_cast<uint32>(getTotalNumInputChannels())
+        };
+
+    auto overSpec = dsp::ProcessSpec 
+        {
+            sampleRate * currentOversampler->getOversamplingFactor(),
+            static_cast<uint32>(samplesPerBlock * currentOversampler->getOversamplingFactor()),
+            static_cast<uint32>(getTotalNumInputChannels())
+        };
 
 
-    // Avoid clicks during gain parameter change
-    chain.get<outputGainIndex>().setRampDurationSeconds(0.1);
-    chain.get<inputGainIndex>().setRampDurationSeconds(0.1);
+    outputChain.get<outputGainIndex>().setRampDurationSeconds(0.1);
+    inputChain.get<inputGainIndex>().setRampDurationSeconds(0.1);
     chain.get<filterIndex>().setMode(LadderFilterMode::LPF12);
     chain.get<filterIndex>().setEnvFollowerPtr(&chain.get<followerIndex>());
 
-    // Set source for dry buffer of mix control
-    chain.get<mixerIndex>().setOtherBlock(chain.get<bufferStoreIndex>().getAudioBlockPointer());
+    outputChain.get<mixerIndex>().setOtherBlock(inputChain.get<bufferStoreIndex>().getAudioBlockPointer());
 
     updateAllParameters();
-    chain.prepare(spec);
+    inputChain.prepare(spec);
+    chain.prepare(overSpec);
+    outputChain.prepare(spec);
 }
 void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
@@ -88,19 +99,21 @@ void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& 
     ScopedNoDenormals noDenormals;
 
     auto inputBlock = dsp::AudioBlock<float>(buffer);
+    const auto context = dsp::ProcessContextReplacing<float>(inputBlock);
 
-    // TODO: don't over sample for the whole chain. It just adds unnecesarry overhead. 
-    // only really needed for the filter drive. Doing this is a pain though. I think best
-    // way is to split the processor chain into bits.
+    inputChain.process(context);
+
     auto oversampled = currentOversampler->processSamplesUp(inputBlock);
-    const auto context = dsp::ProcessContextReplacing<float>(oversampled);
-    chain.process(context);
+    const auto overContext = dsp::ProcessContextReplacing<float>(oversampled);
+    chain.process(overContext);
     currentOversampler->processSamplesDown(inputBlock);
+
+    outputChain.process(context);
 }
 
 void Auto_AudioProcessor::releaseResources()
 {
-    chain.get<mixerIndex>().setOtherBlock(nullptr);
+    outputChain.get<mixerIndex>().setOtherBlock(nullptr);
     chain.get<followerIndex>().onValueCalculated = nullptr;
     chain.reset();
 }
@@ -117,17 +130,17 @@ FilterFollower<float>* Auto_AudioProcessor::getLadderFilter()
 
 Meter* Auto_AudioProcessor::getInputMeter() 
 {
-    return &chain.get<inputMeterIndex>();
+    return &inputChain.get<inputMeterIndex>();
 }
 
 Meter* Auto_AudioProcessor::getOutputMeter() 
 {
-    return &chain.get<outputMeterIndex>();
+    return &outputChain.get<outputMeterIndex>();
 }
 
 Graph* Auto_AudioProcessor::getGraph()
 {
-    return &chain.get<graphIndex>();
+    return &inputChain.get<graphIndex>();
 }
 
 dsp::Oversampling<float>* Auto_AudioProcessor::getOversampling()
@@ -139,10 +152,7 @@ void Auto_AudioProcessor::changeOversampling(size_t factor)
 {
     suspendProcessing(true);
     currentOversampler = &oversamplers[factor];
-    //TODO: fix this, you're not meant to do it.
-    const auto sampleRate = getSampleRate();
-    const auto blockSize = getBlockSize();
-    prepareToPlay(sampleRate, blockSize);
+    prepareToPlay(spec.sampleRate, spec.maximumBlockSize);
     setLatencySamples(currentOversampler->getLatencyInSamples());
     suspendProcessing(false);
 }
@@ -169,8 +179,8 @@ AudioProcessorValueTreeState::ParameterLayout Auto_AudioProcessor::getParameterL
 
 void Auto_AudioProcessor::updateAllParameters()
 {
-    chain.get<inputGainIndex>().setGainDecibels(apvts.getRawParameterValue(parameter_constants::INPUT_GAIN_ID)->load());
-    chain.get<outputGainIndex>().setGainDecibels(apvts.getRawParameterValue(parameter_constants::OUTPUT_GAIN_ID)->load());
+    inputChain.get<inputGainIndex>().setGainDecibels(apvts.getRawParameterValue(parameter_constants::INPUT_GAIN_ID)->load());
+    outputChain.get<outputGainIndex>().setGainDecibels(apvts.getRawParameterValue(parameter_constants::OUTPUT_GAIN_ID)->load());
     chain.get<filterIndex>().setCutoffFrequencyHz(apvts.getRawParameterValue(parameter_constants::FREQUENCY_ID)->load());
     chain.get<filterIndex>().setResonance(apvts.getRawParameterValue(parameter_constants::RESONANCE_ID)->load());
     chain.get<filterIndex>().setDrive(apvts.getRawParameterValue(parameter_constants::DRIVE_ID)->load());
@@ -192,7 +202,7 @@ void Auto_AudioProcessor::updateAllParameters()
         chain.get<filterIndex>().setMode(LadderFilterMode::LPF24);
 
     chain.get<followerIndex>().setAmount(apvts.getRawParameterValue(parameter_constants::ENV_AMOUNT_ID)->load()); 
-    chain.get<mixerIndex>().setMix(apvts.getRawParameterValue(parameter_constants::MIX_ID)->load());
+    outputChain.get<mixerIndex>().setMix(apvts.getRawParameterValue(parameter_constants::MIX_ID)->load());
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
