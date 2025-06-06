@@ -120,7 +120,8 @@ void Auto_AudioProcessorEditor::resized()
 
     constexpr int SMALL_SLIDER_PADDING = 4;
     constexpr int METER_PADDING_X = 7;
-    constexpr int METER_PADDING_Y = 6;
+    constexpr int METER_PADDING_Y_BOTTOM = 6;
+    constexpr int METER_PADDING_Y_TOP = 3;
     constexpr int METER_WIDTH = 20;
     constexpr int GRAPH_PADDING = 2;
 
@@ -173,7 +174,9 @@ void Auto_AudioProcessorEditor::resized()
 
     // Visual Section -------------------
     // Meters
-    rect.reduce(METER_PADDING_X, METER_PADDING_Y);
+    rect.reduce(METER_PADDING_X, 0);
+    rect.removeFromBottom(METER_PADDING_Y_BOTTOM);
+    rect.removeFromTop(METER_PADDING_Y_TOP);
     inputMeter.setBounds(rect.removeFromLeft(METER_WIDTH));
     outputMeter.setBounds(rect.removeFromRight(METER_WIDTH));
 
