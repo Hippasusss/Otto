@@ -58,20 +58,27 @@ void Auto_AudioProcessor::changeProgramName (int index, const String& newName)
 
 void Auto_AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    for (auto& overSampler: oversamplers) {
+    for (auto& overSampler: oversamplers) 
+    {
         overSampler.numChannels = getTotalNumInputChannels();
         overSampler.initProcessing(static_cast<size_t>(samplesPerBlock));
         overSampler.setUsingIntegerLatency(false);
         overSampler.reset();
     }
 
-    auto spec = dsp::ProcessSpec {sampleRate,
-        static_cast<uint32>(samplesPerBlock),
-        static_cast<uint32>(getTotalNumInputChannels())};
+    spec = dsp::ProcessSpec 
+        {
+            sampleRate,
+            static_cast<uint32>(samplesPerBlock),
+            static_cast<uint32>(getTotalNumInputChannels())
+        };
 
-    auto overSpec = dsp::ProcessSpec {sampleRate * currentOversampler->getOversamplingFactor(),
-        static_cast<uint32>(samplesPerBlock * currentOversampler->getOversamplingFactor()),
-        static_cast<uint32>(getTotalNumInputChannels())};
+    auto overSpec = dsp::ProcessSpec 
+        {
+            sampleRate * currentOversampler->getOversamplingFactor(),
+            static_cast<uint32>(samplesPerBlock * currentOversampler->getOversamplingFactor()),
+            static_cast<uint32>(getTotalNumInputChannels())
+        };
 
 
     outputChain.get<outputGainIndex>().setRampDurationSeconds(0.1);
@@ -145,10 +152,7 @@ void Auto_AudioProcessor::changeOversampling(size_t factor)
 {
     suspendProcessing(true);
     currentOversampler = &oversamplers[factor];
-    //TODO: fix this, you're not meant to do it.
-    const auto sampleRate = getSampleRate();
-    const auto blockSize = getBlockSize();
-    prepareToPlay(sampleRate, blockSize);
+    prepareToPlay(spec.sampleRate, spec.maximumBlockSize);
     setLatencySamples(currentOversampler->getLatencyInSamples());
     suspendProcessing(false);
 }

@@ -48,6 +48,7 @@ public:
     Graph* getGraph();
     dsp::Oversampling<float>* getOversampling();
     void changeOversampling(size_t factor);
+    dsp::ProcessSpec spec = dsp::ProcessSpec {0,0,0};
 
     static AudioProcessorValueTreeState::ParameterLayout getParameterLayout();
     AudioProcessorValueTreeState apvts { *this, nullptr, "Parameters", getParameterLayout()};
