@@ -42,15 +42,16 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
 {
     setSize (800, 428);
     
+    setLookAndFeel(&lookAndFeel);
     for(auto& comp : components)
     {
         addAndMakeVisible(comp);
+        comp->setLookAndFeel(&lookAndFeel);
     }
 
     for (auto& slider : mainSliders)
     {
         mainParameterGroup.addChildComponent(slider);
-        slider->setLookAndFeel(&lookAndFeel);
         Label& valueLabel = slider->getSliderValueLabel();
         valueLabel.setColour(Label::ColourIds::backgroundColourId, colour_constants::transparent);
         valueLabel.setColour(Label::ColourIds::textColourId, colour_constants::main);
@@ -72,7 +73,6 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     }
 
     //TODO:: surley not ok thread wise lol
-    oversampling.setLookAndFeel(&lookAndFeel2);
     oversampling.addToDropDownContext("Off", [&processor](){processor.changeOversampling(0);});
     oversampling.addToDropDownContext("x2", [&processor](){processor.changeOversampling(1);});
     oversampling.addToDropDownContext("x4", [&processor](){processor.changeOversampling(2);});
@@ -93,7 +93,6 @@ Auto_AudioProcessorEditor::Auto_AudioProcessorEditor (Auto_AudioProcessor& proce
     envAdvanced.onClick = [this]() {
         resized();
     };
-    setLookAndFeel(&lookAndFeel);
     envAdvancedLabel.setLookAndFeel(&lookAndFeel2);
     envAdvancedLabel.setText("Env: ", NotificationType::dontSendNotification);
     envAdvancedLabel.setJustificationType(Justification::right);
