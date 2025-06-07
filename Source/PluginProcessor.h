@@ -1,5 +1,7 @@
 #pragma once
-#include <JuceHeader.h>
+
+#include "juce_audio_processors/juce_audio_processors.h"
+
 #include "EnvelopeFollower.h"
 #include "BufferStore.h"
 #include "FilterFollower.h"

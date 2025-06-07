@@ -9,7 +9,6 @@
 */
 
 #pragma once
-#include <JuceHeader.h>
 #include "EnvelopeFollower.h"
 
 enum class LadderFilterMode
