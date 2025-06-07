@@ -185,6 +185,7 @@ void Auto_AudioProcessor::updateAllParameters()
     chain.get<filterIndex>().setResonance(apvts.getRawParameterValue(parameter_constants::RESONANCE_ID)->load());
     chain.get<filterIndex>().setDrive(apvts.getRawParameterValue(parameter_constants::DRIVE_ID)->load());
     auto& envelopeFollower = chain.get<followerIndex>();
+    envelopeFollower.setAmount(apvts.getRawParameterValue(parameter_constants::ENV_AMOUNT_ID)->load());
     if (apvts.getRawParameterValue(parameter_constants::ENV_ADVANCED_ID)->load())
     {
         envelopeFollower.setAttack(apvts.getRawParameterValue(parameter_constants::ENV_ATTACK_ID)->load());
@@ -201,7 +202,6 @@ void Auto_AudioProcessor::updateAllParameters()
     else
         chain.get<filterIndex>().setMode(LadderFilterMode::LPF24);
 
-    chain.get<followerIndex>().setAmount(apvts.getRawParameterValue(parameter_constants::ENV_AMOUNT_ID)->load()); 
     outputChain.get<mixerIndex>().setMix(apvts.getRawParameterValue(parameter_constants::MIX_ID)->load());
 }
 

@@ -97,7 +97,7 @@ public:
         const auto& envelope = follower->getEnvelope();
         for (size_t n = 0; n < numSamples; ++n)
         {
-            cuttoffFreqModifierHz = envTransformSmoother.getNextValue() * envelope[n]; 
+            cuttoffFreqModifierHz = envelope[n] * (maxCutoffFreqHz - cutoffFreqHz); 
             updateCutoffFreq();
             updateSmoothers();
             for (size_t ch = 0; ch < numChannels; ++ch)
@@ -116,7 +116,6 @@ private:
     void setNumChannels (size_t newValue)   { state.resize (newValue); }
     void updateCutoffFreq() noexcept        { cutoffTransformSmoother.setTargetValue (std::exp ((cutoffFreqHz + cuttoffFreqModifierHz) * cutoffFreqScaler)); }
     void updateResonance() noexcept         { scaledResonanceSmoother.setTargetValue (jmap (resonance, SampleType (0.1), SampleType (1.0))); }
-    void updateEnvAmount() noexcept         { envTransformSmoother.setTargetValue (envAmountHz); }
 
     //==============================================================================
     SampleType drive, drive2, gain, gain2, comp;
@@ -125,20 +124,19 @@ private:
     std::vector<std::array<SampleType, numStates>> state;
     std::array<SampleType, numStates> A;
 
-    SmoothedValue<SampleType> cutoffTransformSmoother, scaledResonanceSmoother, envTransformSmoother;
+    SmoothedValue<SampleType> cutoffTransformSmoother, scaledResonanceSmoother;
     SampleType cutoffTransformValue, scaledResonanceValue, envTransformValue;
 
     dsp::LookupTableTransform<SampleType> saturationLUT { [] (SampleType x) { return std::tanh (x); },
                                                      SampleType (-5), SampleType (5), 128 };
 
     SampleType cutoffFreqHz { SampleType (200) };
-    std::atomic<SampleType> cuttoffFreqModifierHz { SampleType (0)};
-    SampleType envAmountHz { SampleType (0)};
+    const SampleType maxCutoffFreqHz { SampleType (20000)};
+    SampleType cuttoffFreqModifierHz { SampleType (0)};
     SampleType resonance;
 
     SampleType cutoffFreqScaler;
 
-    const SampleType cutoffFreqMaxHz { SampleType {20000.0f}};
 
     Mode mode;
     bool enabled = true;
