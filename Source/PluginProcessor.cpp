@@ -114,7 +114,6 @@ void Auto_AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& 
 void Auto_AudioProcessor::releaseResources()
 {
     outputChain.get<mixerIndex>().setOtherBlock(nullptr);
-    chain.get<followerIndex>().onValueCalculated = nullptr;
     chain.reset();
 }
 
@@ -179,6 +178,8 @@ AudioProcessorValueTreeState::ParameterLayout Auto_AudioProcessor::getParameterL
 
 void Auto_AudioProcessor::updateAllParameters()
 {
+    const float fastTime = 50;
+    const float slowTime = 300;
     inputChain.get<inputGainIndex>().setGainDecibels(apvts.getRawParameterValue(parameter_constants::INPUT_GAIN_ID)->load());
     outputChain.get<outputGainIndex>().setGainDecibels(apvts.getRawParameterValue(parameter_constants::OUTPUT_GAIN_ID)->load());
     chain.get<filterIndex>().setCutoffFrequencyHz(apvts.getRawParameterValue(parameter_constants::FREQUENCY_ID)->load());
@@ -193,7 +194,7 @@ void Auto_AudioProcessor::updateAllParameters()
     }
     else
     {
-        auto speed = apvts.getRawParameterValue(parameter_constants::ENV_SPEED_ID)->load() ? envelopeFollower.getSlowTime() : envelopeFollower.getFastTime();
+        auto speed = apvts.getRawParameterValue(parameter_constants::ENV_SPEED_ID)->load() ? slowTime : fastTime;
         envelopeFollower.setAttack(speed);
         envelopeFollower.setRelease(speed);
     }
