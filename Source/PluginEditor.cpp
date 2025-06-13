@@ -145,7 +145,7 @@ void Auto_AudioProcessorEditor::resized()
     auto localParameterBounds = mainParameterGroup.getLocalBounds();
     localParameterBounds.removeFromTop(SLIDER_EXTRA_TOP_PADDING);
     localParameterBounds.removeFromRight(BUTTON_AREA_WIDTH);
-    Helpers::distibuteComponentsEvenlyInRectHorizontally(mainSliders, localParameterBounds, SLIDER_PADDING);
+    LayoutHelpers::distributeHorizontally(mainSliders, localParameterBounds, SLIDER_PADDING);
 
     // Buttons -----------------------
     auto buttonArea = parameterBounds.removeFromRight(BUTTON_AREA_WIDTH);
@@ -163,7 +163,7 @@ void Auto_AudioProcessorEditor::resized()
         {
             slider->setVisible(true);
         }
-        Helpers::distibuteComponentsEvenlyInRectHorizontally(timeSliders, topButtonArea, SMALL_SLIDER_PADDING);
+        LayoutHelpers::distributeHorizontally(timeSliders, topButtonArea, SMALL_SLIDER_PADDING);
         twoFourPole.setBounds(bottomButtonArea.reduced(BUTTON_PADDING));
     }
     else
